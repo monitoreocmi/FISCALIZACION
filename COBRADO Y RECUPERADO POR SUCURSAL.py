@@ -10,21 +10,33 @@ if sys.stdout.encoding != 'utf-8':
 MESES_ES = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"]
 
 def limpiar_monto_sucursal(texto):
-    """Limpia formatos como '$1.250,50' para que sean números reales"""
+    """Limpia formatos como '$1.250,50' o '$1,250.50' para que sean floats válidos"""
     if not texto: return 0.0
-    # Quitar $, espacios y dejar solo números, puntos y comas
-    limpio = re.sub(r'[^\d,.]', '', texto)
+    
+    # 1. Quitar símbolo de dólar, espacios y cualquier etiqueta HTML residual
+    limpio = re.sub(r'<.*?>', '', texto) # Elimina HTML si lo hubiera
+    limpio = limpio.replace('$', '').replace(' ', '').strip()
+    
     if not limpio: return 0.0
     
-    # Estandarizar decimales (coma -> punto)
+    # 2. Manejo robusto de separadores:
+    # Si hay puntos y comas (ej: 1.250,50)
     if ',' in limpio and '.' in limpio:
-        if limpio.rfind(',') > limpio.rfind('.'): # Formato 1.234,56
+        if limpio.rfind(',') > limpio.rfind('.'): # Caso estándar latino: 1.250,50
             limpio = limpio.replace('.', '').replace(',', '.')
-        else: # Formato 1,234.56
+        else: # Caso anglo: 1,250.50
             limpio = limpio.replace(',', '')
+    # Si solo hay comas (ej: 1250,50)
     elif ',' in limpio:
         limpio = limpio.replace(',', '.')
-        
+    # Si hay puntos pero funcionan como separador de miles (ej: 1.250) 
+    # y no hay decimales, esto es lo más difícil. 
+    # Asumimos que si el punto está en las últimas 3 posiciones es decimal, si no, es miles.
+    elif '.' in limpio:
+        partes = limpio.split('.')
+        if len(partes[-1]) != 2: # No parece decimal (ej: 1.250)
+             limpio = limpio.replace('.', '')
+
     try:
         return float(limpio)
     except:
@@ -46,43 +58,44 @@ def generar_json_sucursales_ranking():
                 ruta_mes = os.path.join(ruta_raiz, carpeta)
 
                 # 2. Buscar en cada sucursal
+                if not os.path.isdir(ruta_mes): continue
+                
                 for suc in os.listdir(ruta_mes):
                     p_suc = os.path.join(ruta_mes, suc)
-                    # Archivo generado por tu script de Fiscalización v3.3
+                    if not os.path.isdir(p_suc): continue
+                    
                     archivo_html = os.path.join(p_suc, "cobros_detalles.html")
                     
                     if os.path.exists(archivo_html):
                         with open(archivo_html, "r", encoding="utf-8") as f:
                             html_content = f.read()
                         
-                        # Extraer montos de las tarjetas <div class='monto'>
-                        # matches[0] = Cobrado | matches[1] = Recuperado
-                        matches = re.findall(r"<div class='monto'>(.*?)</div>", html_content)
+                        # Expresión regular mejorada para capturar el contenido de la clase monto
+                        # Busca el texto justo después de <div class='monto'> hasta el cierre </div>
+                        matches = re.findall(r"class='monto'>(.*?)</div>", html_content)
                         
                         if len(matches) >= 2:
                             val_c = limpiar_monto_sucursal(matches[0])
                             val_r = limpiar_monto_sucursal(matches[1])
                             
-                            # Formato de objeto que espera el Dashboard
                             lista_ranking.append({
                                 "sucursal": f"{suc.strip()} ({mes_actual})",
                                 "COBRADO": val_c,
                                 "PERDIDA_PATRIMONIO": val_r,
                                 "TOTAL_GESTIONADO": round(val_c + val_r, 2)
                             })
-                            print(f"   📊 Procesado: {suc} ({mes_actual})")
+                            print(f"   📊 Procesado: {suc} ({mes_actual}) -> Cobrado: {val_c}")
 
         # 3. Ordenar: Las que más cobraron van primero
         lista_ranking.sort(key=lambda x: x["COBRADO"], reverse=True)
 
-        # 4. Guardar con el nombre exactO que busca el HTML
+        # 4. Guardar archivo final
         ruta_final = os.path.join(ruta_raiz, "TOTALES_SUCURSALES_COBROS.json")
         with open(ruta_final, "w", encoding="utf-8") as jf:
             json.dump(lista_ranking, jf, indent=4, ensure_ascii=False)
 
         print("\n" + "="*50)
         print(f"✅ ÉXITO: Archivo generado con {len(lista_ranking)} sucursales.")
-        print(f"Ruta: {ruta_final}")
         print("="*50)
         input("Presiona ENTER para salir...")
 

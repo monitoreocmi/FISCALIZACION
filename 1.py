@@ -119,7 +119,6 @@ def generar_reporte_v30_final():
                 filas_resp = ""
                 if 'NOMBRE_AUX' in df_suc_act.columns:
                     for name, cant in df_suc_act['NOMBRE_AUX'].value_counts().head(3).items():
-                        # SECCIÓN MODIFICADA: Fondo rojo suave (#ffcccc) para los responsables
                         filas_resp += f"<tr style='background-color:#ffcccc;'><td style='text-align:left;'>{name}</td><td colspan='4'><a href='RESP_{limpiar_nombre_archivo(name)}.html' style='color:#ed1c24; font-weight:bold;'>{cant}</a></td></tr>"
                         df_res_det = df_suc_act[df_suc_act['NOMBRE_AUX'] == name].copy()
                         df_res_det['FECHA'] = df_res_det['FECHA'].dt.strftime('%Y-%m-%d')
@@ -150,7 +149,19 @@ def generar_reporte_v30_final():
                     </div></body></html>"""
                 with open(os.path.join(ruta_base, n_m_act, n_s, "reporte.html"), "w", encoding="utf-8") as f: f.write(html_final)
 
-        print("\n✅ Reporte actualizado con resaltado en responsables."); input()
+                # --- INTEGRACIÓN SOLO_MES.HTML ---
+                html_solo_mes = f"""<html><head><meta charset='UTF-8'></head><body>
+                    <table>
+                        <tr id='fila-datos'>
+                            <td class='mes-nombre'>{n_m_act}</td>
+                            <td class='total-incidencias'>{t_act}</td>
+                            <td class='calificacion-final'>{nota_f}%</td>
+                        </tr>
+                    </table>
+                </body></html>"""
+                with open(os.path.join(ruta_base, n_m_act, n_s, "solo_mes.html"), "w", encoding="utf-8") as f: f.write(html_solo_mes)
+
+        print("\n✅ Reporte actualizado y archivo solo_mes.html generado."); input()
     except Exception as e: print(f"\n❌ ERROR: {e}"); input()
 
 if __name__ == "__main__":
