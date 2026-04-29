@@ -1,0 +1,200 @@
+[
+    {
+        "sucursal": "CENTRAL (MARZO)",
+        "COBRADO": 284.98,
+        "PERDIDA_PATRIMONIO": 707.49,
+        "TOTAL_GESTIONADO": 992.47
+    },
+    {
+        "sucursal": "CENTRAL (ABRIL)",
+        "COBRADO": 96.74,
+        "PERDIDA_PATRIMONIO": 401.18,
+        "TOTAL_GESTIONADO": 497.92
+    },
+    {
+        "sucursal": "BARQUISIMETO (ABRIL)",
+        "COBRADO": 79.6,
+        "PERDIDA_PATRIMONIO": 5.51,
+        "TOTAL_GESTIONADO": 85.11
+    },
+    {
+        "sucursal": "LA VICTORIA (MARZO)",
+        "COBRADO": 70.71,
+        "PERDIDA_PATRIMONIO": 691.99,
+        "TOTAL_GESTIONADO": 762.7
+    },
+    {
+        "sucursal": "IPSFA (MARZO)",
+        "COBRADO": 66.32,
+        "PERDIDA_PATRIMONIO": 97.2,
+        "TOTAL_GESTIONADO": 163.52
+    },
+    {
+        "sucursal": "VILLAS DE ARAGUA (ABRIL)",
+        "COBRADO": 52.26,
+        "PERDIDA_PATRIMONIO": 11076.9,
+        "TOTAL_GESTIONADO": 11129.16
+    },
+    {
+        "sucursal": "LA MORA (ABRIL)",
+        "COBRADO": 29.51,
+        "PERDIDA_PATRIMONIO": 26.52,
+        "TOTAL_GESTIONADO": 56.03
+    },
+    {
+        "sucursal": "EL BOSQUE (MARZO)",
+        "COBRADO": 23.65,
+        "PERDIDA_PATRIMONIO": 1076.35,
+        "TOTAL_GESTIONADO": 1100.0
+    },
+    {
+        "sucursal": "SAN DIEGO (MARZO)",
+        "COBRADO": 18.09,
+        "PERDIDA_PATRIMONIO": 15062.85,
+        "TOTAL_GESTIONADO": 15080.94
+    },
+    {
+        "sucursal": "NAGUANAGUA (ABRIL)",
+        "COBRADO": 15.03,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 15.03
+    },
+    {
+        "sucursal": "TUCACAS (ABRIL)",
+        "COBRADO": 13.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 13.0
+    },
+    {
+        "sucursal": "CIRCULO MILITAR (MARZO)",
+        "COBRADO": 10.48,
+        "PERDIDA_PATRIMONIO": 17086.99,
+        "TOTAL_GESTIONADO": 17097.47
+    },
+    {
+        "sucursal": "LAS ACACIAS (ABRIL)",
+        "COBRADO": 10.02,
+        "PERDIDA_PATRIMONIO": 426.0,
+        "TOTAL_GESTIONADO": 436.02
+    },
+    {
+        "sucursal": "EL BOSQUE (ABRIL)",
+        "COBRADO": 7.47,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 7.47
+    },
+    {
+        "sucursal": "LAS ACACIAS (MARZO)",
+        "COBRADO": 7.38,
+        "PERDIDA_PATRIMONIO": 753.38,
+        "TOTAL_GESTIONADO": 760.76
+    },
+    {
+        "sucursal": "CASTAÑO (ABRIL)",
+        "COBRADO": 6.43,
+        "PERDIDA_PATRIMONIO": 1.8,
+        "TOTAL_GESTIONADO": 8.23
+    },
+    {
+        "sucursal": "SAN DIEGO (ABRIL)",
+        "COBRADO": 3.51,
+        "PERDIDA_PATRIMONIO": 803.9,
+        "TOTAL_GESTIONADO": 807.41
+    },
+    {
+        "sucursal": "BARQUISIMETO (MARZO)",
+        "COBRADO": 3.43,
+        "PERDIDA_PATRIMONIO": 1.41,
+        "TOTAL_GESTIONADO": 4.84
+    },
+    {
+        "sucursal": "GUACARA (MARZO)",
+        "COBRADO": 3.4,
+        "PERDIDA_PATRIMONIO": 39.0,
+        "TOTAL_GESTIONADO": 42.4
+    },
+    {
+        "sucursal": "SANTA RITA (ABRIL)",
+        "COBRADO": 2.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 2.0
+    },
+    {
+        "sucursal": "NAGUANAGUA (MARZO)",
+        "COBRADO": 1.58,
+        "PERDIDA_PATRIMONIO": 74.78,
+        "TOTAL_GESTIONADO": 76.36
+    },
+    {
+        "sucursal": "SANTA RITA (MARZO)",
+        "COBRADO": 1.2,
+        "PERDIDA_PATRIMONIO": 2456.61,
+        "TOTAL_GESTIONADO": 2457.81
+    },
+    {
+        "sucursal": "IPSFA (ABRIL)",
+        "COBRADO": 1.14,
+        "PERDIDA_PATRIMONIO": 2.4,
+        "TOTAL_GESTIONADO": 3.54
+    },
+    {
+        "sucursal": "CASTAÑO (MARZO)",
+        "COBRADO": 0.88,
+        "PERDIDA_PATRIMONIO": 939.49,
+        "TOTAL_GESTIONADO": 940.37
+    },
+    {
+        "sucursal": "NONE (MARZO)",
+        "COBRADO": 0.69,
+        "PERDIDA_PATRIMONIO": 1445.73,
+        "TOTAL_GESTIONADO": 1446.42
+    },
+    {
+        "sucursal": "GUACARA (ABRIL)",
+        "COBRADO": 0.3,
+        "PERDIDA_PATRIMONIO": 700.04,
+        "TOTAL_GESTIONADO": 700.34
+    },
+    {
+        "sucursal": "CIRCULO MILITAR (ABRIL)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 3837.15,
+        "TOTAL_GESTIONADO": 3837.15
+    },
+    {
+        "sucursal": "LA VICTORIA (ABRIL)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 1496.19,
+        "TOTAL_GESTIONADO": 1496.19
+    },
+    {
+        "sucursal": "SAN JUAN (ABRIL)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 113.39,
+        "TOTAL_GESTIONADO": 113.39
+    },
+    {
+        "sucursal": "LA MORA (MARZO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 163.49,
+        "TOTAL_GESTIONADO": 163.49
+    },
+    {
+        "sucursal": "SAN JUAN (MARZO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 498.38,
+        "TOTAL_GESTIONADO": 498.38
+    },
+    {
+        "sucursal": "TUCACAS (MARZO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 1055.69,
+        "TOTAL_GESTIONADO": 1055.69
+    },
+    {
+        "sucursal": "VILLAS DE ARAGUA (MARZO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 2580.94,
+        "TOTAL_GESTIONADO": 2580.94
+    }
+]

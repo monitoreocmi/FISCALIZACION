@@ -1,0 +1,118 @@
+/* =========================================
+   ESTILOS ORIGINALES RESTAURADOS
+   ========================================= */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: #f8f9fa; 
+    color: #333; 
+    margin: 0; 
+    padding: 0; 
+}
+
+.top-bar { 
+    position: relative; 
+    height: 100px; 
+    background: white; 
+    width: 100%; 
+    border-bottom: 4px solid #F9D908; 
+    margin-bottom: 30px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-ext { 
+    position: absolute; 
+    top: 10px; 
+    height: 75px; 
+    width: auto; 
+}
+
+.logo-left { left: 40px; }
+.logo-right { right: 40px; }
+
+h1 { 
+    color: #002060; 
+    margin: 0; 
+    text-transform: uppercase; 
+    font-weight: 900; 
+}
+
+.main-container { 
+    background-color: white; 
+    max-width: 1150px; 
+    margin: 0 auto 40px auto; 
+    border: 2px solid #002060; 
+    border-radius: 12px; 
+    padding: 25px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+}
+
+/* =========================================
+   TABLAS Y SEPARACIONES (EL AJUSTE)
+   ========================================= */
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    background: white; 
+}
+
+th { 
+    background-color: #002060; 
+    color: #F9D908; 
+    padding: 12px; 
+    font-size: 11px; 
+    text-transform: uppercase; 
+    border-bottom: 2px solid #F9D908; 
+}
+
+td { 
+    border: 1px solid #e0e0e0; 
+    padding: 10px; 
+    text-align: center; 
+    font-size: 11px; 
+    font-weight: 700; 
+}
+
+/* LÍNEA DE SEPARACIÓN GRUESA */
+.linea-grupo td {
+    border-bottom: 3px solid #333 !important;
+}
+
+/* 1. ESTO ARREGLA LA PRIMERA SEPARACIÓN:
+   Asegura que el porcentaje (rowspan) pinte su borde inferior 
+   cuando la fila es de cierre de grupo */
+td[rowspan] {
+    vertical-align: middle;
+    border-bottom: 3px solid #333 !important;
+}
+
+/* 2. EVITA QUE EL TOTAL SE VEA MAL:
+   Como el total no es un grupo, le quitamos el borde grueso 
+   para que se vea como lo tenías antes */
+.row-total td {
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+/* COLORES DE GRUPOS ORIGINALES */
+.bg-grupo-a { background-color: #f1f8e9; } 
+.bg-grupo-b { background-color: #e3f2fd; } 
+.bg-grupo-c { background-color: #fffde7; } 
+.bg-grupo-d { background-color: #fff3e0; } 
+.bg-grupo-e { background-color: #ffebee; } 
+
+.row-total { 
+    background-color: #002060; 
+    color: white; 
+}
+
+.btn-volver { 
+    display: inline-block; 
+    padding: 10px 25px; 
+    background-color: #002060; 
+    color: white; 
+    text-decoration: none; 
+    border-radius: 6px; 
+    font-weight: bold; 
+    border: 2px solid #F9D908;
+}
