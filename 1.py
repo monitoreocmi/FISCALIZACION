@@ -15,7 +15,8 @@ MESES_ES = {
     9: "SEPTIEMBRE", 10: "OCTUBRE", 11: "NOVIEMBRE", 12: "DICIEMBRE"
 }
 
-RUTA_LOGO = "../../RECURSOS/LOGO.PNG"
+# Ajuste de ruta para compatibilidad con servidores web (GitHub)
+RUTA_LOGO = "../../RECURSOS/logo.png"
 
 def limpiar_nombre_archivo(nombre):
     return re.sub(r'[^\w\s-]', '', str(nombre)).strip().replace(' ', '_')
@@ -23,23 +24,31 @@ def limpiar_nombre_archivo(nombre):
 CSS_UNIFICADO = f"""
 <style>
     body {{ font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }}
-    .top-bar {{ height: 100px; background: white; border-bottom: 4px solid #F9D908; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; margin-bottom: 30px; }}
-    .logo-ext {{ height: 70px; }}
-    h1 {{ color: #0844a4; margin: 0; text-transform: uppercase; font-weight: 900; font-size: 20px; text-align: center; flex-grow: 1; }}
-    .main-container {{ background-color: white; max-width: 95%; margin: 0 auto 40px auto; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }}
-    table {{ width: 100%; border-collapse: collapse; border: 2px solid #333; }}
-    th {{ background-color: #0844a4; color: #F9D908; padding: 12px; font-size: 13px; text-transform: uppercase; border: 2px solid #333; }}
+    .top-bar {{ height: 100px; background: white; border-bottom: 4px solid #F9D908; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; margin-bottom: 30px; }}
+    .logo-ext {{ height: 60px; max-width: 100px; object-fit: contain; }}
+    h1 {{ color: #0844a4; margin: 0; text-transform: uppercase; font-weight: 900; font-size: 18px; text-align: center; flex-grow: 1; padding: 0 10px; }}
+    .main-container {{ background-color: white; max-width: 95%; margin: 0 auto 40px auto; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow-x: auto; }}
+    table {{ width: 100%; border-collapse: collapse; border: 2px solid #333; min-width: 600px; }}
+    th {{ background-color: #0844a4; color: #F9D908; padding: 10px; font-size: 12px; text-transform: uppercase; border: 2px solid #333; }}
     td {{ border: 2px solid #333; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; color: black; }}
     tr:nth-child(even) {{ background-color: #f2f2f2; }}
-    .btn-volver {{ display: inline-block; margin-top: 30px; padding: 12px 25px; background-color: #0844a4; color: #ffffff !important; text-decoration: none; font-weight: 900; font-size: 14px; text-transform: uppercase; border-radius: 50px; border: 2px solid #F9D908; transition: 0.3s; }}
-    .btn-volver:hover {{ background-color: #F9D908; color: #0844a4 !important; }}
+    .btn-volver {{ display: inline-block; margin-top: 25px; padding: 10px 20px; background-color: #0844a4; color: #ffffff !important; text-decoration: none; font-weight: 900; font-size: 13px; text-transform: uppercase; border-radius: 50px; border: 2px solid #F9D908; }}
+    
+    /* Ajustes para Resoluciones Pequeñas (Laptops y Móviles) */
+    @media (max-width: 768px) {{
+        .top-bar {{ height: 80px; padding: 0 10px; }}
+        .logo-ext {{ height: 40px; }}
+        h1 {{ font-size: 14px; }}
+        td, th {{ font-size: 10px; padding: 5px; }}
+        .main-container {{ width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }}
+    }}
 </style>
 """
 
 def generar_reporte_v30_final():
     try:
         print("\n" + "="*60)
-        print(">>> GENERADOR V30 - RESALTADO DE RESPONSABLES ACTIVADO <<<")
+        print(">>> GENERADOR V30 - OPTIMIZADO PARA MÓVIL Y GITHUB <<<")
         print("="*60 + "\n")
         
         root = tk.Tk()
@@ -101,7 +110,7 @@ def generar_reporte_v30_final():
                             df_inc_det = df_suc_act[df_suc_act['INC_LIMPIA'] == busq].copy()
                             df_inc_det['FECHA'] = df_inc_det['FECHA'].dt.strftime('%Y-%m-%d')
                             cols = [c for c in ['PROVEEDOR', 'FACTURA', 'FECHA', 'RESPONSABLE', 'OBSERVACIÓN'] if c in df_inc_det.columns]
-                            html_inc = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{inc}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_inc_det[cols].values])}</tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
+                            html_inc = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{inc}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_inc_det[cols].values])}</tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
                             f_det = os.path.join(ruta_base, n_m_act, n_s, f"{limpiar_nombre_archivo(inc)}.html")
                             os.makedirs(os.path.dirname(f_det), exist_ok=True); 
                             with open(f_det, "w", encoding="utf-8") as f: f.write(html_inc)
@@ -123,18 +132,18 @@ def generar_reporte_v30_final():
                         df_res_det = df_suc_act[df_suc_act['NOMBRE_AUX'] == name].copy()
                         df_res_det['FECHA'] = df_res_det['FECHA'].dt.strftime('%Y-%m-%d')
                         cols_res = [c for c in ['FACTURA', 'FECHA', 'INCIDENCIA', 'OBSERVACIÓN'] if c in df_res_det.columns]
-                        html_res = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>RESPONSABLE: {name}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_res])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_res_det[cols_res].values])}</tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
+                        html_res = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>RESPONSABLE: {name}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_res])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_res_det[cols_res].values])}</tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
                         with open(os.path.join(ruta_base, n_m_act, n_s, f"RESP_{limpiar_nombre_archivo(name)}.html"), "w", encoding="utf-8") as f: f.write(html_res)
 
                 # Reporte TODAS
                 df_all = df_suc_act.copy()
                 df_all['FECHA'] = df_all['FECHA'].dt.strftime('%Y-%m-%d')
                 cols_finales = [c for c in ['PROVEEDOR', 'FACTURA', 'FECHA', 'TIPO FISCALIZACIÓN', 'RESPONSABLE', 'INCIDENCIA', 'OBSERVACIÓN'] if c in df_all.columns]
-                html_all = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TODAS LAS INCIDENCIAS</h1><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_finales])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_all[cols_finales].fillna('-').values])}</tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
+                html_all = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TODAS LAS INCIDENCIAS</h1><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_finales])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_all[cols_finales].fillna('-').values])}</tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
                 with open(os.path.join(ruta_base, n_m_act, n_s, "TODAS.html"), "w", encoding="utf-8") as f: f.write(html_all)
 
                 # Reporte Principal
-                html_final = f"""<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body>
+                html_final = f"""<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body>
                     <div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{n_s} - {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div>
                     <div class='main-container'>
                         <table>
@@ -161,7 +170,7 @@ def generar_reporte_v30_final():
                 </body></html>"""
                 with open(os.path.join(ruta_base, n_m_act, n_s, "solo_mes.html"), "w", encoding="utf-8") as f: f.write(html_solo_mes)
 
-        print("\n✅ Reporte actualizado y archivo solo_mes.html generado."); input()
+        print("\n✅ Reporte actualizado. Recuerda renombrar tu imagen a logo.png en la carpeta RECURSOS."); input()
     except Exception as e: print(f"\n❌ ERROR: {e}"); input()
 
 if __name__ == "__main__":

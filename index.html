@@ -1,46 +1,52 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><style>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
             :root { --azul: #0844a4; --amarillo: #F9D908; --verde: #27ae60; --rojo: #ed1c24; --fondo: #f4f7f6; }
-            body { font-family: 'Segoe UI', sans-serif; background: var(--fondo); margin: 0; }
-            .header-container { background: white; height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 4px solid var(--amarillo); }
-            .logo-panel { height: 60px; }
-            h1 { color: var(--azul); text-transform: uppercase; font-weight: 900; font-size: 20px; text-align: center; flex-grow: 1; }
-            .controls-bar { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
-            .selector-wrapper { background: var(--azul); padding: 10px 20px; border-radius: 5px; border: 2px solid var(--amarillo); }
-            #mes-selector { background: transparent; color: white; border: none; font-weight: 900; font-size: 16px; cursor: pointer; outline: none; }
-            .tab-btn { padding: 12px 20px; border: none; background: #ddd; color: #666; font-weight: 900; border-radius: 5px; cursor: pointer; }
-            .tab-btn.active { background: var(--azul); color: white; box-shadow: 0 4px 0 var(--amarillo); }
+            body { font-family: 'Segoe UI', sans-serif; background: var(--fondo); margin: 0; padding: 0; }
+            .header-container { background: white; height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--amarillo); }
+            .logo-panel { height: 50px; max-width: 90px; object-fit: contain; }
+            h1 { color: var(--azul); text-transform: uppercase; font-weight: 900; font-size: 16px; text-align: center; flex-grow: 1; margin: 0 10px; }
+            .controls-bar { display: flex; justify-content: center; gap: 8px; margin: 15px 0; flex-wrap: wrap; padding: 0 10px; }
+            .selector-wrapper { background: var(--azul); padding: 8px 15px; border-radius: 5px; border: 2px solid var(--amarillo); }
+            #mes-selector { background: transparent; color: white; border: none; font-weight: 900; font-size: 14px; cursor: pointer; outline: none; }
+            .tab-btn { padding: 10px 15px; border: none; background: #ddd; color: #666; font-weight: 900; border-radius: 5px; cursor: pointer; font-size: 11px; }
+            .tab-btn.active { background: var(--azul); color: white; box-shadow: 0 3px 0 var(--amarillo); }
             #btn-hon.active { background: var(--verde) !important; }
             #btn-peo.active { background: var(--rojo) !important; }
-            .main-content { padding: 0 20px 20px; max-width: 1450px; margin: 0 auto; }
+            .main-content { padding: 0 15px 20px; max-width: 1400px; margin: 0 auto; }
             .mes-container, .tab-content { display: none; }
             .active { display: block !important; }
-            .sub-title { background: var(--azul); color: white; padding: 10px 20px; border-radius: 8px; font-size: 14px; border-left: 8px solid var(--amarillo); margin-bottom: 15px; }
-            .audit-grid-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 15px; }
-            .audit-card { background: white; border-radius: 10px; padding: 15px; border-top: 4px solid var(--azul); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-            .audit-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; font-size: 13px; font-weight: bold; border-left: 4px solid transparent; }
+            .sub-title { background: var(--azul); color: white; padding: 10px; border-radius: 6px; font-size: 12px; border-left: 6px solid var(--amarillo); margin-bottom: 15px; }
+            .audit-grid-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+            .grid-half { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+            .audit-card { background: white; border-radius: 8px; padding: 12px; border-top: 4px solid var(--azul); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+            .audit-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; font-size: 11px; font-weight: bold; border-left: 4px solid transparent; }
+            .row-blue { background: #e3f2fd; color: #0d47a1; border-left-color: var(--azul); }
+            .status-ok { color: var(--verde); background: #e8f5e9; border-left-color: var(--verde); }
+            .status-fail { color: var(--rojo); background: #ffebee; border-left-color: var(--rojo); }
+            .status-ok-green { color: white !important; background: var(--verde) !important; font-size: 14px; margin-bottom: 5px; }
+            .status-fail-red { color: white !important; background: var(--rojo) !important; font-size: 14px; margin-bottom: 5px; }
+            .blue-box { background: white; padding: 15px; border-radius: 10px; border-top: 4px solid var(--azul); margin-bottom: 15px; }
+            .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+            .card { padding: 10px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: 900; font-size: 10px; color: white; background: var(--azul); transition: 0.2s; }
+            .card:hover { background: var(--amarillo); color: var(--azul); }
+            .global-cobros-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px; }
+            .global-item { background: white; padding: 12px; border-radius: 8px; text-align: center; border-bottom: 4px solid var(--verde); }
+            .global-item b { font-size: 18px; display: block; }
+            .scroll-area { max-height: 350px; overflow-y: auto; }
             
-            .row-blue { background: #e3f2fd; color: #0d47a1; border-left-color: var(--azul); margin-bottom: 4px; border-radius: 4px; }
-            .status-ok { color: var(--verde); background: #e8f5e9; border-left-color: var(--verde); margin-bottom: 4px; border-radius: 4px; }
-            .status-fail { color: var(--rojo); background: #ffebee; border-left-color: var(--rojo); margin-bottom: 4px; border-radius: 4px; }
-            
-            .status-ok-green { color: white !important; background: var(--verde) !important; margin-bottom: 5px; border-radius: 5px; padding: 15px; font-size: 16px; border: 2px solid white; }
-            .status-fail-red { color: white !important; background: var(--rojo) !important; margin-bottom: 5px; border-radius: 5px; padding: 15px; font-size: 16px; border: 2px solid white; }
-            
-            .blue-box { background: white; padding: 20px; border-radius: 12px; border-top: 4px solid var(--azul); margin-bottom: 20px; }
-            .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-            .card { padding: 12px; text-align: center; border-radius: 8px; text-decoration: none; font-weight: 900; font-size: 11px; color: white; background: var(--azul); }
-            .global-cobros-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-            .global-item { background: white; padding: 15px; border-radius: 10px; text-align: center; border-bottom: 4px solid var(--verde); }
-            .global-item b { font-size: 22px; display: block; }
-            .scroll-area { max-height: 400px; overflow-y: auto; }
+            @media (max-width: 600px) {
+                h1 { font-size: 13px; }
+                .logo-panel { height: 40px; }
+                .tab-btn { width: 100%; }
+                .global-item b { font-size: 16px; }
+            }
         </style></head><body>
-            <header class="header-container"><img src="RECURSOS/LOGO.PNG" class="logo-panel"><h1>SISTEMA DE FISCALIZACIÓN LUXOR</h1><img src="RECURSOS/LOGO.PNG" class="logo-panel"></header>
+            <header class="header-container"><img src="RECURSOS/logo.png" class="logo-panel"><h1>FISCALIZACIÓN LUXOR</h1><img src="RECURSOS/logo.png" class="logo-panel"></header>
             <div class="controls-bar">
                 <div class="selector-wrapper"><select id="mes-selector" onchange="cambiarMes()"><option value="mes-MARZO" >MARZO</option><option value="mes-ABRIL" selected>ABRIL</option></select></div>
                 <button class="tab-btn active" id="btn-inc" onclick="showGlobalTab('incs')">INCIDENCIAS</button>
-                <button class="tab-btn" id="btn-cob" onclick="showGlobalTab('cobs')">COBROS Y MITIGACIÓN</button>
-                <button class="tab-btn" id="btn-hon" onclick="showGlobalTab('honor')">SUCURSALES CON MEJOR RENDIMIENTO</button>
-                <button class="tab-btn" id="btn-peo" onclick="showGlobalTab('peores')">SUCURSALES CON PEOR RENDIMIENTO</button>
+                <button class="tab-btn" id="btn-cob" onclick="showGlobalTab('cobs')">COBROS</button>
+                <button class="tab-btn" id="btn-hon" onclick="showGlobalTab('honor')">MEJORES</button>
+                <button class="tab-btn" id="btn-peo" onclick="showGlobalTab('peores')">PEORES</button>
             </div>
             <main class="main-content">
             <div id="mes-MARZO" class="mes-container">
@@ -60,7 +66,7 @@
                     <div class="global-cobros-box">
                         <div class="global-item"><span>TOTAL COBRADO</span><br><b style="color: #333;">$492.79</b></div>
                         <div class="global-item"><span>PÉRDIDA MITIGADA</span><br><b>$44,731.77</b></div>
-                        <div class="global-item"><span>TOTAL (COBRADO Y MITIGADO) POR MES</span><br><b>$45,224.56</b></div>
+                        <div class="global-item"><span>TOTAL MENSUAL</span><br><b>$45,224.56</b></div>
                     </div>
                     <div class="audit-grid-full">
                         <div class="audit-card"><h3>CANTIDAD COBRADA</h3><div class="scroll-area"><div class='audit-row '><span>CENTRAL</span><b>$284.98</b></div><div class='audit-row '><span>LA VICTORIA</span><b>$70.71</b></div><div class='audit-row '><span>IPSFA</span><b>$66.32</b></div><div class='audit-row '><span>EL BOSQUE</span><b>$23.65</b></div><div class='audit-row '><span>SAN DIEGO</span><b>$18.09</b></div><div class='audit-row '><span>CIRCULO MILITAR</span><b>$10.48</b></div><div class='audit-row '><span>LAS ACACIAS</span><b>$7.38</b></div><div class='audit-row '><span>BARQUISIMETO</span><b>$3.43</b></div><div class='audit-row '><span>GUACARA</span><b>$3.40</b></div><div class='audit-row '><span>NAGUANAGUA</span><b>$1.58</b></div><div class='audit-row '><span>SANTA RITA</span><b>$1.20</b></div><div class='audit-row '><span>CASTAÑO</span><b>$0.88</b></div><div class='audit-row '><span>NONE</span><b>$0.69</b></div><div class='audit-row '><span>LA MORA</span><b>$0.00</b></div><div class='audit-row '><span>SAN JUAN</span><b>$0.00</b></div><div class='audit-row '><span>TUCACAS</span><b>$0.00</b></div><div class='audit-row '><span>VILLAS DE ARAGUA</span><b>$0.00</b></div></div></div>
@@ -70,14 +76,14 @@
                 </div>
                 <div id="honor-MARZO" class="tab-content">
                     <h2 class="sub-title" style="background:var(--verde); border-left-color:white;">EXCELENTE RENDIMIENTO EN FISCALIZACIÓN - MARZO</h2>
-                    <div class="audit-grid-full" style="grid-template-columns: 1fr 1fr;">
+                    <div class="audit-grid-full grid-half">
                         <div class="audit-card podio-high"><h3>EXCELENTE RENDIMIENTO EN FISCALIZACIÓN</h3><div class="audit-row">Sin datos</div></div>
                         <div class="audit-card podio-high"><h3>EXCELENTE RENDIMIENTO EN COBRO Y MITIGACIÓN</h3><div class="audit-row">Sin datos</div></div>
                     </div>
                 </div>
                 <div id="peores-MARZO" class="tab-content">
                     <h2 class="sub-title" style="background:var(--rojo); border-left-color:black;">GRAVE RENDIMIENTO EN FISCALIZACIÓN - MARZO</h2>
-                    <div class="audit-grid-full" style="grid-template-columns: 1fr 1fr;">
+                    <div class="audit-grid-full grid-half">
                         <div class="audit-card podio-low"><h3>GRAVE RENDIMIENTO EN FISCALIZACIÓN</h3><div class='audit-row status-fail-red'><span>CENTRAL</span></div><div class='audit-row status-fail-red'><span>SAN DIEGO</span></div><div class='audit-row status-fail-red'><span>TUCACAS</span></div></div>
                         <div class="audit-card podio-low"><h3>GRAVE RENDIMIENTO EN COBROS Y MITIGACIÓN</h3><div class='audit-row status-fail-red'><span>CIRCULO MILITAR</span></div><div class='audit-row status-fail-red'><span>SAN DIEGO</span></div><div class='audit-row status-fail-red'><span>VILLAS DE ARAGUA</span></div></div>
                     </div>
@@ -100,7 +106,7 @@
                     <div class="global-cobros-box">
                         <div class="global-item"><span>TOTAL COBRADO</span><br><b style="color: #333;">$317.01</b></div>
                         <div class="global-item"><span>PÉRDIDA MITIGADA</span><br><b>$18,890.98</b></div>
-                        <div class="global-item"><span>TOTAL (COBRADO Y MITIGADO) POR MES</span><br><b>$19,207.99</b></div>
+                        <div class="global-item"><span>TOTAL MENSUAL</span><br><b>$19,207.99</b></div>
                     </div>
                     <div class="audit-grid-full">
                         <div class="audit-card"><h3>CANTIDAD COBRADA</h3><div class="scroll-area"><div class='audit-row '><span>CENTRAL</span><b>$96.74</b></div><div class='audit-row '><span>BARQUISIMETO</span><b>$79.60</b></div><div class='audit-row '><span>VILLAS DE ARAGUA</span><b>$52.26</b></div><div class='audit-row '><span>LA MORA</span><b>$29.51</b></div><div class='audit-row '><span>NAGUANAGUA</span><b>$15.03</b></div><div class='audit-row '><span>TUCACAS</span><b>$13.00</b></div><div class='audit-row '><span>LAS ACACIAS</span><b>$10.02</b></div><div class='audit-row '><span>EL BOSQUE</span><b>$7.47</b></div><div class='audit-row '><span>CASTAÑO</span><b>$6.43</b></div><div class='audit-row '><span>SAN DIEGO</span><b>$3.51</b></div><div class='audit-row '><span>SANTA RITA</span><b>$2.00</b></div><div class='audit-row '><span>IPSFA</span><b>$1.14</b></div><div class='audit-row '><span>GUACARA</span><b>$0.30</b></div><div class='audit-row '><span>CIRCULO MILITAR</span><b>$0.00</b></div><div class='audit-row '><span>LA VICTORIA</span><b>$0.00</b></div><div class='audit-row '><span>SAN JUAN</span><b>$0.00</b></div></div></div>
@@ -110,14 +116,14 @@
                 </div>
                 <div id="honor-ABRIL" class="tab-content">
                     <h2 class="sub-title" style="background:var(--verde); border-left-color:white;">EXCELENTE RENDIMIENTO EN FISCALIZACIÓN - ABRIL</h2>
-                    <div class="audit-grid-full" style="grid-template-columns: 1fr 1fr;">
+                    <div class="audit-grid-full grid-half">
                         <div class="audit-card podio-high"><h3>EXCELENTE RENDIMIENTO EN FISCALIZACIÓN</h3><div class='audit-row status-ok-green'><span>SAN JUAN</span></div><div class='audit-row status-ok-green'><span>SANTA RITA</span></div><div class='audit-row status-ok-green'><span>IPSFA</span></div></div>
                         <div class="audit-card podio-high"><h3>EXCELENTE RENDIMIENTO EN COBRO Y MITIGACIÓN</h3><div class='audit-row status-ok-green'><span>SANTA RITA</span></div><div class='audit-row status-ok-green'><span>IPSFA</span></div><div class='audit-row status-ok-green'><span>SAN JUAN</span></div></div>
                     </div>
                 </div>
                 <div id="peores-ABRIL" class="tab-content">
                     <h2 class="sub-title" style="background:var(--rojo); border-left-color:black;">GRAVE RENDIMIENTO EN FISCALIZACIÓN - ABRIL</h2>
-                    <div class="audit-grid-full" style="grid-template-columns: 1fr 1fr;">
+                    <div class="audit-grid-full grid-half">
                         <div class="audit-card podio-low"><h3>GRAVE RENDIMIENTO EN FISCALIZACIÓN</h3><div class='audit-row status-fail-red'><span>TUCACAS</span></div><div class='audit-row status-fail-red'><span>LAS ACACIAS</span></div><div class='audit-row status-fail-red'><span>CASTAÑO</span></div></div>
                         <div class="audit-card podio-low"><h3>GRAVE RENDIMIENTO EN COBROS Y MITIGACIÓN</h3><div class='audit-row status-fail-red'><span>VILLAS DE ARAGUA</span></div><div class='audit-row status-fail-red'><span>CIRCULO MILITAR</span></div><div class='audit-row status-fail-red'><span>LAS ACACIAS</span></div></div>
                     </div>

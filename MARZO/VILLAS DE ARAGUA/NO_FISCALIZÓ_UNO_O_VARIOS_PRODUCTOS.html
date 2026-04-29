@@ -1,15 +1,23 @@
-<html><head><meta charset='UTF-8'>
+<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <style>
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
-    .top-bar { height: 100px; background: white; border-bottom: 4px solid #F9D908; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; margin-bottom: 30px; }
-    .logo-ext { height: 70px; }
-    h1 { color: #0844a4; margin: 0; text-transform: uppercase; font-weight: 900; font-size: 20px; text-align: center; flex-grow: 1; }
-    .main-container { background-color: white; max-width: 95%; margin: 0 auto 40px auto; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    table { width: 100%; border-collapse: collapse; border: 2px solid #333; }
-    th { background-color: #0844a4; color: #F9D908; padding: 12px; font-size: 13px; text-transform: uppercase; border: 2px solid #333; }
+    .top-bar { height: 100px; background: white; border-bottom: 4px solid #F9D908; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; margin-bottom: 30px; }
+    .logo-ext { height: 60px; max-width: 100px; object-fit: contain; }
+    h1 { color: #0844a4; margin: 0; text-transform: uppercase; font-weight: 900; font-size: 18px; text-align: center; flex-grow: 1; padding: 0 10px; }
+    .main-container { background-color: white; max-width: 95%; margin: 0 auto 40px auto; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; border: 2px solid #333; min-width: 600px; }
+    th { background-color: #0844a4; color: #F9D908; padding: 10px; font-size: 12px; text-transform: uppercase; border: 2px solid #333; }
     td { border: 2px solid #333; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; color: black; }
     tr:nth-child(even) { background-color: #f2f2f2; }
-    .btn-volver { display: inline-block; margin-top: 30px; padding: 12px 25px; background-color: #0844a4; color: #ffffff !important; text-decoration: none; font-weight: 900; font-size: 14px; text-transform: uppercase; border-radius: 50px; border: 2px solid #F9D908; transition: 0.3s; }
-    .btn-volver:hover { background-color: #F9D908; color: #0844a4 !important; }
+    .btn-volver { display: inline-block; margin-top: 25px; padding: 10px 20px; background-color: #0844a4; color: #ffffff !important; text-decoration: none; font-weight: 900; font-size: 13px; text-transform: uppercase; border-radius: 50px; border: 2px solid #F9D908; }
+    
+    /* Ajustes para Resoluciones Pequeñas (Laptops y Móviles) */
+    @media (max-width: 768px) {
+        .top-bar { height: 80px; padding: 0 10px; }
+        .logo-ext { height: 40px; }
+        h1 { font-size: 14px; }
+        td, th { font-size: 10px; padding: 5px; }
+        .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
+    }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/LOGO.PNG' class='logo-ext'><h1>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</h1><img src='../../RECURSOS/LOGO.PNG' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>CAVA LUXOR</td><td>4041</td><td>2026-03-19</td><td>YOSEPH  RIVAS</td><td>NO FISCALIZO: -  2 CAJAS DE CARAMELO HALLS EXTRASTRONG 25.2GR - 1 CAJA DE CHOCOZUCARITAS KELLOGG 250GR - 1 CAJA DE DULCES SUEOS MC CORMINCK 12X10 - 1 CAJA DE CEREAL MAIZORITOS POP CRONCH 269GR - 1 UNIDAD DE CEREAL MAIZORITOS POP CRONCH 240GR - 2CAJAS DE RON SUPERIOR 1LTR</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>CAVA LUXOR</td><td>4041</td><td>2026-03-19</td><td>YOSEPH  RIVAS</td><td>NO FISCALIZO: -  2 CAJAS DE CARAMELO HALLS EXTRASTRONG 25.2GR - 1 CAJA DE CHOCOZUCARITAS KELLOGG 250GR - 1 CAJA DE DULCES SUEOS MC CORMINCK 12X10 - 1 CAJA DE CEREAL MAIZORITOS POP CRONCH 269GR - 1 UNIDAD DE CEREAL MAIZORITOS POP CRONCH 240GR - 2CAJAS DE RON SUPERIOR 1LTR</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>

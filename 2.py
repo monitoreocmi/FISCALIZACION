@@ -20,6 +20,9 @@ MESES_ES = {
     9: "SEPTIEMBRE", 10: "OCTUBRE", 11: "NOVIEMBRE", 12: "DICIEMBRE"
 }
 
+# Ruta optimizada para GitHub (Case Sensitive)
+RUTA_LOGO_ESTANDAR = "../../RECURSOS/logo.png"
+
 def limpiar_monto(valor):
     if valor is None: return 0.0
     if isinstance(valor, (int, float)): return float(valor)
@@ -45,7 +48,7 @@ def obtener_indices_flexibles(headers):
 def generar_reporte_cobros_final():
     try:
         print("\n" + "="*60)
-        print(">>> SISTEMA LUXOR: GENERADOR DE COBROS UNIFICADO <<<")
+        print(">>> SISTEMA LUXOR: GENERADOR DE COBROS OPTIMIZADO <<<")
         print("="*60 + "\n")
         
         root = tk.Tk(); root.withdraw(); root.attributes("-topmost", True)
@@ -105,33 +108,38 @@ def generar_reporte_cobros_final():
         totales_globales = {}
 
         estilo_css = """<style>
-            body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 20px; text-align: center; }
-            .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 40px; background: white; margin-bottom: 20px; border-radius: 10px; border-bottom: 4px solid #F9D908; }
-            .logo-header { width: 110px; }
-            h1 { color: #002060; margin: 0; font-size: 20px; text-transform: uppercase; font-weight: 900; }
-            .resumen-grid { display: flex; justify-content: center; gap: 20px; margin: 30px 0; flex-wrap: wrap; }
-            .card-resumen { background: white; padding: 25px; border-radius: 15px; text-decoration: none; width: 280px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-bottom: 8px solid #ccc; color: inherit; display: block;}
-            .card-resumen:hover { transform: translateY(-5px); }
-            .card-resumen h3 { margin: 0; color: #666; text-transform: uppercase; font-size: 11px; height: 40px; display: flex; align-items: center; justify-content: center; }
-            .card-resumen .monto { font-size: 28px; font-weight: 900; color: #002060; margin: 15px 0; }
+            body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; }
+            .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; margin-bottom: 20px; border-bottom: 4px solid #F9D908; }
+            .logo-header { height: 50px; max-width: 100px; object-fit: contain; }
+            h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; flex-grow: 1; }
+            .resumen-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
+            .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; transition: 0.3s; }
+            .card-resumen:hover { transform: translateY(-3px); }
+            .card-resumen h3 { margin: 0; color: #666; text-transform: uppercase; font-size: 10px; height: 30px; display: flex; align-items: center; justify-content: center; }
+            .card-resumen .monto { font-size: 24px; font-weight: 900; color: #002060; margin: 10px 0; }
             .cobrado { border-color: #27ae60; } .recuperado { border-color: #f1c40f; } .no-pagado { border-color: #ed1c24; }
-            .blue-box-container { background: #002060; padding: 30px; border-radius: 15px; max-width: 98%; margin: 20px auto; border: 3px solid #F9D908; color: white; }
-            .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 20px;}
-            table { width: 100%; border-collapse: collapse; min-width: 1000px;}
-            th { background: #001a4d; color: #F9D908; padding: 12px; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #F9D908;}
-            td { padding: 10px; border-bottom: 1px solid #eee; font-size: 10px; font-weight: bold; text-align: left;}
-            .btn-group { margin-top: 25px; display: flex; justify-content: center; gap: 15px; }
-            .btn { display: inline-block; padding: 12px 25px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 8px; border: 2px solid #F9D908; text-transform: uppercase; font-size: 12px; }
-            .btn:hover { background: #F9D908; color: #002060 !important; }
-            .link-foto { color: #002060; text-decoration: underline; font-weight: 800; cursor: pointer; }
+            .blue-box-container { background: #002060; padding: 15px; border-radius: 12px; width: 98%; margin: 10px auto; border: 2px solid #F9D908; color: white; box-sizing: border-box; }
+            .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 15px; }
+            table { width: 100%; border-collapse: collapse; min-width: 800px; }
+            th { background: #001a4d; color: #F9D908; padding: 10px; font-size: 9px; text-transform: uppercase; border-bottom: 2px solid #F9D908; }
+            td { padding: 8px; border-bottom: 1px solid #eee; font-size: 9px; font-weight: bold; text-align: left; }
+            .btn-group { margin-top: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+            .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; text-transform: uppercase; font-size: 11px; }
             .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
-            .modal-content { max-width: 90%; max-height: 90%; border: 5px solid #F9D908; }
+            .modal-content { max-width: 95%; max-height: 95%; border: 3px solid #F9D908; }
+            
+            /* Ajustes Móvil y Laptop */
+            @media (max-width: 768px) {
+                h1 { font-size: 14px; }
+                .logo-header { height: 35px; }
+                .card-resumen { width: 100%; max-width: 300px; }
+                .blue-box-container { width: 100%; border-radius: 0; }
+                .btn { width: 100%; max-width: 250px; text-align: center; }
+            }
         </style>"""
 
         script_modal = """<div id="myModal" class="modal" onclick="this.style.display='none'"><img class="modal-content" id="imgModal"></div>
         <script>function openModal(src) { document.getElementById('myModal').style.display = "flex"; document.getElementById('imgModal').src = src; }</script>"""
-
-        cabeceras_html = "".join([f"<th>{col}</th>" for col in columnas_reales])
 
         for periodo in sorted(df['PERIODO'].unique()):
             df_p = df[df['PERIODO'] == periodo]
@@ -153,8 +161,8 @@ def generar_reporte_cobros_final():
                 t_n = df_s[df_s['ESTATUS']=='NO_PAGADO']['MONTO_CALC'].sum() or 0
                 
                 # HTML MENÚ
-                html_menu = f"""<html><head><meta charset='UTF-8'>{estilo_css}</head><body>
-                <div class='header-logos'><img src='../../RECURSOS/LOGO.PNG' class='logo-header'><h1>GERENCIA DE FISCALIZACIÓN</h1><img src='../../RECURSOS/LOGO.PNG' class='logo-header'></div>
+                html_menu = f"""<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{estilo_css}</head><body>
+                <div class='header-logos'><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'><h1>GERENCIA DE FISCALIZACIÓN</h1><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'></div>
                 <h2>{suc} | {n_m}</h2>
                 <div class='resumen-grid'>
                     <a href='cobrado.html' class='card-resumen cobrado'><h3>Cobrado</h3><div class='monto'>${t_c:,.2f}</div></a>
@@ -169,33 +177,18 @@ def generar_reporte_cobros_final():
                 with open(os.path.join(p_suc, "cobros_detalles.html"), "w", encoding="utf-8") as f: f.write(html_menu)
 
                 # REPORTES DETALLADOS
-                vistas = [
-                    ('COBRADO', 'cobrado.html', 'DETALLE COBRADO'),
-                    ('RECUPERADO', 'recuperado.html', 'PÉRDIDA MITIGADA'),
-                    ('NO_PAGADO', 'no_pagado.html', 'DETALLE NO PAGADO'),
-                    ('TODO', 'todo_detallado.html', 'DETALLE COMPLETO')
-                ]
-
-                for est_key, file_name, titulo_web in vistas:
+                for est_key, file_name, titulo_web in [('COBRADO', 'cobrado.html', 'DETALLE COBRADO'), ('RECUPERADO', 'recuperado.html', 'PÉRDIDA MITIGADA'), ('NO_PAGADO', 'no_pagado.html', 'DETALLE NO PAGADO'), ('TODO', 'todo_detallado.html', 'DETALLE COMPLETO')]:
                     df_view = df_s if est_key == 'TODO' else df_s[df_s['ESTATUS'] == est_key]
                     filas = ""
                     for _, r in df_view.iterrows():
                         idx_monto = r['IDX_MONTO']
-                        tds = ""
-                        for i, v in enumerate(r['FILA']):
-                            if i == idx_monto:
-                                m_fmt = f"${limpiar_monto(v):,.2f}"
-                                if r['FOTO_LINK'] and r['FOTO_LINK'] != "None":
-                                    tds += f"<td><span class='link-foto' onclick='openModal(\"../../FACTURAS/{n_m}/{suc}/{r['FOTO_LINK']}.jpeg\")'>{m_fmt}</span></td>"
-                                else:
-                                    tds += f"<td>{m_fmt}</td>"
-                            else:
-                                tds += f"<td>{str(v) if v is not None else ''}</td>"
+                        tds = "".join([f"<td><span class='link-foto' onclick='openModal(\"../../FACTURAS/{n_m}/{suc}/{r['FOTO_LINK']}.jpeg\")'>${limpiar_monto(v):,.2f}</span></td>" if i == idx_monto and r['FOTO_LINK'] and r['FOTO_LINK'] != "None" else f"<td>${limpiar_monto(v):,.2f}</td>" if i == idx_monto else f"<td>{str(v) if v is not None else ''}</td>" for i, v in enumerate(r['FILA'])])
                         filas += f"<tr>{tds}</tr>"
 
+                    cabeceras_html = "".join([f"<th>{col}</th>" for col in columnas_reales])
                     with open(os.path.join(p_suc, file_name), "w", encoding="utf-8") as f:
-                        f.write(f"<html><head><meta charset='UTF-8'>{estilo_css}</head><body>"
-                                f"<div class='header-logos'><img src='../../RECURSOS/LOGO.PNG' class='logo-header'><h1>GERENCIA DE FISCALIZACIÓN</h1><img src='../../RECURSOS/LOGO.PNG' class='logo-header'></div>"
+                        f.write(f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{estilo_css}</head><body>"
+                                f"<div class='header-logos'><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'><h1>GERENCIA DE FISCALIZACIÓN</h1><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'></div>"
                                 f"<div class='blue-box-container'><h2>{titulo_web}</h2><h3>{suc} - {n_m}</h3>"
                                 f"<div class='table-responsive'><table><thead><tr>{cabeceras_html}</tr></thead><tbody>{filas}</tbody></table></div>"
                                 f"<div class='btn-group'>"
@@ -203,11 +196,10 @@ def generar_reporte_cobros_final():
                                 f"<a href='../../index.html?tab=cobs' class='btn'>MENÚ PRINCIPAL</a>"
                                 f"</div></div>{script_modal}</body></html>")
 
-        # Guardar JSON en raíz
         with open(os.path.join(ruta_base, "TOTALES_GLOBALES_COBROS.json"), "w", encoding="utf-8") as f:
             json.dump(totales_globales, f, indent=4, ensure_ascii=False)
 
-        print("\n✅ Reportes generados en carpetas de meses y JSON en raíz."); input()
+        print("\n✅ Reportes generados y optimizados. Recuerda usar logo.png en RECURSOS."); input()
     except Exception as e: print(f"❌ Error: {e}"); input()
 
 if __name__ == "__main__":
