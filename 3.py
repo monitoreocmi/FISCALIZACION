@@ -125,7 +125,7 @@ def generar_panel_luxor_centralizado():
                         <div class="global-item"><span>TOTAL MENSUAL</span><br><b>${(tc + tp):,.2f}</b></div>
                     </div>
                     <div class="audit-grid-full">
-                        <div class="audit-card"><h3>CANTIDAD COBRADA</h3><div class="scroll-area">{gen_rows(sorted(rank_cobs, key=lambda x: x['c'], reverse=True), "c", money=True)}</div></div>
+                        <div class="audit-card"><h3>CANTIDAD COBRADA POR SUCURSAL</h3><div class="scroll-area">{gen_rows(sorted(rank_cobs, key=lambda x: x['c'], reverse=True), "c", money=True)}</div></div>
                         <div class="audit-card"><h3>PÉRDIDA MITIGADA</h3><div class="scroll-area">{gen_rows(sorted(rank_cobs, key=lambda x: x['p'], reverse=True), "p", money=True)}</div></div>
                         <div class="audit-card"><h3>TOTAL (COBRADO Y MITIGADO)</h3><div class="scroll-area">{gen_rows(sorted(rank_cobs, key=lambda x: x['t'], reverse=True), "t", money=True)}</div></div>
                     </div>
@@ -192,9 +192,9 @@ def generar_panel_luxor_centralizado():
             <div class="controls-bar">
                 <div class="selector-wrapper"><select id="mes-selector" onchange="cambiarMes()">{opciones_dropdown}</select></div>
                 <button class="tab-btn active" id="btn-inc" onclick="showGlobalTab('incs')">INCIDENCIAS</button>
-                <button class="tab-btn" id="btn-cob" onclick="showGlobalTab('cobs')">COBROS</button>
-                <button class="tab-btn" id="btn-hon" onclick="showGlobalTab('honor')">MEJORES</button>
-                <button class="tab-btn" id="btn-peo" onclick="showGlobalTab('peores')">PEORES</button>
+                <button class="tab-btn" id="btn-cob" onclick="showGlobalTab('cobs')">COBROS Y MITIGACION</button>
+                <button class="tab-btn" id="btn-hon" onclick="showGlobalTab('honor')">SUCURSAL CON MEJOR RENDIMIENTO</button>
+                <button class="tab-btn" id="btn-peo" onclick="showGlobalTab('peores')">SUCURSAL CON PEOR RENDIMIENTO</button>
             </div>
             <main class="main-content">{html_meses_data}</main>
             <script>
