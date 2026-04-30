@@ -19,5 +19,13 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>ERROR DE KG EN TARA</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>CAVA LUXOR</td><td>*4853</td><td>2026-04-10</td><td>SPCP CRISTAL CASTRO</td><td>FALTO AGREGAR EL PESO DE LAS TARAS DEL QUESO GUAYANES, 25 TARAS DE 1KG (25KG) </td></tr><tr><td>CAVA LUXOR</td><td>*300013784
-</td><td>2026-04-21</td><td>SPCP DANIHEL PALACIOS</td><td>NO AGREGO EL PESO DE LAS TARAS AL QUESO LLANERO, 12 TARAS DE 2,6KG (31,2KG) </td></tr><tr><td>ADOLFO'S VICAR, C.A.</td><td>13479</td><td>2026-04-22</td><td>SPCP DANIHEL PALACIOS</td><td>FALTO AGREGAR 2 TARAS DE 2,3KG(4,6KG) AL CEBOLLIN</td></tr><tr><td>FRUMIX,C.A.</td><td>00009489</td><td>2026-04-23</td><td>SPCP HILDEMAR BUENO</td><td>FALTO AGREGAR UNA TARA DE 1,2KG A LA MANZANA VERDE</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>ERROR DE KG EN TARA</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>SPCP CRISTAL CASTRO</td><td>CAVA LUXOR</td><td>2026-04-10</td><td>*4853</td><td>ERROR DE KG EN TARA.</td><td>RECEPCIÓN</td><td>FALTO AGREGAR EL PESO DE LAS TARAS DEL QUESO GUAYANES, 25 TARAS DE 1KG (25KG) </td></tr><tr><td>SPCP DANIHEL PALACIOS</td><td>CAVA LUXOR</td><td>2026-04-21</td><td>*300013784
+</td><td>ERROR DE KG EN TARA.</td><td>RECEPCIÓN</td><td>NO AGREGO EL PESO DE LAS TARAS AL QUESO LLANERO, 12 TARAS DE 2,6KG (31,2KG) </td></tr><tr><td>SPCP DANIHEL PALACIOS</td><td>ADOLFO'S VICAR, C.A.</td><td>2026-04-22</td><td>13479</td><td>ERROR DE KG EN TARA.</td><td>RECEPCIÓN</td><td>FALTO AGREGAR 2 TARAS DE 2,3KG(4,6KG) AL CEBOLLIN</td></tr><tr><td>SPCP HILDEMAR BUENO</td><td>FRUMIX,C.A.</td><td>2026-04-23</td><td>00009489</td><td>ERROR DE KG EN TARA.</td><td>RECEPCIÓN</td><td>FALTO AGREGAR UNA TARA DE 1,2KG A LA MANZANA VERDE</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

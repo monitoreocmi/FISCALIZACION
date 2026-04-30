@@ -1,11 +1,10 @@
 import pandas as pd
 import os
 import json
-import tkinter as tk
-from tkinter import filedialog
 import sys
 import warnings
 
+# Silenciar advertencias de validación de Excel
 warnings.filterwarnings("ignore")
 
 if sys.stdout.encoding != 'utf-8':
@@ -20,19 +19,35 @@ MESES_ES = {
 def procesar_luxor_columna_h():
     try:
         print("\n" + "="*60)
-        print(">>> SISTEMA LUXOR: DETECTOR DE 'TIPO D' Y 'TIPO E' <<<")
+        print(">>> SISTEMA LUXOR: DETECTOR AUTO DE 'TIPO D' Y 'TIPO E' <<<")
         print("="*60)
         
-        root = tk.Tk(); root.withdraw(); root.attributes("-topmost", True)
-        directorio = filedialog.askdirectory(title="Selecciona la carpeta con los Excels")
-        if not directorio: return
+        # BÚSQUEDA AUTOMÁTICA EN CARPETA 'CUADROS'
+        ruta_script = os.path.dirname(os.path.abspath(sys.argv[0]))
+        ruta_cuadros = os.path.join(ruta_script, "cuadros")
+
+        if not os.path.isdir(ruta_cuadros):
+            print(f"❌ ERROR: No se encuentra la carpeta 'cuadros' en:\n{ruta_cuadros}")
+            return
+
+        # Recopilar todos los archivos .xlsx de forma recursiva (subcarpetas)
+        archivos = []
+        for root, dirs, files in os.walk(ruta_cuadros):
+            for file in files:
+                if file.endswith(('.xlsx', '.xls')) and not file.startswith('~$'):
+                    archivos.append(os.path.join(root, file))
+
+        if not archivos:
+            print(f"⚠️ No hay archivos Excel en la carpeta 'cuadros' o sus subcarpetas.")
+            return
+
+        print(f"✅ Se encontraron {len(archivos)} archivos. Iniciando análisis...\n")
 
         lista_acumulada = []
-        archivos = [f for f in os.listdir(directorio) if f.endswith(('.xlsx', '.xls')) and not f.startswith('~$')]
 
-        for i, archivo in enumerate(archivos, 1):
-            ruta_completa = os.path.join(directorio, archivo)
-            print(f"[{i}/{len(archivos)}] Analizando: {archivo}")
+        for i, ruta_completa in enumerate(archivos, 1):
+            nombre_archivo = os.path.basename(ruta_completa)
+            print(f"[{i}/{len(archivos)}] Analizando: {nombre_archivo}")
             
             try:
                 # Cargar el archivo
@@ -45,12 +60,10 @@ def procesar_luxor_columna_h():
                 col_fecha = next((c for c in df.columns if 'FECHA' in c), None)
                 col_suc = next((c for c in df.columns if 'SUCURSAL' in c), None)
 
-                # Si no hay columnas de identidad, saltamos
                 if not col_fecha or not col_suc:
                     continue
 
-                # ESCANEO DE FILAS: Buscamos el texto que contenga 'TIPO D' o 'TIPO E'
-                # Convertimos todo a string para evitar errores con números
+                # ESCANEO DE FILAS
                 for _, fila in df.iterrows():
                     fila_str = " ".join([str(val).upper() for val in fila.values])
                     
@@ -71,13 +84,13 @@ def procesar_luxor_columna_h():
                         except: continue
 
             except Exception as e:
-                print(f"   ❌ Error en archivo: {e}")
+                print(f"   ❌ Error en archivo {nombre_archivo}: {e}")
 
         if not lista_acumulada:
-            print("\n❌ ERROR: No se encontró el texto 'TIPO D' o 'TIPO E' en los archivos.")
-            input(); return
+            print("\n❌ No se encontraron incidencias 'TIPO D' o 'TIPO E'.")
+            return
 
-        # Consolidar
+        # Consolidar resultados
         df_final = pd.DataFrame(lista_acumulada)
         resumen = df_final.groupby(['SUCURSAL', 'MES', 'TIPO']).size().unstack(fill_value=0)
         
@@ -87,25 +100,22 @@ def procesar_luxor_columna_h():
         resumen['TOTAL'] = resumen['D'] + resumen['E']
         resumen = resumen.sort_values(by='TOTAL', ascending=False).reset_index()
 
-        # Formato JSON
+        # Formato JSON para el Dashboard
         resultado_json = [{
             "n": f"{r['SUCURSAL']} ({r['MES']})",
             "v": int(r['TOTAL']),
             "detalle": f"D: {int(r['D'])} | E: {int(r['E'])}"
         } for _, r in resumen.iterrows()]
 
-        # Guardar
-        ruta_script = os.path.dirname(os.path.abspath(sys.argv[0]))
+        # Guardar en la raíz del script
         with open(os.path.join(ruta_script, "incidencias_graves.json"), "w", encoding="utf-8") as f:
             json.dump(resultado_json, f, indent=4, ensure_ascii=False)
 
         print(f"\n✅ ¡CONSEGUIDO! Se detectaron {len(lista_acumulada)} incidencias.")
-        print(f"El ranking tiene {len(resultado_json)} sucursales.")
-        input("Presiona ENTER para finalizar...")
+        print(f"El ranking tiene {len(resultado_json)} sucursales procesadas.")
 
     except Exception as e:
         print(f"\n❌ ERROR GENERAL: {e}")
-        input("ENTER para salir...")
 
 if __name__ == "__main__":
     procesar_luxor_columna_h()

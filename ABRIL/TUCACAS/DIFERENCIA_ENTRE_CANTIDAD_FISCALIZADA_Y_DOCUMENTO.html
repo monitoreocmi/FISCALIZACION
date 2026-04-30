@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>INVERSIONES LAS PATRONAS, C.A</td><td>529</td><td>2026-04-22</td><td>SUB GENESIS COBOS</td><td>FALTANTE 2.6KG DE MANDARINA, 6283.42</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>SUB GENESIS COBOS</td><td>INVERSIONES LAS PATRONAS, C.A</td><td>2026-04-22</td><td>529</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>RECEPCION</td><td>FALTANTE 2.6KG DE MANDARINA, 6283.42</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

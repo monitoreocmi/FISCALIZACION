@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: JOSE MAUREL</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>FACTURA</th><th>FECHA</th><th>INCIDENCIA</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>B000026740</td><td>2026-03-04</td><td>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</td><td>NO SE FISCALIZAN 3 UNIDAEDS DE RUGULA</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: JOSE MAUREL</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>JOSE MAUREL</td><td>PROFRESCA</td><td>2026-03-04</td><td>B000026740</td><td>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</td><td>RECEPCION</td><td>NO SE FISCALIZAN 3 UNIDAEDS DE RUGULA</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

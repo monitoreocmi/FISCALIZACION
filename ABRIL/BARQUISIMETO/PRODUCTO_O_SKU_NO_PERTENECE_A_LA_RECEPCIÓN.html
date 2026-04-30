@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>KC GLOBAL INT, C.A.</td><td>6325</td><td>2026-04-02</td><td>REIDINSON MONTERO</td><td>SKU ERRADOS </td></tr><tr><td>GALLETERA TRIGO DE ORO, C.A.</td><td>51655</td><td>2026-04-17</td><td>REIDINSON MONTERO</td><td>SKU ERRADOS </td></tr><tr><td>PASTAS CAPRI, C.A.</td><td>418138</td><td>2026-04-20</td><td>RUBER RAMOS </td><td>POR ERROR DEL SUB-GERENTE RUBER RAMOS SE RECIBIERON 2 BULTOS DE PASTA PREMIUN DEDAL 1 KG Y LA MERCANCIA CORRECTA ERAN 2 BULTOS DE PASTA EXTRA ESPECIAL DEDAL 1 KG , SE REALIZA EL CAMBIO BAJO AUTORIZACION DE LA GERENCIA CORPORATIVA </td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>REIDINSON MONTERO</td><td>KC GLOBAL INT, C.A.</td><td>2026-04-02</td><td>6325</td><td>PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN.</td><td>RECEPCIÓN</td><td>SKU ERRADOS </td></tr><tr><td>REIDINSON MONTERO</td><td>GALLETERA TRIGO DE ORO, C.A.</td><td>2026-04-17</td><td>51655</td><td>PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN.</td><td>RECEPCIÓN</td><td>SKU ERRADOS </td></tr><tr><td>RUBER RAMOS </td><td>PASTAS CAPRI, C.A.</td><td>2026-04-20</td><td>418138</td><td>PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN.</td><td>RECEPCIÓN</td><td>POR ERROR DEL SUB-GERENTE RUBER RAMOS SE RECIBIERON 2 BULTOS DE PASTA PREMIUN DEDAL 1 KG Y LA MERCANCIA CORRECTA ERAN 2 BULTOS DE PASTA EXTRA ESPECIAL DEDAL 1 KG , SE REALIZA EL CAMBIO BAJO AUTORIZACION DE LA GERENCIA CORPORATIVA </td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

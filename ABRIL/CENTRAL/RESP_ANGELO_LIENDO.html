@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: ANGELO LIENDO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>FACTURA</th><th>FECHA</th><th>INCIDENCIA</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>482.0</td><td>2026-04-09</td><td>RECEPCIÓN FUERA DE VISUAL / CON OBSTRUCCIÓN.</td><td>CONTO LOS COCOS Y LOS JOJOTOS FUERA DE VISUAL</td></tr><tr><td>1259.0</td><td>2026-04-10</td><td>DOCUMENTO NO LEGIBLE</td><td>NO ENVIO FOTO DE LA FACTURA</td></tr><tr><td>1258.0</td><td>2026-04-10</td><td>DOCUMENTO NO LEGIBLE</td><td>NO ENVIO FOTO DE LA FACTURA</td></tr><tr><td>51320.0</td><td>2026-04-15</td><td>NO SE INDICÓ DIFERENCIA AL DORSO DE LA FACTURA.</td><td>NUTRICLARA ORIGINAL 280</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: ANGELO LIENDO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>ANGELO LIENDO</td><td>PATRONAS</td><td>2026-04-09</td><td>482.0</td><td>RECEPCIÓN FUERA DE VISUAL / CON OBSTRUCCIÓN.</td><td>RECEPCION</td><td>CONTO LOS COCOS Y LOS JOJOTOS FUERA DE VISUAL</td></tr><tr><td>ANGELO LIENDO</td><td>H2O DE COCO</td><td>2026-04-10</td><td>1259.0</td><td>DOCUMENTO NO LEGIBLE</td><td>RECEPCION</td><td>NO ENVIO FOTO DE LA FACTURA</td></tr><tr><td>ANGELO LIENDO</td><td>H2O DE COCO</td><td>2026-04-10</td><td>1258.0</td><td>DOCUMENTO NO LEGIBLE</td><td>RECEPCION</td><td>NO ENVIO FOTO DE LA FACTURA</td></tr><tr><td>ANGELO LIENDO</td><td>OVOMAR</td><td>2026-04-15</td><td>51320.0</td><td>NO SE INDICÓ DIFERENCIA AL DORSO DE LA FACTURA.</td><td>RECEPCION</td><td>NUTRICLARA ORIGINAL 280</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

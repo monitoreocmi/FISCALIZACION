@@ -20,18 +20,13 @@ def limpiar_monto_sucursal(texto):
     if not limpio: return 0.0
     
     # 2. Manejo robusto de separadores:
-    # Si hay puntos y comas (ej: 1.250,50)
     if ',' in limpio and '.' in limpio:
         if limpio.rfind(',') > limpio.rfind('.'): # Caso estándar latino: 1.250,50
             limpio = limpio.replace('.', '').replace(',', '.')
         else: # Caso anglo: 1,250.50
             limpio = limpio.replace(',', '')
-    # Si solo hay comas (ej: 1250,50)
     elif ',' in limpio:
         limpio = limpio.replace(',', '.')
-    # Si hay puntos pero funcionan como separador de miles (ej: 1.250) 
-    # y no hay decimales, esto es lo más difícil. 
-    # Asumimos que si el punto está en las últimas 3 posiciones es decimal, si no, es miles.
     elif '.' in limpio:
         partes = limpio.split('.')
         if len(partes[-1]) != 2: # No parece decimal (ej: 1.250)
@@ -71,7 +66,6 @@ def generar_json_sucursales_ranking():
                             html_content = f.read()
                         
                         # Expresión regular mejorada para capturar el contenido de la clase monto
-                        # Busca el texto justo después de <div class='monto'> hasta el cierre </div>
                         matches = re.findall(r"class='monto'>(.*?)</div>", html_content)
                         
                         if len(matches) >= 2:
@@ -97,11 +91,9 @@ def generar_json_sucursales_ranking():
         print("\n" + "="*50)
         print(f"✅ ÉXITO: Archivo generado con {len(lista_ranking)} sucursales.")
         print("="*50)
-        input("Presiona ENTER para salir...")
 
     except Exception as e:
         print(f"\n❌ ERROR: {e}")
-        input("Presiona ENTER para cerrar...")
 
 if __name__ == "__main__":
     generar_json_sucursales_ranking()

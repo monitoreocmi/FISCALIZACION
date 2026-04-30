@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>NO SE INDICÓ DIFERENCIA AL DORSO DE LA FACTURA</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>FRUMIX</td><td>9409.0</td><td>2026-04-14</td><td>BEATRIZ REYES</td><td>FALTANTE DE 380 GRAMOS DE PERA EQUIVALEMTE A 2,14$</td></tr><tr><td>OVOMAR</td><td>51320.0</td><td>2026-04-15</td><td>ANGELO LIENDO</td><td>NUTRICLARA ORIGINAL 280</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>NO SE INDICÓ DIFERENCIA AL DORSO DE LA FACTURA</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>BEATRIZ REYES</td><td>FRUMIX</td><td>2026-04-14</td><td>9409.0</td><td>NO SE INDICÓ DIFERENCIA AL DORSO DE LA FACTURA.</td><td>RECEPCION</td><td>FALTANTE DE 380 GRAMOS DE PERA EQUIVALEMTE A 2,14$</td></tr><tr><td>ANGELO LIENDO</td><td>OVOMAR</td><td>2026-04-15</td><td>51320.0</td><td>NO SE INDICÓ DIFERENCIA AL DORSO DE LA FACTURA.</td><td>RECEPCION</td><td>NUTRICLARA ORIGINAL 280</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

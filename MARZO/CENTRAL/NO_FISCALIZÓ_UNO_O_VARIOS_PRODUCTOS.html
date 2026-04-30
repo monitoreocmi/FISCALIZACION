@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>NO FISCALIZÓ UNO O VARIOS PRODUCTOS (MARZO)</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>INVERSIONES FLORES CELINA C.A</td><td>nan</td><td>2026-03-02</td><td>BEATRIZ RETES</td><td>FALTO FISCALIZAR 5 BULTOS DE VASO 747, 10 BULTOS DE BOLSA DE PAPEL PARA CANILLAS Y 15 BULTOS DE VASOS 167</td></tr><tr><td>LA CARIDAD C.A.</td><td>E-40340</td><td>2026-03-27</td><td>BEATRIZ RETES</td><td>NO CARGARON 82 KG DE PATAS DE POLLO EN EL SISTEMA EQUIVALENTES A 92,2$</td></tr></tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>NO FISCALIZÓ UNO O VARIOS PRODUCTOS (MARZO)</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>BEATRIZ RETES</td><td>INVERSIONES FLORES CELINA C.A</td><td>2026-03-02</td><td>-</td><td>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</td><td>RECEPCION</td><td>FALTO FISCALIZAR 5 BULTOS DE VASO 747, 10 BULTOS DE BOLSA DE PAPEL PARA CANILLAS Y 15 BULTOS DE VASOS 167</td></tr><tr><td>BEATRIZ RETES</td><td>LA CARIDAD C.A.</td><td>2026-03-27</td><td>E-40340</td><td>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</td><td>RECEPCION</td><td>NO CARGARON 82 KG DE PATAS DE POLLO EN EL SISTEMA EQUIVALENTES A 92,2$</td></tr></tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER</a></div></body></html>

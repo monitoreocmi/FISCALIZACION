@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: AIRONDIC JIMENEZ</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>FACTURA</th><th>FECHA</th><th>INCIDENCIA</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>13387</td><td>2026-04-10</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>FALTANTE DE 0.2KG DE ZANAHORIA</td></tr><tr><td>0 00666</td><td>2026-04-14</td><td>NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.</td><td>NRO DE CONTROL CORRECTO: 00000666</td></tr><tr><td>B000027574</td><td>2026-04-16</td><td>PRODUCTO O SKU DUPLICADO.</td><td>SKU HTL2164 DUPLICADO ELIMINAR Y AGREGAR COLIFLOR</td></tr><tr><td>30856</td><td>2026-04-22</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>FALTANTE DE 0.8KG QUESO PASTEURIZADO CAMILA</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: AIRONDIC JIMENEZ</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>AIRONDIC JIMENEZ</td><td>ADOLFO'S VICAR</td><td>2026-04-10</td><td>13387</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>RECEPCIÓN</td><td>FALTANTE DE 0.2KG DE ZANAHORIA</td></tr><tr><td>AIRONDIC JIMENEZ</td><td>INVERSIONES CHOCOMUNDO 2030</td><td>2026-04-14</td><td>0 00666</td><td>NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.</td><td>RECEPCIÓN</td><td>NRO DE CONTROL CORRECTO: 00000666</td></tr><tr><td>AIRONDIC JIMENEZ</td><td>PRODUCTOS FRESCOS PROFRESCA</td><td>2026-04-16</td><td>B000027574</td><td>PRODUCTO O SKU DUPLICADO.</td><td>RECEPCIÓN</td><td>SKU HTL2164 DUPLICADO ELIMINAR Y AGREGAR COLIFLOR</td></tr><tr><td>AIRONDIC JIMENEZ</td><td>QUESERA Y CHARCUTERIA CAMILA C.A.</td><td>2026-04-22</td><td>30856</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>RECEPCIÓN</td><td>FALTANTE DE 0.8KG QUESO PASTEURIZADO CAMILA</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

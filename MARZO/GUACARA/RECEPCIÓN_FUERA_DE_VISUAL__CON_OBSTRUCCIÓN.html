@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RECEPCIÓN FUERA DE VISUAL / CON OBSTRUCCIÓN (MARZO)</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>VELANDRIA</td><td>10104</td><td>2026-03-03</td><td>JOSE MAUREL</td><td>RECEPCION FUERA DE VISUAL, NO SE APRECIA BIEN, SE INDICO DONDE HACER LA RECECPION Y SE HIZO CASO OMISO</td></tr><tr><td>JEAN DAVID</td><td>18903</td><td>2026-03-10</td><td>LISBETH SANCHEZ</td><td>FISCALIZACION FUERA DE VISUAL</td></tr></tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RECEPCIÓN FUERA DE VISUAL / CON OBSTRUCCIÓN (MARZO)</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>JOSE MAUREL</td><td>VELANDRIA</td><td>2026-03-03</td><td>10104</td><td>RECEPCIÓN FUERA DE VISUAL / CON OBSTRUCCIÓN.</td><td>RECEPCION</td><td>RECEPCION FUERA DE VISUAL, NO SE APRECIA BIEN, SE INDICO DONDE HACER LA RECECPION Y SE HIZO CASO OMISO</td></tr><tr><td>LISBETH SANCHEZ</td><td>JEAN DAVID</td><td>2026-03-10</td><td>18903</td><td>RECEPCIÓN FUERA DE VISUAL / CON OBSTRUCCIÓN.</td><td>RECEPCION</td><td>FISCALIZACION FUERA DE VISUAL</td></tr></tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER</a></div></body></html>

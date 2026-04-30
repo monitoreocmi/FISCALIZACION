@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: PCP ANDRES ARCILA</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>FACTURA</th><th>FECHA</th><th>INCIDENCIA</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>18168</td><td>2026-03-19</td><td>NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.</td><td>NUMERO DE CONTROL INCORRECTO</td></tr><tr><td>300010881</td><td>2026-03-26</td><td>FISCALIZACIÓN A DESTIEMPO</td><td>FISCALIZACION A DESTIEMPO </td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: PCP ANDRES ARCILA</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>PCP ANDRES ARCILA</td><td>INVERSIONES AGROPECUARIA JEANDAVID, C.A</td><td>2026-03-19</td><td>18168</td><td>NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.</td><td>RECEPCION</td><td>NUMERO DE CONTROL INCORRECTO</td></tr><tr><td>PCP ANDRES ARCILA</td><td>CAVA LUXOR, C.A</td><td>2026-03-26</td><td>300010881</td><td>FISCALIZACIÓN A DESTIEMPO</td><td>RECEPCION</td><td>FISCALIZACION A DESTIEMPO </td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

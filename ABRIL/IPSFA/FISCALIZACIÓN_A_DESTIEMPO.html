@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>FISCALIZACIÓN A DESTIEMPO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>RUBYMAR</td><td>8683.0</td><td>2026-04-16</td><td>DOUGLAS BUSTAMANTE</td><td>FISCALIZACION A DESTIEMPO</td></tr><tr><td>LA PATRONA 2024</td><td>nan</td><td>2026-04-16</td><td>DOUGLAS BUSTAMANTE</td><td>FISCALIZACION A DESTIEMPO</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>FISCALIZACIÓN A DESTIEMPO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>DOUGLAS BUSTAMANTE</td><td>RUBYMAR</td><td>2026-04-16</td><td>8683.0</td><td>FISCALIZACIÓN A DESTIEMPO</td><td>RECEPCION</td><td>FISCALIZACION A DESTIEMPO</td></tr><tr><td>DOUGLAS BUSTAMANTE</td><td>LA PATRONA 2024</td><td>2026-04-16</td><td>-</td><td>FISCALIZACIÓN A DESTIEMPO</td><td>RECEPCION</td><td>FISCALIZACION A DESTIEMPO</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

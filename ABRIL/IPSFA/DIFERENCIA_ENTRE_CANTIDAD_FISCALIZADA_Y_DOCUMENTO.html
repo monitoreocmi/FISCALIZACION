@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>LA PATRONA 2024</td><td>430.0</td><td>2026-04-09</td><td>JOSE MAUREL</td><td>FALTANTE DE 200GR DE PARCHITA</td></tr><tr><td>VICAR</td><td>13439.0</td><td>2026-04-17</td><td>JOSE MAUREL</td><td>FALTANTE DE 400 GR DE LECHUGA CRIOLLA</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>JOSE MAUREL</td><td>LA PATRONA 2024</td><td>2026-04-09</td><td>430.0</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>RECEPCION</td><td>FALTANTE DE 200GR DE PARCHITA</td></tr><tr><td>JOSE MAUREL</td><td>VICAR</td><td>2026-04-17</td><td>13439.0</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>RECEPCION</td><td>FALTANTE DE 400 GR DE LECHUGA CRIOLLA</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

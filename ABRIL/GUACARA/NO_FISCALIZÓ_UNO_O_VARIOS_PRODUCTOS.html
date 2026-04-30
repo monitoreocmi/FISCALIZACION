@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>ECO CARNES</td><td>12705.0</td><td>2026-04-01</td><td>JHON SINISTERRA</td><td>NO SE FISCALIZARON LOS TRASTES</td></tr><tr><td>VICAR</td><td>13338.0</td><td>2026-04-01</td><td>JHON SINISTERRA</td><td>DIFERENCIA DE PESAJE EN TARA LECHUGA 4,2KG, NO SE FISCALIZO EL ROMERO 2,1KG</td></tr><tr><td>FRUMIX</td><td>9356.0</td><td>2026-04-10</td><td>ELYANNYS VILLEGAS</td><td>NO SE FISCALIZO 13,8 KG DE NARANJA IMPORTADA</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>JHON SINISTERRA</td><td>ECO CARNES</td><td>2026-04-01</td><td>12705.0</td><td>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</td><td>RECEPCION</td><td>NO SE FISCALIZARON LOS TRASTES</td></tr><tr><td>JHON SINISTERRA</td><td>VICAR</td><td>2026-04-01</td><td>13338.0</td><td>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</td><td>RECEPCION</td><td>DIFERENCIA DE PESAJE EN TARA LECHUGA 4,2KG, NO SE FISCALIZO EL ROMERO 2,1KG</td></tr><tr><td>ELYANNYS VILLEGAS</td><td>FRUMIX</td><td>2026-04-10</td><td>9356.0</td><td>NO FISCALIZÓ UNO O VARIOS PRODUCTOS</td><td>RECEPCION</td><td>NO SE FISCALIZO 13,8 KG DE NARANJA IMPORTADA</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

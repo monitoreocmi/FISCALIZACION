@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>PRODUCTO O SKU DUPLICADO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>FRUMIX, C.A.</td><td>26697</td><td>2026-04-02</td><td>DIEGO GUERRERO</td><td>SKU DUPLICADO</td></tr><tr><td>KC GLOBAL INT, C.A.</td><td>6403</td><td>2026-04-23</td><td>NEYDI JASPE </td><td>SKU DUPLICADO</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>PRODUCTO O SKU DUPLICADO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>DIEGO GUERRERO</td><td>FRUMIX, C.A.</td><td>2026-04-02</td><td>26697</td><td>PRODUCTO O SKU DUPLICADO.</td><td>RECEPCIÓN</td><td>SKU DUPLICADO</td></tr><tr><td>NEYDI JASPE </td><td>KC GLOBAL INT, C.A.</td><td>2026-04-23</td><td>6403</td><td>PRODUCTO O SKU DUPLICADO.</td><td>RECEPCIÓN</td><td>SKU DUPLICADO</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

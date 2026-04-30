@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: DIANA BENAVIDES</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>FACTURA</th><th>FECHA</th><th>INCIDENCIA</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>0 00395</td><td>2026-04-04</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>FALTANTE DE 0.2KG DE TOPOCHO</td></tr><tr><td>G00001136</td><td>2026-04-07</td><td>NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.</td><td>NRO DE CONTROL CORRECTO: 0000105802</td></tr><tr><td>0 03829</td><td>2026-04-10</td><td>NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.</td><td>NRO DE CONTROL CORRECTO: 0000004573</td></tr><tr><td>*30012746</td><td>2026-04-14</td><td>NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.</td><td>NRO CORRECTO: 300012746</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: DIANA BENAVIDES</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>DIANA BENAVIDES</td><td>INVERSIONES LAS PATRONAS 2024</td><td>2026-04-04</td><td>0 00395</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>RECEPCIÓN</td><td>FALTANTE DE 0.2KG DE TOPOCHO</td></tr><tr><td>DIANA BENAVIDES</td><td>CAFE LA PROTECTORA</td><td>2026-04-07</td><td>G00001136</td><td>NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.</td><td>RECEPCIÓN</td><td>NRO DE CONTROL CORRECTO: 0000105802</td></tr><tr><td>DIANA BENAVIDES</td><td>MUSACEUM </td><td>2026-04-10</td><td>0 03829</td><td>NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.</td><td>RECEPCIÓN</td><td>NRO DE CONTROL CORRECTO: 0000004573</td></tr><tr><td>DIANA BENAVIDES</td><td>CAVA LUXOR</td><td>2026-04-14</td><td>*30012746</td><td>NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.</td><td>RECEPCIÓN</td><td>NRO CORRECTO: 300012746</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

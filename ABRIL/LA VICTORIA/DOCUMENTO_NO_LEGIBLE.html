@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>DOCUMENTO NO LEGIBLE</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>NUCITA VENEZOLANA</td><td>9180045902</td><td>2026-04-25</td><td>ISMARLET DURAN</td><td>DOCUMENTO BORROSO</td></tr><tr><td>PASYA SINDONI</td><td>9000039044</td><td>2026-04-25</td><td>ISMARLET DURAN</td><td>DOCUMENTO BORROSO</td></tr><tr><td>CAVA LUXOR</td><td>106641</td><td>2026-04-25</td><td>ISMARLET DURAN</td><td>DOCUMENTO BORROSO</td></tr><tr><td>CAVA LUXOR</td><td>106614</td><td>2026-04-25</td><td>ISMARLET DURAN</td><td>DOCUMENTO BORROSO</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>DOCUMENTO NO LEGIBLE</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>ISMARLET DURAN</td><td>NUCITA VENEZOLANA</td><td>2026-04-25</td><td>9180045902</td><td>DOCUMENTO NO LEGIBLE</td><td>RECEPCION</td><td>DOCUMENTO BORROSO</td></tr><tr><td>ISMARLET DURAN</td><td>PASYA SINDONI</td><td>2026-04-25</td><td>9000039044</td><td>DOCUMENTO NO LEGIBLE</td><td>RECEPCION</td><td>DOCUMENTO BORROSO</td></tr><tr><td>ISMARLET DURAN</td><td>CAVA LUXOR</td><td>2026-04-25</td><td>106641</td><td>DOCUMENTO NO LEGIBLE</td><td>RECEPCION</td><td>DOCUMENTO BORROSO</td></tr><tr><td>ISMARLET DURAN</td><td>CAVA LUXOR</td><td>2026-04-25</td><td>106614</td><td>DOCUMENTO NO LEGIBLE</td><td>RECEPCION</td><td>DOCUMENTO BORROSO</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>

@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO (MARZO)</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>INVERSIONES LAS PATRONAS, 2024 C.A.</td><td>103</td><td>2026-03-04</td><td>REIDINSON MONTERO</td><td>FALTANTE DE 1 KG DE PATILLA </td></tr><tr><td>ADOLFO'S VICAR, C.A.</td><td>13115</td><td>2026-03-09</td><td>REIDINSON MONTERO</td><td>FALTANTE DE 2 KL DE APIO , POR UN MONTO DE 2.84 $</td></tr></tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO (MARZO)</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>REIDINSON MONTERO</td><td>INVERSIONES LAS PATRONAS, 2024 C.A.</td><td>2026-03-04</td><td>103</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>RECEPCIÓN</td><td>FALTANTE DE 1 KG DE PATILLA </td></tr><tr><td>REIDINSON MONTERO</td><td>ADOLFO'S VICAR, C.A.</td><td>2026-03-09</td><td>13115</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>RECEPCIÓN</td><td>FALTANTE DE 2 KL DE APIO , POR UN MONTO DE 2.84 $</td></tr></tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER</a></div></body></html>

@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO (MARZO)</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>RESPONSABLE</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>VELANDRIA</td><td>10164</td><td>2026-03-12</td><td>NIXILET ARRIZGA</td><td>DIFERENCIA ENTRE EVA Y DOCUMENTO FALTANTE DE 90 UNIDADES DE AJO PELADO ANDINITO 100GR</td></tr><tr><td>ECO CARNE</td><td>12329</td><td>2026-03-13</td><td>JHON SINISTERRA</td><td>FALTANTE DE 79,4 KG DE TRASTE EN SISTEMA EVA</td></tr></tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO (MARZO)</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>NIXILET ARRIZGA</td><td>VELANDRIA</td><td>2026-03-12</td><td>10164</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>RECEPCION</td><td>DIFERENCIA ENTRE EVA Y DOCUMENTO FALTANTE DE 90 UNIDADES DE AJO PELADO ANDINITO 100GR</td></tr><tr><td>JHON SINISTERRA</td><td>ECO CARNE</td><td>2026-03-13</td><td>12329</td><td>DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.</td><td>RECEPCION</td><td>FALTANTE DE 79,4 KG DE TRASTE EN SISTEMA EVA</td></tr></tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER</a></div></body></html>

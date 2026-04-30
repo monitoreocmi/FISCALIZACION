@@ -19,4 +19,12 @@
         .main-container { width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }
     }
 </style>
-</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: DIEGO GUERRERO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>FACTURA</th><th>FECHA</th><th>INCIDENCIA</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>22631</td><td>2026-03-05</td><td>PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN.</td><td>ERROR AL CARGAR SKU</td></tr><tr><td>761</td><td>2026-03-05</td><td>RECEPCIÓN SIN AUTORIZACIÓN DE CMF.</td><td>FISCALIZO SIN AUTORIZACION CMF</td></tr><tr><td>5578</td><td>2026-03-06</td><td>PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN.</td><td>ERROR DE TARA </td></tr><tr><td>13169</td><td>2026-03-13</td><td>PRODUCTO O SKU DUPLICADO.</td><td>SKU DUPLICADO</td></tr></tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>
+<script>
+    function volverSmart() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const retorno = urlParams.get('retorno');
+        if (retorno) { window.location.href = retorno; }
+        else { window.location.href = 'reporte.html'; }
+    }
+</script>
+</head><body><div class='top-bar'><img src='../../RECURSOS/logo.png' class='logo-ext'><h1>RESPONSABLE: DIEGO GUERRERO</h1><img src='../../RECURSOS/logo.png' class='logo-ext'></div><div class='main-container'><table><thead><tr><th>RESPONSABLE</th><th>PROVEEDOR</th><th>FECHA</th><th>FACTURA</th><th>INCIDENCIA</th><th>TIPO FISCALIZACIÓN</th><th>OBSERVACIÓN</th></tr></thead><tbody><tr><td>DIEGO GUERRERO</td><td>CORPORACION R3, C.A.</td><td>2026-03-05</td><td>22631</td><td>PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN.</td><td>DEVOLUCION</td><td>ERROR AL CARGAR SKU</td></tr><tr><td>DIEGO GUERRERO</td><td>INVERSIONES DON DAVID NZ, C.A.</td><td>2026-03-05</td><td>761</td><td>RECEPCIÓN SIN AUTORIZACIÓN DE CMF.</td><td>RECEPCIÓN</td><td>FISCALIZO SIN AUTORIZACION CMF</td></tr><tr><td>DIEGO GUERRERO</td><td>AGROPECUARIA LATIN FRUITS , C.A.</td><td>2026-03-06</td><td>5578</td><td>PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN.</td><td>RECEPCIÓN</td><td>ERROR DE TARA </td></tr><tr><td>DIEGO GUERRERO</td><td>ADOLFO'S VICAR, C.A.</td><td>2026-03-13</td><td>13169</td><td>PRODUCTO O SKU DUPLICADO.</td><td>RECEPCIÓN</td><td>SKU DUPLICADO</td></tr></tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>
