@@ -34,7 +34,6 @@ CSS_UNIFICADO = f"""
     tr:nth-child(even) {{ background-color: #f2f2f2; }}
     .btn-volver {{ display: inline-block; margin-top: 25px; padding: 10px 20px; background-color: #0844a4; color: #ffffff !important; text-decoration: none; font-weight: 900; font-size: 13px; text-transform: uppercase; border-radius: 50px; border: 2px solid #F9D908; }}
     
-    /* Ajustes para Resoluciones Pequeñas (Laptops y Móviles) */
     @media (max-width: 768px) {{
         .top-bar {{ height: 80px; padding: 0 10px; }}
         .logo-ext {{ height: 40px; }}
@@ -102,18 +101,34 @@ def generar_reporte_v30_final():
                         c_act = int(len(df_suc_act[df_suc_act['INC_LIMPIA']==busq]))
                         c_ant = int(len(df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ant) & (df_master['INC_LIMPIA']==busq)]))
                         g_act_grupo += c_act; g_ant_grupo += c_ant; t_act += c_act; t_ant += c_ant
-                        v_ant = "0" if c_ant == 0 else f"<a href='../../{n_m_ant}/{n_s}/{limpiar_nombre_archivo(inc)}.html'>{c_ant}</a>"
+                        
+                        # Fix de botones: El enlace anterior ahora incluye el contexto del reporte principal del mes actual para el retorno
+                        v_ant = "0" if c_ant == 0 else f"<a href='../../{n_m_ant}/{n_s}/{limpiar_nombre_archivo(inc)}.html?retorno=../../{n_m_act}/{n_s}/reporte.html'>{c_ant}</a>"
                         v_act = "0" if c_act == 0 else f"<a href='{limpiar_nombre_archivo(inc)}.html'>{c_act}</a>"
                         temp_filas.append(f"<tr style='background-color:{grupo['color']};'><td style='text-align:left;'>{inc}.</td><td>{grupo['tipo']}</td><td>{v_ant}</td><td>{v_act}</td>")
                         
-                        if c_act > 0:
-                            df_inc_det = df_suc_act[df_suc_act['INC_LIMPIA'] == busq].copy()
-                            df_inc_det['FECHA'] = df_inc_det['FECHA'].dt.strftime('%Y-%m-%d')
-                            cols = [c for c in ['PROVEEDOR', 'FACTURA', 'FECHA', 'RESPONSABLE', 'OBSERVACIÓN'] if c in df_inc_det.columns]
-                            html_inc = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{inc}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_inc_det[cols].values])}</tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
-                            f_det = os.path.join(ruta_base, n_m_act, n_s, f"{limpiar_nombre_archivo(inc)}.html")
-                            os.makedirs(os.path.dirname(f_det), exist_ok=True); 
-                            with open(f_det, "w", encoding="utf-8") as f: f.write(html_inc)
+                        # Generación de archivos de detalle de incidencia
+                        if c_act > 0 or c_ant > 0:
+                            # Procesar para mes actual
+                            if c_act > 0:
+                                df_inc_det = df_suc_act[df_suc_act['INC_LIMPIA'] == busq].copy()
+                                df_inc_det['FECHA'] = df_inc_det['FECHA'].dt.strftime('%Y-%m-%d')
+                                cols = [c for c in ['PROVEEDOR', 'FACTURA', 'FECHA', 'RESPONSABLE', 'OBSERVACIÓN'] if c in df_inc_det.columns]
+                                html_inc = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{inc}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_inc_det[cols].values])}</tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
+                                f_det = os.path.join(ruta_base, n_m_act, n_s, f"{limpiar_nombre_archivo(inc)}.html")
+                                os.makedirs(os.path.dirname(f_det), exist_ok=True); 
+                                with open(f_det, "w", encoding="utf-8") as f: f.write(html_inc)
+                            
+                            # Procesar para mes anterior con link de retorno inteligente
+                            if c_ant > 0:
+                                df_inc_ant = df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ant) & (df_master['INC_LIMPIA']==busq)].copy()
+                                df_inc_ant['FECHA'] = df_inc_ant['FECHA'].dt.strftime('%Y-%m-%d')
+                                cols = [c for c in ['PROVEEDOR', 'FACTURA', 'FECHA', 'RESPONSABLE', 'OBSERVACIÓN'] if c in df_inc_ant.columns]
+                                # El script de retorno detecta si viene de un mes futuro
+                                html_inc_ant = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{inc} ({n_m_ant})</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_inc_ant[cols].values])}</tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
+                                f_det_ant = os.path.join(ruta_base, n_m_ant, n_s, f"{limpiar_nombre_archivo(inc)}.html")
+                                os.makedirs(os.path.dirname(f_det_ant), exist_ok=True)
+                                with open(f_det_ant, "w", encoding="utf-8") as f: f.write(html_inc_ant)
                     
                     color_porc = "#ffcccc" if g_act_grupo > g_ant_grupo else "#ccffcc"
                     if g_act_grupo > g_ant_grupo: suma_impacto += grupo["porc"]
@@ -122,9 +137,12 @@ def generar_reporte_v30_final():
 
                 nota_f = max(0, 100 - suma_impacto)
                 color_calif = "#ed1c24" if nota_f < 75 else "#27ae60"
+                
+                # Links de totales con retorno por historial para no perder el mes
                 link_t_ant = f"<a href='../../{n_m_ant}/{n_s}/TODAS.html' style='color:white;'>{t_ant}</a>" if t_ant > 0 else "0"
                 link_t_act = f"<a href='TODAS.html' style='color:white;'>{t_act}</a>" if t_act > 0 else "0"
 
+                # Responsables
                 filas_resp = ""
                 if 'NOMBRE_AUX' in df_suc_act.columns:
                     for name, cant in df_suc_act['NOMBRE_AUX'].value_counts().head(3).items():
@@ -135,14 +153,20 @@ def generar_reporte_v30_final():
                         html_res = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>RESPONSABLE: {name}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_res])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_res_det[cols_res].values])}</tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
                         with open(os.path.join(ruta_base, n_m_act, n_s, f"RESP_{limpiar_nombre_archivo(name)}.html"), "w", encoding="utf-8") as f: f.write(html_res)
 
-                # Reporte TODAS
+                # Reporte TODAS con retorno por historial
                 df_all = df_suc_act.copy()
                 df_all['FECHA'] = df_all['FECHA'].dt.strftime('%Y-%m-%d')
                 cols_finales = [c for c in ['PROVEEDOR', 'FACTURA', 'FECHA', 'TIPO FISCALIZACIÓN', 'RESPONSABLE', 'INCIDENCIA', 'OBSERVACIÓN'] if c in df_all.columns]
                 html_all = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TODAS LAS INCIDENCIAS</h1><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_finales])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_all[cols_finales].fillna('-').values])}</tbody></table><a href='reporte.html' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
                 with open(os.path.join(ruta_base, n_m_act, n_s, "TODAS.html"), "w", encoding="utf-8") as f: f.write(html_all)
 
-                # Reporte Principal
+                # Reporte TODAS anterior con botón de retorno inteligente
+                if t_ant > 0:
+                    df_all_ant = df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ant)].copy()
+                    df_all_ant['FECHA'] = df_all_ant['FECHA'].dt.strftime('%Y-%m-%d')
+                    html_all_ant = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TODAS LAS INCIDENCIAS ({n_m_ant})</h1><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_finales])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_all_ant[cols_finales].fillna('-').values])}</tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
+                    with open(os.path.join(ruta_base, n_m_ant, n_s, "TODAS.html"), "w", encoding="utf-8") as f: f.write(html_all_ant)
+
                 html_final = f"""<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body>
                     <div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{n_s} - {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div>
                     <div class='main-container'>
@@ -158,7 +182,6 @@ def generar_reporte_v30_final():
                     </div></body></html>"""
                 with open(os.path.join(ruta_base, n_m_act, n_s, "reporte.html"), "w", encoding="utf-8") as f: f.write(html_final)
 
-                # --- INTEGRACIÓN SOLO_MES.HTML ---
                 html_solo_mes = f"""<html><head><meta charset='UTF-8'></head><body>
                     <table>
                         <tr id='fila-datos'>
@@ -170,7 +193,7 @@ def generar_reporte_v30_final():
                 </body></html>"""
                 with open(os.path.join(ruta_base, n_m_act, n_s, "solo_mes.html"), "w", encoding="utf-8") as f: f.write(html_solo_mes)
 
-        print("\n✅ Reporte actualizado. Recuerda renombrar tu imagen a logo.png en la carpeta RECURSOS."); input()
+        print("\n✅ Reporte actualizado. Los botones ahora respetan el mes actual."); input()
     except Exception as e: print(f"\n❌ ERROR: {e}"); input()
 
 if __name__ == "__main__":
