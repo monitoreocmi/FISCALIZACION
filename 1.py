@@ -84,17 +84,23 @@ def generar_reporte_v30_final():
             try:
                 df_t = pd.read_excel(f, engine='openpyxl')
                 df_t.columns = [str(c).strip().upper() for c in df_t.columns]
+                
                 if 'RESPONSABLE' in df_t.columns: df_t['NOMBRE_AUX'] = df_t['RESPONSABLE']
-                if len(df_t.columns) >= 4 and 'FECHA' not in df_t.columns:
-                    df_t.rename(columns={df_t.columns[3]: 'FECHA'}, inplace=True)
                 if 'INCIDENCIA' in df_t.columns:
                     df_t['INC_LIMPIA'] = df_t['INCIDENCIA'].astype(str).str.strip().str.upper().str.replace('.', '', regex=False)
+                
+                if len(df_t.columns) >= 4 and 'FECHA' not in df_t.columns:
+                    df_t.rename(columns={df_t.columns[3]: 'FECHA'}, inplace=True)
+                
                 df_t['FECHA'] = pd.to_datetime(df_t['FECHA'], errors='coerce')
                 lista_df.append(df_t)
             except Exception as e:
                 print(f"   ⚠️ Error leyendo {os.path.basename(f)}: {e}")
         
         df_master = pd.concat(lista_df, ignore_index=True).dropna(subset=['FECHA', 'SUCURSAL'])
+        if 'FACTURA' in df_master.columns:
+            df_master = df_master.drop_duplicates(subset=['SUCURSAL', 'FACTURA', 'INC_LIMPIA', 'FECHA'])
+            
         df_master['PERIODO'] = df_master['FECHA'].dt.to_period('M')
         
         grupos_defs = [
@@ -127,6 +133,7 @@ def generar_reporte_v30_final():
                         busq = inc.upper().replace('.', '')
                         c_act = int(len(df_suc_act[df_suc_act['INC_LIMPIA']==busq]))
                         c_ant = int(len(df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ant) & (df_master['INC_LIMPIA']==busq)]))
+                        
                         g_act_grupo += c_act; g_ant_grupo += c_ant; t_act += c_act; t_ant += c_ant
                         
                         v_ant = "0" if c_ant == 0 else f"<a href='../../{n_m_ant}/{n_s}/{limpiar_nombre_archivo(inc)}.html?retorno=../../{n_m_act}/{n_s}/reporte.html'>{c_ant}</a>"
@@ -141,15 +148,6 @@ def generar_reporte_v30_final():
                             f_det = os.path.join(ruta_base, n_m_act, n_s, f"{limpiar_nombre_archivo(inc)}.html")
                             os.makedirs(os.path.dirname(f_det), exist_ok=True); 
                             with open(f_det, "w", encoding="utf-8") as f: f.write(html_inc)
-                        
-                        if c_ant > 0:
-                            df_inc_ant = df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ant) & (df_master['INC_LIMPIA']==busq)].copy()
-                            df_inc_ant['FECHA'] = df_inc_ant['FECHA'].dt.strftime('%Y-%m-%d')
-                            cols_presentes = [c for c in columnas_reporte if c in df_inc_ant.columns]
-                            html_inc_ant = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{inc} ({n_m_ant})</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_presentes])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_inc_ant[cols_presentes].fillna('-').values])}</tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER</a></div></body></html>"
-                            f_det_ant = os.path.join(ruta_base, n_m_ant, n_s, f"{limpiar_nombre_archivo(inc)}.html")
-                            os.makedirs(os.path.dirname(f_det_ant), exist_ok=True)
-                            with open(f_det_ant, "w", encoding="utf-8") as f: f.write(html_inc_ant)
                     
                     color_porc = "#ffcccc" if g_act_grupo > g_ant_grupo else "#ccffcc"
                     if g_act_grupo > g_ant_grupo: suma_impacto += grupo["porc"]
@@ -170,15 +168,7 @@ def generar_reporte_v30_final():
                         html_res = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>RESPONSABLE: {name}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_presentes])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_res_det[cols_presentes].fillna('-').values])}</tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>"
                         with open(os.path.join(ruta_base, n_m_act, n_s, archivo_resp), "w", encoding="utf-8") as f: f.write(html_res)
 
-                for p_ref, n_ref, link_name in [(p_act, n_m_act, "TODAS.html"), (p_ant, n_m_ant, "TODAS.html")]:
-                    df_all = df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ref)].copy()
-                    if not df_all.empty:
-                        df_all['FECHA'] = df_all['FECHA'].dt.strftime('%Y-%m-%d')
-                        cols_presentes = [c for c in columnas_reporte if c in df_all.columns]
-                        html_all = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TODAS LAS INCIDENCIAS ({n_ref})</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_presentes])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_all[cols_presentes].fillna('-').values])}</tbody></table><br><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER</a></div></body></html>"
-                        os.makedirs(os.path.join(ruta_base, n_ref, n_s), exist_ok=True)
-                        with open(os.path.join(ruta_base, n_ref, n_s, "TODAS.html"), "w", encoding="utf-8") as f: f.write(html_all)
-
+                # REPORTE PRINCIPAL
                 html_final = f"""<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body>
                     <div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{n_s} - {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div>
                     <div class='main-container'>
@@ -186,18 +176,23 @@ def generar_reporte_v30_final():
                             <thead><tr><th>INCIDENCIA</th><th>TIPO</th><th>{n_m_ant}</th><th>{n_m_act}</th><th>APROBATORIO 75%</th></tr></thead>
                             <tbody>
                                 {filas_html}
-                                <tr style='background-color:#0844a4;'><td style='text-align:right; color:white;' colspan='2'>TOTAL / CALIFICACIÓN</td><td style='color:white;'><a href='../../{n_m_ant}/{n_s}/TODAS.html' style='color:white;'>{t_ant}</a></td><td style='color:white;'><a href='TODAS.html?retorno=reporte.html' style='color:white;'>{t_act}</a></td><td style='background:{color_calif}; color:white;'>{nota_f}%</td></tr>
+                                <tr style='background-color:#0844a4;'><td style='text-align:right; color:white;' colspan='2'>TOTAL / CALIFICACIÓN</td><td style='color:white;'>{t_ant}</td><td style='color:white;'>{t_act}</td><td style='background:{color_calif}; color:white;'>{nota_f}%</td></tr>
                                 <tr><td colspan='5' style='font-weight:900; background:#f0f0f0; padding:10px; color:#002060;'>RESPONSABLES CON MAYOR INCIDENCIA</td></tr>
                                 {filas_resp}
                             </tbody>
                         </table><br><a href='../../index.html' class='btn-volver'>VOLVER AL PANEL</a>
                     </div></body></html>"""
-                with open(os.path.join(ruta_base, n_m_act, n_s, "reporte.html"), "w", encoding="utf-8") as f: f.write(html_final)
-
+                
+                # CREACIÓN DEL ARCHIVO SOLO_MES.HTML (CON MES, TOTAL Y CALIFICACIÓN)
                 html_solo_mes = f"<table><tr><td>{n_m_act}</td><td>{t_act}</td><td>{nota_f}%</td></tr></table>"
-                with open(os.path.join(ruta_base, n_m_act, n_s, "solo_mes.html"), "w", encoding="utf-8") as f: f.write(html_solo_mes)
+                
+                p_final = os.path.join(ruta_base, n_m_act, n_s)
+                os.makedirs(p_final, exist_ok=True)
+                
+                with open(os.path.join(p_final, "reporte.html"), "w", encoding="utf-8") as f: f.write(html_final)
+                with open(os.path.join(p_final, "solo_mes.html"), "w", encoding="utf-8") as f: f.write(html_solo_mes)
 
-        print("\n✅ Reportes generados exitosamente.")
+        print("\n✅ Reportes y archivos solo_mes generados exitosamente.")
     except Exception as e: print(f"\n❌ ERROR: {e}")
 
 if __name__ == "__main__":

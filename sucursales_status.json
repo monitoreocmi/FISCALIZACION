@@ -1,10 +1,6 @@
 {
     "aprobadas": [
         {
-            "n": "EL BOSQUE (ABRIL)",
-            "v": "100%"
-        },
-        {
             "n": "SAN DIEGO (ABRIL)",
             "v": "100%"
         },
@@ -39,10 +35,6 @@
         {
             "n": "SANTA RITA (MAYO)",
             "v": "100%"
-        },
-        {
-            "n": "CASTAÑO (ABRIL)",
-            "v": "90%"
         },
         {
             "n": "SANTA RITA (ABRIL)",
@@ -85,6 +77,10 @@
         {
             "n": "SAN JUAN (MARZO)",
             "v": "50%"
+        },
+        {
+            "n": "CASTAÑO (ABRIL)",
+            "v": "45%"
         },
         {
             "n": "TUCACAS (ABRIL)",

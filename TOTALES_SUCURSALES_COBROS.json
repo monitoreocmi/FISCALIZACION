@@ -14,8 +14,8 @@
     {
         "sucursal": "BOSQUE (ABRIL)",
         "COBRADO": 64.99,
-        "PERDIDA_PATRIMONIO": 167.04,
-        "TOTAL_GESTIONADO": 232.03
+        "PERDIDA_PATRIMONIO": 170.94,
+        "TOTAL_GESTIONADO": 235.93
     },
     {
         "sucursal": "VILLAS DE ARAGUA (ABRIL)",
@@ -88,12 +88,6 @@
         "COBRADO": 0.3,
         "PERDIDA_PATRIMONIO": 700.04,
         "TOTAL_GESTIONADO": 700.34
-    },
-    {
-        "sucursal": "EL BOSQUE (ABRIL)",
-        "COBRADO": 0.0,
-        "PERDIDA_PATRIMONIO": 3.9,
-        "TOTAL_GESTIONADO": 3.9
     },
     {
         "sucursal": "SAN JUAN (ABRIL)",
