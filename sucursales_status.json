@@ -1,6 +1,10 @@
 {
     "aprobadas": [
         {
+            "n": "EL BOSQUE (ABRIL)",
+            "v": "100%"
+        },
+        {
             "n": "SAN DIEGO (ABRIL)",
             "v": "100%"
         },
@@ -9,16 +13,36 @@
             "v": "100%"
         },
         {
-            "n": "CENTRAL (ABRIL)",
-            "v": "90%"
+            "n": "BARQUISIMETO (MAYO)",
+            "v": "100%"
         },
         {
-            "n": "LA VICTORIA (ABRIL)",
-            "v": "90%"
+            "n": "BOSQUE (MAYO)",
+            "v": "100%"
         },
         {
-            "n": "IPSFA (ABRIL)",
-            "v": "85%"
+            "n": "CASTAÑO (MAYO)",
+            "v": "100%"
+        },
+        {
+            "n": "CENTRAL (MAYO)",
+            "v": "100%"
+        },
+        {
+            "n": "IPSFA (MAYO)",
+            "v": "100%"
+        },
+        {
+            "n": "MORA (MAYO)",
+            "v": "100%"
+        },
+        {
+            "n": "SANTA RITA (MAYO)",
+            "v": "100%"
+        },
+        {
+            "n": "CASTAÑO (ABRIL)",
+            "v": "90%"
         },
         {
             "n": "SANTA RITA (ABRIL)",
@@ -27,24 +51,20 @@
         {
             "n": "GUACARA (ABRIL)",
             "v": "80%"
+        },
+        {
+            "n": "VICTORIA (ABRIL)",
+            "v": "75%"
+        },
+        {
+            "n": "SAN JUAN (MAYO)",
+            "v": "75%"
         }
     ],
     "reprobadas": [
         {
-            "n": "VILLAS DE ARAGUA (ABRIL)",
+            "n": "IPSFA (ABRIL)",
             "v": "65%"
-        },
-        {
-            "n": "CASTAÑO (ABRIL)",
-            "v": "60%"
-        },
-        {
-            "n": "LA MORA (ABRIL)",
-            "v": "60%"
-        },
-        {
-            "n": "NAGUANAGUA (ABRIL)",
-            "v": "60%"
         },
         {
             "n": "BARQUISIMETO (ABRIL)",
@@ -59,16 +79,12 @@
             "v": "50%"
         },
         {
-            "n": "LAS ACACIAS (ABRIL)",
+            "n": "NAGUANAGUA (ABRIL)",
             "v": "50%"
         },
         {
             "n": "SAN JUAN (MARZO)",
             "v": "50%"
-        },
-        {
-            "n": "EL BOSQUE (ABRIL)",
-            "v": "45%"
         },
         {
             "n": "TUCACAS (ABRIL)",
@@ -77,6 +93,18 @@
         {
             "n": "LAS ACACIAS (MARZO)",
             "v": "45%"
+        },
+        {
+            "n": "VILLAS DE ARAGUA (ABRIL)",
+            "v": "35%"
+        },
+        {
+            "n": "ACACIAS (ABRIL)",
+            "v": "30%"
+        },
+        {
+            "n": "MORA (ABRIL)",
+            "v": "30%"
         },
         {
             "n": "BARQUISIMETO (MARZO)",
@@ -103,23 +131,27 @@
             "v": "30%"
         },
         {
-            "n": "LA VICTORIA (MARZO)",
+            "n": "TUCACAS (MARZO)",
             "v": "25%"
         },
         {
-            "n": "TUCACAS (MARZO)",
+            "n": "VICTORIA (MARZO)",
             "v": "25%"
+        },
+        {
+            "n": "CENTRAL (ABRIL)",
+            "v": "20%"
         },
         {
             "n": "GUACARA (MARZO)",
             "v": "10%"
         },
         {
-            "n": "CASTAÑO (MARZO)",
+            "n": "BOSQUE (ABRIL)",
             "v": "0%"
         },
         {
-            "n": "CENTRAL (MARZO)",
+            "n": "CASTAÑO (MARZO)",
             "v": "0%"
         },
         {

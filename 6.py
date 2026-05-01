@@ -22,7 +22,7 @@ def procesar_luxor_columna_h():
         print(">>> SISTEMA LUXOR: DETECTOR AUTO DE 'TIPO D' Y 'TIPO E' <<<")
         print("="*60)
         
-        # BÚSQUEDA AUTOMÁTICA EN CARPETA 'CUADROS'
+        # BÚSQUEDA AUTOMÁTICA EN CARPETA 'CUADROS' Y SUBCARPETAS
         ruta_script = os.path.dirname(os.path.abspath(sys.argv[0]))
         ruta_cuadros = os.path.join(ruta_script, "cuadros")
 
@@ -30,7 +30,7 @@ def procesar_luxor_columna_h():
             print(f"❌ ERROR: No se encuentra la carpeta 'cuadros' en:\n{ruta_cuadros}")
             return
 
-        # Recopilar todos los archivos .xlsx de forma recursiva (subcarpetas)
+        # RECOPILLAR ARCHIVOS DE FORMA RECURSIVA (MESES Y SUCURSALES)
         archivos = []
         for root, dirs, files in os.walk(ruta_cuadros):
             for file in files:
@@ -50,20 +50,15 @@ def procesar_luxor_columna_h():
             print(f"[{i}/{len(archivos)}] Analizando: {nombre_archivo}")
             
             try:
-                # Cargar el archivo
                 df = pd.read_excel(ruta_completa)
-                
-                # Estandarizar nombres de columnas
                 df.columns = [str(c).upper().strip() for c in df.columns]
                 
-                # Buscar columnas necesarias
                 col_fecha = next((c for c in df.columns if 'FECHA' in c), None)
                 col_suc = next((c for c in df.columns if 'SUCURSAL' in c), None)
 
                 if not col_fecha or not col_suc:
                     continue
 
-                # ESCANEO DE FILAS
                 for _, fila in df.iterrows():
                     fila_str = " ".join([str(val).upper() for val in fila.values])
                     
@@ -90,7 +85,6 @@ def procesar_luxor_columna_h():
             print("\n❌ No se encontraron incidencias 'TIPO D' o 'TIPO E'.")
             return
 
-        # Consolidar resultados
         df_final = pd.DataFrame(lista_acumulada)
         resumen = df_final.groupby(['SUCURSAL', 'MES', 'TIPO']).size().unstack(fill_value=0)
         
@@ -100,22 +94,21 @@ def procesar_luxor_columna_h():
         resumen['TOTAL'] = resumen['D'] + resumen['E']
         resumen = resumen.sort_values(by='TOTAL', ascending=False).reset_index()
 
-        # Formato JSON para el Dashboard
         resultado_json = [{
             "n": f"{r['SUCURSAL']} ({r['MES']})",
             "v": int(r['TOTAL']),
             "detalle": f"D: {int(r['D'])} | E: {int(r['E'])}"
         } for _, r in resumen.iterrows()]
 
-        # Guardar en la raíz del script
         with open(os.path.join(ruta_script, "incidencias_graves.json"), "w", encoding="utf-8") as f:
             json.dump(resultado_json, f, indent=4, ensure_ascii=False)
 
         print(f"\n✅ ¡CONSEGUIDO! Se detectaron {len(lista_acumulada)} incidencias.")
-        print(f"El ranking tiene {len(resultado_json)} sucursales procesadas.")
 
     except Exception as e:
         print(f"\n❌ ERROR GENERAL: {e}")
+    
+    # EL SCRIPT SE CIERRA SOLO AL LLEGAR AL FINAL (SIN INPUTS)
 
 if __name__ == "__main__":
     procesar_luxor_columna_h()

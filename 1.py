@@ -25,12 +25,12 @@ def limpiar_nombre_archivo(nombre):
 
 CSS_UNIFICADO = f"""
 <style>
-    body {{ font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }}
+    body {{ font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; text-align: center; }}
     .top-bar {{ height: 100px; background: white; border-bottom: 4px solid #F9D908; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; margin-bottom: 30px; }}
     .logo-ext {{ height: 60px; max-width: 100px; object-fit: contain; }}
     h1 {{ color: #0844a4; margin: 0; text-transform: uppercase; font-weight: 900; font-size: 18px; text-align: center; flex-grow: 1; padding: 0 10px; }}
-    .main-container {{ background-color: white; max-width: 95%; margin: 0 auto 40px auto; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow-x: auto; }}
-    table {{ width: 100%; border-collapse: collapse; border: 2px solid #333; min-width: 600px; }}
+    .main-container {{ background-color: white; width: 90%; margin: 0 auto 40px auto; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; text-align: center; overflow-x: auto; }}
+    table {{ width: 100%; border-collapse: collapse; border: 2px solid #333; margin: 0 auto; }}
     th {{ background-color: #0844a4; color: #F9D908; padding: 10px; font-size: 12px; text-transform: uppercase; border: 2px solid #333; }}
     td {{ border: 2px solid #333; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; color: black; }}
     tr:nth-child(even) {{ background-color: #f2f2f2; }}
@@ -41,7 +41,7 @@ CSS_UNIFICADO = f"""
         .logo-ext {{ height: 40px; }}
         h1 {{ font-size: 14px; }}
         td, th {{ font-size: 10px; padding: 5px; }}
-        .main-container {{ width: 100%; max-width: 100%; padding: 5px; box-shadow: none; }}
+        .main-container {{ width: 95%; padding: 5px; box-shadow: none; }}
     }}
 </style>
 <script>
@@ -117,7 +117,6 @@ def generar_reporte_v30_final():
                 df_suc_act = df_m_act[df_m_act['SUCURSAL'] == suc]
                 filas_html, suma_impacto, t_act, t_ant = "", 0, 0, 0
                 
-                # Columnas estándar para reportes detallados
                 columnas_reporte = ['RESPONSABLE', 'PROVEEDOR', 'FECHA', 'FACTURA', 'INCIDENCIA', 'TIPO FISCALIZACIÓN', 'OBSERVACIÓN']
 
                 for grupo in grupos_defs:
@@ -160,7 +159,6 @@ def generar_reporte_v30_final():
                 nota_f = max(0, 100 - suma_impacto)
                 color_calif = "#ed1c24" if nota_f < 75 else "#27ae60"
                 
-                # Reporte RESPONSABLES (Detallado con todas las columnas)
                 filas_resp = ""
                 if 'NOMBRE_AUX' in df_suc_act.columns:
                     for name, cant in df_suc_act['NOMBRE_AUX'].value_counts().head(3).items():
@@ -172,13 +170,12 @@ def generar_reporte_v30_final():
                         html_res = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>RESPONSABLE: {name}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_presentes])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_res_det[cols_presentes].fillna('-').values])}</tbody></table><a href='#' onclick='volverSmart()' class='btn-volver'>VOLVER</a></div></body></html>"
                         with open(os.path.join(ruta_base, n_m_act, n_s, archivo_resp), "w", encoding="utf-8") as f: f.write(html_res)
 
-                # Reporte TODAS (Mes actual y anterior)
                 for p_ref, n_ref, link_name in [(p_act, n_m_act, "TODAS.html"), (p_ant, n_m_ant, "TODAS.html")]:
                     df_all = df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ref)].copy()
                     if not df_all.empty:
                         df_all['FECHA'] = df_all['FECHA'].dt.strftime('%Y-%m-%d')
                         cols_presentes = [c for c in columnas_reporte if c in df_all.columns]
-                        html_all = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TODAS LAS INCIDENCIAS ({n_ref})</h1><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_presentes])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_all[cols_presentes].fillna('-').values])}</tbody></table><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER</a></div></body></html>"
+                        html_all = f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TODAS LAS INCIDENCIAS ({n_ref})</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_presentes])}</tr></thead><tbody>{''.join([f'<tr>{"".join([f"<td>{v}</td>" for v in r])}</tr>' for r in df_all[cols_presentes].fillna('-').values])}</tbody></table><br><a href='#' onclick='window.history.back(); return false;' class='btn-volver'>VOLVER</a></div></body></html>"
                         os.makedirs(os.path.join(ruta_base, n_ref, n_s), exist_ok=True)
                         with open(os.path.join(ruta_base, n_ref, n_s, "TODAS.html"), "w", encoding="utf-8") as f: f.write(html_all)
 
