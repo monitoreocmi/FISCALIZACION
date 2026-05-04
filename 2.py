@@ -124,7 +124,7 @@ def generar_reporte_cobros_final():
             .modal-content { max-width: 95%; max-height: 95%; border: 3px solid #F9D908; }
         </style>"""
 
-        # --- AJUSTE CLAVE PARA IMÁGENES EN GITHUB ---
+        # --- AJUSTE DE RUTA: FISCALIZACION/facturas ---
         script_modal = """<div id="myModal" class="modal" onclick="this.style.display='none'"><img class="modal-content" id="imgModal"></div>
         <script>
         function openModal(nombreBase, mes, suc) {
@@ -135,12 +135,12 @@ def generar_reporte_cobros_final():
             
             function intentarCargar() {
                 if (index >= extensiones.length) { 
-                    alert("Error: No se encontró la imagen '" + nombreBase + "' en FACTURAS/" + mes + "/" + suc + ". Asegúrese de subir los archivos a GitHub."); 
+                    alert("No se encontró la foto '" + nombreBase + "' en FISCALIZACION/facturas/" + mes + "/" + suc); 
                     return; 
                 }
                 
-                // Ruta absoluta relativa a la raíz para evitar errores de navegación
-                const url = "../../FACTURAS/" + mes + "/" + suc + "/" + nombreBase + "." + extensiones[index];
+                // Salimos de mes/sucursal y entramos en FISCALIZACION/facturas
+                const url = "../../FISCALIZACION/facturas/" + mes + "/" + suc + "/" + nombreBase + "." + extensiones[index];
                 
                 const tempImg = new Image();
                 tempImg.onload = () => { 
@@ -190,7 +190,7 @@ def generar_reporte_cobros_final():
                         f.write(f"<a href='{url}' class='card-resumen {cl}'><h3>{l}</h3><div class='monto'>${m:,.2f}</div></a>")
                     f.write(f"</div><a href='todo_detallado.html' class='btn'>VER TODO</a><a href='../../index.html?tab=cobs#mes-{n_m}' class='btn'>INICIO</a></body></html>")
 
-        print("\n✅ REPORTES GENERADOS CORRECTAMENTE: Se ha forzado la ruta absoluta a la carpeta FACTURAS.")
+        print("\n✅ REPORTES GENERADOS: Ruta ajustada a FISCALIZACION/facturas.")
     except Exception as e: print(f"❌ Error crítico: {e}")
 
 if __name__ == "__main__":

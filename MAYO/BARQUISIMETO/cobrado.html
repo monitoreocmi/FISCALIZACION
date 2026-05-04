@@ -25,12 +25,12 @@
             
             function intentarCargar() {
                 if (index >= extensiones.length) { 
-                    alert("Error: No se encontró la imagen '" + nombreBase + "' en FACTURAS/" + mes + "/" + suc + ". Asegúrese de subir los archivos a GitHub."); 
+                    alert("No se encontró la foto '" + nombreBase + "' en FISCALIZACION/facturas/" + mes + "/" + suc); 
                     return; 
                 }
                 
-                // Ruta absoluta relativa a la raíz para evitar errores de navegación
-                const url = "../../FACTURAS/" + mes + "/" + suc + "/" + nombreBase + "." + extensiones[index];
+                // Salimos de mes/sucursal y entramos en FISCALIZACION/facturas
+                const url = "../../FISCALIZACION/facturas/" + mes + "/" + suc + "/" + nombreBase + "." + extensiones[index];
                 
                 const tempImg = new Image();
                 tempImg.onload = () => { 
