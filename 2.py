@@ -39,6 +39,7 @@ def obtener_indices_flexibles(headers):
         if 'MONTO' in h_up: indices['monto'] = i
         if 'FECHA' in h_up: indices['fecha'] = i
         if 'F COBRADA' in h_up: indices['foto'] = i
+    # Fallback si no encuentra monto por nombre exacto
     if indices['monto'] == -1: indices['monto'] = 9 
     return indices
 
@@ -60,6 +61,7 @@ def generar_reporte_cobros_final():
             wb = load_workbook(f, data_only=True)
             ws = wb.active
             
+            # Obtener cabeceras reales
             headers_reales = [str(cell.value).strip() if cell.value else f"COL_{i+1}" for i, cell in enumerate(ws[1])]
             idx = obtener_indices_flexibles(headers_reales)
             
@@ -67,6 +69,7 @@ def generar_reporte_cobros_final():
                 row_vals = [cell.value for cell in row]
                 if not any(v is not None for v in row_vals): continue
                 
+                # Detección de color basada en la celda de MONTO detectada
                 try:
                     target_cell = row[idx['monto']]
                     color = str(target_cell.fill.start_color.index).upper()
@@ -105,6 +108,7 @@ def generar_reporte_cobros_final():
 
         df = pd.DataFrame(datos_finales)
         
+        # --- LÓGICA DE GENERACIÓN HTML (CSS IGUAL AL ORIGINAL) ---
         estilo_css = """<style>
             body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; }
             .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 4px solid #F9D908; }
@@ -124,7 +128,6 @@ def generar_reporte_cobros_final():
             .modal-content { max-width: 95%; max-height: 95%; border: 3px solid #F9D908; }
         </style>"""
 
-        # --- AJUSTE DE RUTA: FISCALIZACION/facturas ---
         script_modal = """<div id="myModal" class="modal" onclick="this.style.display='none'"><img class="modal-content" id="imgModal"></div>
         <script>
         function openModal(nombreBase, mes, suc) {
@@ -132,25 +135,12 @@ def generar_reporte_cobros_final():
             const modal = document.getElementById('myModal');
             const img = document.getElementById('imgModal');
             let index = 0;
-            
             function intentarCargar() {
-                if (index >= extensiones.length) { 
-                    alert("No se encontró la foto '" + nombreBase + "' en FISCALIZACION/facturas/" + mes + "/" + suc); 
-                    return; 
-                }
-                
-                // Salimos de mes/sucursal y entramos en FISCALIZACION/facturas
-                const url = "../../FISCALIZACION/facturas/" + mes + "/" + suc + "/" + nombreBase + "." + extensiones[index];
-                
+                if (index >= extensiones.length) { alert("No se encontró la imagen."); return; }
+                const url = `../../FACTURAS/${mes}/${suc}/${nombreBase}.${extensiones[index]}`;
                 const tempImg = new Image();
-                tempImg.onload = () => { 
-                    img.src = url; 
-                    modal.style.display = "flex"; 
-                };
-                tempImg.onerror = () => { 
-                    index++; 
-                    intentarCargar(); 
-                };
+                tempImg.onload = () => { img.src = url; modal.style.display = "flex"; };
+                tempImg.onerror = () => { index++; intentarCargar(); };
                 tempImg.src = url;
             }
             intentarCargar();
@@ -165,24 +155,29 @@ def generar_reporte_cobros_final():
                 df_s = df_p[df_p['SUCURSAL'] == suc]
                 idx_actual = df_s['IDX'].iloc[0]
 
+                # Detallados con alineación de columnas corregida
                 for est_key, file_name, titulo in [('COBRADO', 'cobrado.html', 'DETALLE COBRADO'), ('RECUPERADO', 'recuperado.html', 'PÉRDIDA MITIGADA'), ('NO_PAGADO', 'no_pagado.html', 'DETALLE NO PAGADO'), ('EXCEDENTE', 'excedente.html', 'DETALLE EXCEDENTES'), ('TODO', 'todo_detallado.html', 'DETALLE COMPLETO')]:
                     df_view = df_s if est_key == 'TODO' else df_s[df_s['ESTATUS'] == est_key]
                     filas_html = ""
                     for _, r in df_view.iterrows():
                         tds = ""
+                        # Iterar sobre todas las columnas que existan en el registro
                         for i, val in enumerate(r['FILA']):
                             val_clean = str(val).strip() if val is not None else ""
                             if i == idx_actual['monto']:
+                                # Si hay foto, poner link al modal en el monto
                                 if r['FOTO_BASE'] not in ["", "None", "nan", "0", "SIN FOTO"]:
                                     tds += f"<td><span style='cursor:pointer; color:#002060; text-decoration:underline;' onclick='openModal(\"{r['FOTO_BASE']}\", \"{n_m}\", \"{suc}\")'>${r['MONTO_CALC']:,.2f}</span></td>"
                                 else: tds += f"<td>${r['MONTO_CALC']:,.2f}</td>"
                             else: tds += f"<td>{val_clean}</td>"
                         filas_html += f"<tr>{tds}</tr>"
 
+                    # Escribir el archivo
                     with open(os.path.join(p_suc, file_name), "w", encoding="utf-8") as f:
                         headers_html = "".join([f"<th>{h}</th>" for h in r['HEADERS']])
                         f.write(f"<html><head><meta charset='UTF-8'>{estilo_css}</head><body><div class='header-logos'><h1>{titulo}</h1></div><div class='blue-box-container'><div class='table-responsive'><table><thead><tr>{headers_html}</tr></thead><tbody>{filas_html}</tbody></table></div><a href='cobros_detalles.html' class='btn'>VOLVER</a></div>{script_modal}</body></html>")
 
+                # Página de inicio de sucursal (Resumen)
                 with open(os.path.join(p_suc, "cobros_detalles.html"), "w", encoding="utf-8") as f:
                     v = [df_s[df_s['ESTATUS']==k]['MONTO_CALC'].sum() for k in ['COBRADO', 'RECUPERADO', 'EXCEDENTE', 'NO_PAGADO']]
                     f.write(f"<html><head><meta charset='UTF-8'>{estilo_css}</head><body><div class='header-logos'><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'><h1>SISTEMA LUXOR</h1><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'></div><h2>{suc} | {n_m}</h2><div class='resumen-grid'>")
@@ -190,7 +185,7 @@ def generar_reporte_cobros_final():
                         f.write(f"<a href='{url}' class='card-resumen {cl}'><h3>{l}</h3><div class='monto'>${m:,.2f}</div></a>")
                     f.write(f"</div><a href='todo_detallado.html' class='btn'>VER TODO</a><a href='../../index.html?tab=cobs#mes-{n_m}' class='btn'>INICIO</a></body></html>")
 
-        print("\n✅ REPORTES GENERADOS: Ruta ajustada a FISCALIZACION/facturas.")
+        print("\n✅ REPORTES GENERADOS CORRECTAMENTE: Columnas y filas alineadas con el Excel.")
     except Exception as e: print(f"❌ Error crítico: {e}")
 
 if __name__ == "__main__":
