@@ -22,12 +22,25 @@
             const modal = document.getElementById('myModal');
             const img = document.getElementById('imgModal');
             let index = 0;
+            
             function intentarCargar() {
-                if (index >= extensiones.length) { alert("No se encontró la imagen."); return; }
-                const url = `../../FACTURAS/${mes}/${suc}/${nombreBase}.${extensiones[index]}`;
+                if (index >= extensiones.length) { 
+                    alert("Error: No se encontró la imagen '" + nombreBase + "' en FACTURAS/" + mes + "/" + suc + ". Asegúrese de subir los archivos a GitHub."); 
+                    return; 
+                }
+                
+                // Ruta absoluta relativa a la raíz para evitar errores de navegación
+                const url = "../../FACTURAS/" + mes + "/" + suc + "/" + nombreBase + "." + extensiones[index];
+                
                 const tempImg = new Image();
-                tempImg.onload = () => { img.src = url; modal.style.display = "flex"; };
-                tempImg.onerror = () => { index++; intentarCargar(); };
+                tempImg.onload = () => { 
+                    img.src = url; 
+                    modal.style.display = "flex"; 
+                };
+                tempImg.onerror = () => { 
+                    index++; 
+                    intentarCargar(); 
+                };
                 tempImg.src = url;
             }
             intentarCargar();
