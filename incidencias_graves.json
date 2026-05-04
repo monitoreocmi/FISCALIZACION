@@ -1,5 +1,10 @@
 [
     {
+        "n": "CENTRAL (MARZO)",
+        "v": 33,
+        "detalle": "D: 16 | E: 17"
+    },
+    {
         "n": "CENTRAL (ABRIL)",
         "v": 21,
         "detalle": "D: 16 | E: 5"
@@ -15,6 +20,21 @@
         "detalle": "D: 10 | E: 0"
     },
     {
+        "n": "SAN DIEGO (MARZO)",
+        "v": 10,
+        "detalle": "D: 8 | E: 2"
+    },
+    {
+        "n": "VICTORIA (MARZO)",
+        "v": 10,
+        "detalle": "D: 0 | E: 10"
+    },
+    {
+        "n": "TUCACAS (MARZO)",
+        "v": 8,
+        "detalle": "D: 0 | E: 8"
+    },
+    {
         "n": "CASTAÑO (ABRIL)",
         "v": 6,
         "detalle": "D: 1 | E: 5"
@@ -25,22 +45,37 @@
         "detalle": "D: 4 | E: 2"
     },
     {
+        "n": "ACACIAS (MARZO)",
+        "v": 5,
+        "detalle": "D: 5 | E: 0"
+    },
+    {
+        "n": "GUACARA (MARZO)",
+        "v": 5,
+        "detalle": "D: 1 | E: 4"
+    },
+    {
         "n": "BARQUISIMETO (ABRIL)",
         "v": 5,
         "detalle": "D: 5 | E: 0"
     },
     {
-        "n": "VICTORIA (MARZO)",
-        "v": 5,
-        "detalle": "D: 0 | E: 5"
-    },
-    {
-        "n": "GUACARA (MARZO)",
+        "n": "VILLAS DE ARAGUA (ABRIL)",
         "v": 4,
-        "detalle": "D: 1 | E: 3"
+        "detalle": "D: 2 | E: 2"
     },
     {
         "n": "CIRCULO MILITAR (ABRIL)",
+        "v": 4,
+        "detalle": "D: 3 | E: 1"
+    },
+    {
+        "n": "SAN DIEGO (ABRIL)",
+        "v": 4,
+        "detalle": "D: 3 | E: 1"
+    },
+    {
+        "n": "IPSFA (MARZO)",
         "v": 4,
         "detalle": "D: 3 | E: 1"
     },
@@ -50,24 +85,9 @@
         "detalle": "D: 1 | E: 3"
     },
     {
-        "n": "VILLAS DE ARAGUA (ABRIL)",
-        "v": 4,
-        "detalle": "D: 2 | E: 2"
-    },
-    {
-        "n": "SAN DIEGO (ABRIL)",
-        "v": 4,
-        "detalle": "D: 3 | E: 1"
-    },
-    {
-        "n": "GUACARA (ABRIL)",
+        "n": "SANTA RITA (MARZO)",
         "v": 3,
-        "detalle": "D: 1 | E: 2"
-    },
-    {
-        "n": "NAN (MARZO)",
-        "v": 3,
-        "detalle": "D: 1 | E: 2"
+        "detalle": "D: 3 | E: 0"
     },
     {
         "n": "VICTORIA (ABRIL)",
@@ -75,12 +95,17 @@
         "detalle": "D: 1 | E: 2"
     },
     {
-        "n": "SANTA RITA (MARZO)",
+        "n": "GUACARA (ABRIL)",
+        "v": 3,
+        "detalle": "D: 1 | E: 2"
+    },
+    {
+        "n": "NAGUANAGUA (ABRIL)",
         "v": 3,
         "detalle": "D: 3 | E: 0"
     },
     {
-        "n": "NAGUANAGUA (ABRIL)",
+        "n": "CIRCULO MILITAR (MARZO)",
         "v": 3,
         "detalle": "D: 3 | E: 0"
     },
@@ -90,9 +115,19 @@
         "detalle": "D: 2 | E: 0"
     },
     {
+        "n": "BOSQUE (MARZO)",
+        "v": 2,
+        "detalle": "D: 1 | E: 1"
+    },
+    {
         "n": "CENTRAL (MAYO)",
         "v": 2,
         "detalle": "D: 2 | E: 0"
+    },
+    {
+        "n": "SAN JUAN (MARZO)",
+        "v": 2,
+        "detalle": "D: 0 | E: 2"
     },
     {
         "n": "IPSFA (ABRIL)",
@@ -100,7 +135,7 @@
         "detalle": "D: 2 | E: 0"
     },
     {
-        "n": "IPSFA (MARZO)",
+        "n": "MORA (ABRIL)",
         "v": 2,
         "detalle": "D: 2 | E: 0"
     },
@@ -115,18 +150,18 @@
         "detalle": "D: 2 | E: 0"
     },
     {
-        "n": "MORA (ABRIL)",
-        "v": 2,
-        "detalle": "D: 2 | E: 0"
+        "n": "BARQUISIMETO (MAYO)",
+        "v": 1,
+        "detalle": "D: 1 | E: 0"
+    },
+    {
+        "n": "NAGUANAGUA (MARZO)",
+        "v": 1,
+        "detalle": "D: 1 | E: 0"
     },
     {
         "n": "LA MORA (MARZO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
-    },
-    {
-        "n": "SAN JUAN (MARZO)",
-        "v": 1,
-        "detalle": "D: 0 | E: 1"
     }
 ]

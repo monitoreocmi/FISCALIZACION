@@ -7,7 +7,6 @@ from datetime import datetime
 try:
     from flask import Flask, request, jsonify, render_template_string, send_from_directory
     from werkzeug.utils import secure_filename
-    # Librerías para el manejo de colores en Excel
     from openpyxl import load_workbook
     from openpyxl.styles import PatternFill
 except ImportError:
@@ -19,11 +18,9 @@ app = Flask(__name__)
 RUTA_RAIZ = os.path.dirname(os.path.abspath(__file__))
 os.chdir(RUTA_RAIZ)
 
-# --- CONFIGURACIÓN DE COLORES LUXOR ---
 FILL_VERDE = PatternFill(start_color="FFC6EFCE", end_color="FFC6EFCE", fill_type="solid")    # COBRO
 FILL_AMARILLO = PatternFill(start_color="FFFFEB9C", end_color="FFFFEB9C", fill_type="solid") # RECUPERACIÓN
 
-# Lista de sucursales exacta
 SUCURSALES = [
     "BARQUISIMETO", "CASTAÑO", "CENTRAL", "CIRCULO", "BOSQUE", 
     "GUACARA", "IPSFA", "MORA", "VICTORIA", "ACACIAS", 
@@ -41,8 +38,16 @@ INCIDENCIAS_REF = {
 }
 
 def asegurar_id(df):
+    columnas_ordenadas = [
+        'SUCURSAL', 'PROVEEDOR', 'FACTURA', 'FECHA', 'TIPO FISCALIZACIÓN', 
+        'RESPONSABLE', 'INCIDENCIA', 'TIPO DE ERROR', 'OBSERVACIÓN', 
+        'MONTO $', 'F COBRADA', 'CLASIFICACIÓN MONTO', 'ID'
+    ]
     if 'ID' not in df.columns:
-        df.insert(0, 'ID', [f"HIST_{datetime.now().strftime('%Y%m%d')}_{i}" for i in range(len(df))])
+        df['ID'] = [f"HIST_{datetime.now().strftime('%Y%m%d')}_{i}" for i in range(len(df))]
+    for col in columnas_ordenadas:
+        if col not in df.columns: df[col] = ""
+    df = df[columnas_ordenadas]
     df['ID'] = df['ID'].astype(str).str.strip().replace('nan', '')
     return df
 
@@ -80,65 +85,50 @@ def guardar():
             archivo_excel = os.path.join(ruta_dir, f"{sucursal}.xlsx")
         
         df = pd.read_excel(archivo_excel, dtype={'ID': str}) if os.path.exists(archivo_excel) else pd.DataFrame()
-        df = asegurar_id(df)
-        
         id_edicion = datos.get('ID_EDICION')
         if id_edicion and str(id_edicion).strip() != "":
             df = df[df['ID'] != str(id_edicion).strip()]
             
         archivo_foto = request.files.get('foto')
-        nombre_foto = datos.get('FOTO_EXISTENTE') or "SIN FOTO"
+        f_cobrada_val = datos.get('F_COBRADA_INPUT') or "SIN FOTO"
+        
         if archivo_foto and archivo_foto.filename != '':
             ruta_foto = os.path.join(RUTA_RAIZ, "facturas", mes_nombre, sucursal)
             os.makedirs(ruta_foto, exist_ok=True)
-            nombre_foto = f"{secure_filename(datos.get('FACTURA'))}.jpg"
+            # Se usa el nombre ingresado en F Cobrada para el archivo
+            nombre_foto = f"{secure_filename(f_cobrada_val)}.jpg"
             archivo_foto.save(os.path.join(ruta_foto, nombre_foto))
-        elif datos.get('CLASIFICACION_MONTO') == "NINGUNA":
-            nombre_foto = "SIN FOTO"
-            
+        
         nuevo_id = str(id_edicion).strip() if (id_edicion and str(id_edicion).strip() != "") else datetime.now().strftime('%Y%m%d%H%M%S')
         nueva_fila = {
-            'ID': nuevo_id, 'SUCURSAL': sucursal, 'PROVEEDOR': datos.get('PROVEEDOR'),
-            'FACTURA': datos.get('FACTURA'), 'FECHA': datos.get('FECHA'),
-            'TIPO FISCALIZACIÓN': datos.get('TIPO_FISC'), 'RESPONSABLE': datos.get('RESPONSABLE'),
+            'SUCURSAL': sucursal, 'PROVEEDOR': datos.get('PROVEEDOR'), 'FACTURA': datos.get('FACTURA'), 
+            'FECHA': datos.get('FECHA'), 'TIPO FISCALIZACIÓN': datos.get('TIPO_FISC'), 'RESPONSABLE': datos.get('RESPONSABLE'),
             'INCIDENCIA': datos.get('INCIDENCIA'), 'TIPO DE ERROR': INCIDENCIAS_REF.get(datos.get('INCIDENCIA'), "N/A"),
-            'OBSERVACIÓN': datos.get('OBSERVACION'), 'CLASIFICACIÓN MONTO': datos.get('CLASIFICACION_MONTO'),
-            'MONTO $': float(datos.get('MONTO')) if datos.get('CLASIFICACION_MONTO') != "NINGUNA" else 0, 
-            'F COBRADA': nombre_foto
+            'OBSERVACIÓN': datos.get('OBSERVACION'), 'MONTO $': float(datos.get('MONTO')) if datos.get('CLASIFICACION_MONTO') != "NINGUNA" else 0, 
+            'F COBRADA': f_cobrada_val, 'CLASIFICACIÓN MONTO': datos.get('CLASIFICACION_MONTO'), 'ID': nuevo_id
         }
         df = pd.concat([df, pd.DataFrame([nueva_fila])], ignore_index=True)
+        df = asegurar_id(df)
         df.to_excel(archivo_excel, index=False)
 
-        # --- APLICACIÓN DE COLORES SEGÚN CLASIFICACIÓN ---
         if datos.get('CLASIFICACION_MONTO') != "NINGUNA":
-            wb = load_workbook(archivo_excel)
-            ws = wb.active
-            col_monto_idx = -1
-            # Identificar la columna del monto
+            wb = load_workbook(archivo_excel); ws = wb.active; col_monto_idx = -1
             for cell in ws[1]:
-                if cell.value == 'MONTO $':
-                    col_monto_idx = cell.column
-                    break
-            
+                if cell.value == 'MONTO $': col_monto_idx = cell.column; break
             if col_monto_idx != -1:
                 target_cell = ws.cell(row=ws.max_row, column=col_monto_idx)
-                if datos.get('CLASIFICACION_MONTO') == "COBRO":
-                    target_cell.fill = FILL_VERDE
-                elif datos.get('CLASIFICACION_MONTO') == "RECUPERACIÓN":
-                    target_cell.fill = FILL_AMARILLO
+                if datos.get('CLASIFICACION_MONTO') == "COBRO": target_cell.fill = FILL_VERDE
+                elif datos.get('CLASIFICACION_MONTO') == "RECUPERACIÓN": target_cell.fill = FILL_AMARILLO
             wb.save(archivo_excel)
-
         return jsonify({"status": "ok"})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+    except Exception as e: return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/listar/<mes>/<sucursal>')
 def listar(mes, sucursal):
     ruta = buscar_archivo_lectura(mes, sucursal)
     if ruta and os.path.exists(ruta):
         try:
-            df = pd.read_excel(ruta, dtype={'ID': str}).fillna("")
-            df = asegurar_id(df)
+            df = pd.read_excel(ruta, dtype={'ID': str}).fillna(""); df = asegurar_id(df)
             df_filtrado = df[df['SUCURSAL'].astype(str).str.upper().str.contains(sucursal.upper())]
             return jsonify(df_filtrado.to_dict(orient='records'))
         except: return jsonify([])
@@ -151,17 +141,14 @@ def borrar():
         mes = MESES_ES[datetime.strptime(data.get('fecha'), '%Y-%m-%d').month]
         ruta = buscar_archivo_lectura(mes, data.get('sucursal'))
         if ruta and os.path.exists(ruta):
-            df = pd.read_excel(ruta, dtype={'ID': str})
-            df = asegurar_id(df)
-            df = df[df['ID'] != str(data.get('id')).strip()]
-            df.to_excel(ruta, index=False)
+            df = pd.read_excel(ruta, dtype={'ID': str}); df = asegurar_id(df)
+            df = df[df['ID'] != str(data.get('id')).strip()]; df.to_excel(ruta, index=False)
             return jsonify({"status": "ok"})
     except: return jsonify({"status": "error"}), 500
     return jsonify({"status": "error"})
 
 @app.route('/RECURSOS/<path:path>')
-def recursos(path):
-    return send_from_directory(os.path.join(RUTA_RAIZ, 'RECURSOS'), path)
+def recursos(path): return send_from_directory(os.path.join(RUTA_RAIZ, 'RECURSOS'), path)
 
 HTML_FORM = """
 <!DOCTYPE html>
@@ -204,7 +191,6 @@ HTML_FORM = """
         <div class="card" style="max-width: 700px;">
             <form id="formMatriz">
                 <input type="hidden" name="ID_EDICION" id="id_edicion">
-                <input type="hidden" name="FOTO_EXISTENTE" id="foto_existente">
                 <div class="grid">
                     <div style="grid-column: span 2;"><label>SUCURSAL</label>
                         <select name="SUCURSAL" id="f_suc" required>{% for s in sucursales %}<option value="{{s}}">{{s}}</option>{% endfor %}</select>
@@ -222,7 +208,8 @@ HTML_FORM = """
                         </select>
                     </div>
                     <div id="box-monto"><label>MONTO $</label><input type="number" name="MONTO" id="f_mon" step="0.01" value="0"></div>
-                    <div id="box-foto"><label>FOTO</label><input type="file" name="foto" id="f_foto" accept="image/*"></div>
+                    <div id="box-fcobrada"><label>F COBRADA</label><input type="text" name="F_COBRADA_INPUT" id="f_fcob"></div>
+                    <div id="box-foto"><label>CARGAR FOTO</label><input type="file" name="foto" id="f_foto" accept="image/*"></div>
                     <div style="grid-column: span 2;"><label>INCIDENCIA</label>
                         <select name="INCIDENCIA" id="inc_sel" required><option value="">Seleccione...</option>{% for inc in incidencias %}<option value="{{inc}}">{{inc}}</option>{% endfor %}</select>
                     </div>
@@ -252,9 +239,22 @@ HTML_FORM = """
         };
         function toggleMonto() {
             const val = document.getElementById('f_clasm').value;
-            const isNone = val === "NINGUNA";
-            document.getElementById('f_mon').required = !isNone;
-            if(isNone) { document.getElementById('f_mon').value = 0; document.getElementById('f_foto').value = ""; }
+            
+            // Monto: visible si no es NINGUNA
+            document.getElementById('box-monto').style.display = (val === "NINGUNA") ? 'none' : 'block';
+            document.getElementById('f_mon').required = (val !== "NINGUNA");
+            
+            // F Cobrada y Cargar Foto: SOLO si es COBRO
+            const isCobro = (val === "COBRO");
+            document.getElementById('box-fcobrada').style.display = isCobro ? 'block' : 'none';
+            document.getElementById('box-foto').style.display = isCobro ? 'block' : 'none';
+            document.getElementById('f_fcob').required = isCobro;
+            
+            if(val === "NINGUNA") document.getElementById('f_mon').value = 0;
+            if(!isCobro) {
+                document.getElementById('f_fcob').value = "SIN FOTO";
+                document.getElementById('f_foto').value = "";
+            }
         }
         function openTab(evt, tabName) {
             let i, content, btns;
@@ -283,14 +283,12 @@ HTML_FORM = """
             datos.forEach(r => {
                 let rowData = encodeURIComponent(JSON.stringify(r));
                 const clean = (val) => (val && val.toString().trim() !== "" && val !== "N/A" && val !== "NINGUNA") ? val : "-";
-                const fCobradaDisplay = (r['F COBRADA'] === 'SIN FOTO' || !r['F COBRADA']) ? '-' : r['F COBRADA'];
-                tbody.innerHTML += `<tr><td>${clean(r.SUCURSAL)}</td><td>${clean(r.PROVEEDOR)}</td><td class="col-factura">${clean(r.FACTURA)}</td><td>${clean(r.FECHA)}</td><td>${clean(r['TIPO FISCALIZACIÓN'])}</td><td>${clean(r.RESPONSABLE)}</td><td>${clean(r.INCIDENCIA)}</td><td class="col-tipo-error">${clean(r['TIPO DE ERROR'])}</td><td>${clean(r.OBSERVACIÓN)}</td><td>${clean(r['MONTO $'])}</td><td>${fCobradaDisplay}</td><td style="white-space: nowrap;"><button class="btn-icon btn-edit" onclick="prepararEdicion('${rowData}')">✏️</button><button class="btn-icon btn-del" onclick="borrarIncidencia('${r.ID}', '${r.FECHA}', '${r.SUCURSAL}')">🗑️</button></td></tr>`;
+                tbody.innerHTML += `<tr><td>${clean(r.SUCURSAL)}</td><td>${clean(r.PROVEEDOR)}</td><td class="col-factura">${clean(r.FACTURA)}</td><td>${clean(r.FECHA)}</td><td>${clean(r['TIPO FISCALIZACIÓN'])}</td><td>${clean(r.RESPONSABLE)}</td><td>${clean(r.INCIDENCIA)}</td><td class="col-tipo-error">${clean(r['TIPO DE ERROR'])}</td><td>${clean(r.OBSERVACIÓN)}</td><td>${clean(r['MONTO $'])}</td><td>${clean(r['F COBRADA'])}</td><td style="white-space: nowrap;"><button class="btn-icon btn-edit" onclick="prepararEdicion('${rowData}')">✏️</button><button class="btn-icon btn-del" onclick="borrarIncidencia('${r.ID}', '${r.FECHA}', '${r.SUCURSAL}')">🗑️</button></td></tr>`;
             });
         }
         function prepararEdicion(encodedData) {
             const r = JSON.parse(decodeURIComponent(encodedData));
             document.getElementById('id_edicion').value = r.ID;
-            document.getElementById('foto_existente').value = r['F COBRADA'];
             document.getElementById('f_suc').value = r.SUCURSAL;
             document.getElementById('f_fec').value = r.FECHA;
             document.getElementById('f_pro').value = r.PROVEEDOR;
@@ -299,6 +297,7 @@ HTML_FORM = """
             document.getElementById('f_res').value = r.RESPONSABLE;
             document.getElementById('f_clasm').value = r['CLASIFICACIÓN MONTO'] || "NINGUNA";
             document.getElementById('f_mon').value = r['MONTO $'];
+            document.getElementById('f_fcob').value = r['F COBRADA'];
             document.getElementById('inc_sel').value = r.INCIDENCIA;
             document.getElementById('f_obs').value = r.OBSERVACIÓN;
             toggleMonto();
@@ -317,8 +316,5 @@ HTML_FORM = """
 """
 
 if __name__ == "__main__":
-    try:
-        app.run(host='0.0.0.0', port=5000)
-    except Exception as e:
-        print(f"\n! ERROR CRITICO AL INICIAR: {e}")
-        input("Presiona ENTER para salir...")
+    try: app.run(host='0.0.0.0', port=5000)
+    except Exception as e: print(f"ERROR: {e}")

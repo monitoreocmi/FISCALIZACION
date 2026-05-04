@@ -6,14 +6,13 @@ if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
 
 MESES_ES = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"]
-# Ruta optimizada para GitHub (Case Sensitive)
 RUTA_LOGO_PANEL = "RECURSOS/logo.png" 
 
 def generar_panel_luxor_centralizado():
     try:
         os.system('cls' if os.name == 'nt' else 'clear')
         print("="*60)
-        print("        SISTEMA LUXOR - INTEGRACIÓN DE COLORES DINÁMICOS")
+        print("        SISTEMA LUXOR - PANEL CENTRALIZADO V3.0")
         print("="*60)
         
         ruta_raiz = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -45,10 +44,10 @@ def generar_panel_luxor_centralizado():
         c_raw = data_suc_cobros_raw if isinstance(data_suc_cobros_raw, (dict, list)) else []
         if isinstance(c_raw, dict):
             for k, v in c_raw.items():
-                cobros_db.append({"sucursal": k, "c": v.get("COBRADO", 0), "p": v.get("PERDIDA_PATRIMONIO", 0)})
+                cobros_db.append({"sucursal": k, "c": v.get("COBRADO", 0), "p": v.get("PERDIDA_PATRIMONIO", 0), "e": v.get("EXCEDENTE", 0)})
         else:
             for item in c_raw:
-                cobros_db.append({"sucursal": item.get("sucursal", ""), "c": item.get("COBRADO", 0), "p": item.get("PERDIDA_PATRIMONIO", 0)})
+                cobros_db.append({"sucursal": item.get("sucursal", ""), "c": item.get("COBRADO", 0), "p": item.get("PERDIDA_PATRIMONIO", 0), "e": item.get("EXCEDENTE", 0)})
 
         for m in meses_carpetas:
             m_key = m.upper()
@@ -71,18 +70,15 @@ def generar_panel_luxor_centralizado():
                 s_key = f"{s.strip().upper()} ({m_key})"
                 inc_val = data_totales.get(s_key, 0)
                 grv_val = next((g.get('v', 0) for g in data_graves if str(g.get('n','')).upper() == s_key), 0)
-                c_val, p_val = 0, 0
+                c_val, p_val, e_val = 0, 0, 0
                 for cb in cobros_db:
-                    if str(cb.get('sucursal','')).upper() == s_key: c_val, p_val = cb.get('c',0), cb.get('p',0); break
+                    if str(cb.get('sucursal','')).upper() == s_key: 
+                        c_val, p_val, e_val = cb.get('c',0), cb.get('p',0), cb.get('e', 0)
+                        break
                 
                 score_fisc = inc_val + (grv_val * 10)
                 rank_fisc.append({'n': s, 'v': score_fisc})
-                rank_cobs.append({'n': s, 'c': c_val, 'p': p_val, 't': c_val + p_val})
-
-            top_f = sorted([x for x in rank_fisc if x['n'].upper() in n_aprobadas], key=lambda x: x['v'])[:3]
-            top_c = sorted([x for x in rank_cobs if x['n'].upper() in n_aprobadas], key=lambda x: x['t'])[:3]
-            bad_f = sorted([x for x in rank_fisc if x['n'].upper() in n_reprobadas], key=lambda x: x['v'], reverse=True)[:3]
-            bad_c = sorted([x for x in rank_cobs if x['n'].upper() in n_reprobadas], key=lambda x: x['t'], reverse=True)[:3]
+                rank_cobs.append({'n': s, 'c': c_val, 'p': p_val, 'e': e_val, 't': c_val + p_val + e_val})
 
             def gen_rows_simple(lista, css=""):
                 html = ""
@@ -97,8 +93,8 @@ def generar_panel_luxor_centralizado():
                     html += f"<div class='audit-row {css}'><span>{i['n']}</span><b>{val}</b></div>"
                 return html or '<div class="audit-row">Sin datos</div>'
 
-            c_glob = data_cobros_glob.get(m_key, {"TOTAL_COBRADO": 0, "TOTAL_PERDIDA_PATRIMONIO": 0, "COLOR_COBRADO": "NEGRO"})
-            tc, tp = c_glob.get('TOTAL_COBRADO', 0), c_glob.get('TOTAL_PERDIDA_PATRIMONIO', 0)
+            c_glob = data_cobros_glob.get(m_key, {"TOTAL_COBRADO": 0, "TOTAL_PERDIDA_PATRIMONIO": 0, "TOTAL_EXCEDENTE": 0, "COLOR_COBRADO": "NEGRO"})
+            tc, tp, te = c_glob.get('TOTAL_COBRADO', 0), c_glob.get('TOTAL_PERDIDA_PATRIMONIO', 0), c_glob.get('TOTAL_EXCEDENTE', 0)
             color_label = c_glob.get("COLOR_COBRADO", "NEGRO")
             
             estilo_monto = "color: #333;"
@@ -123,26 +119,28 @@ def generar_panel_luxor_centralizado():
                     <div class="global-cobros-box">
                         <div class="global-item"><span>TOTAL COBRADO</span><br><b style="{estilo_monto}">${tc:,.2f}</b></div>
                         <div class="global-item"><span>PÉRDIDA MITIGADA</span><br><b>${tp:,.2f}</b></div>
-                        <div class="global-item"><span>TOTAL MENSUAL</span><br><b>${(tc + tp):,.2f}</b></div>
+                        <div class="global-item"><span>EXCEDENTES</span><br><b>${te:,.2f}</b></div>
+                        <div class="global-item" style="border-bottom-color:var(--azul)"><span>TOTAL MENSUAL</span><br><b>${(tc + tp + te):,.2f}</b></div>
                     </div>
                     <div class="audit-grid-full">
-                        <div class="audit-card"><h3>CANTIDAD COBRADA POR SUCURSAL</h3><div class="scroll-area">{gen_rows(sorted(rank_cobs, key=lambda x: x['c'], reverse=True), "c", money=True)}</div></div>
+                        <div class="audit-card"><h3>CANTIDAD COBRADA</h3><div class="scroll-area">{gen_rows(sorted(rank_cobs, key=lambda x: x['c'], reverse=True), "c", money=True)}</div></div>
                         <div class="audit-card"><h3>PÉRDIDA MITIGADA</h3><div class="scroll-area">{gen_rows(sorted(rank_cobs, key=lambda x: x['p'], reverse=True), "p", money=True)}</div></div>
-                        <div class="audit-card"><h3>TOTAL (COBRADO Y MITIGADO)</h3><div class="scroll-area">{gen_rows(sorted(rank_cobs, key=lambda x: x['t'], reverse=True), "t", money=True)}</div></div>
+                        <div class="audit-card" style="border-top-color:var(--azul)"><h3>EXCEDENTES</h3><div class="scroll-area">{gen_rows(sorted(rank_cobs, key=lambda x: x['e'], reverse=True), "e", money=True)}</div></div>
+                        <div class="audit-card" style="border-top-color:var(--amarillo)"><h3>TOTAL (COBRADO, MITIGADO, EXCEDENTE)</h3><div class="scroll-area">{gen_rows(sorted(rank_cobs, key=lambda x: x['t'], reverse=True), "t", money=True)}</div></div>
                     </div>
                 </div>
                 <div id="honor-{m}" class="tab-content">
-                    <h2 class="sub-title" style="background:var(--verde); border-left-color:white;">EXCELENTE RENDIMIENTO EN FISCALIZACIÓN - {m_key}</h2>
+                    <h2 class="sub-title" style="background:var(--verde); border-left-color:white;">EXCELENTE RENDIMIENTO - {m_key}</h2>
                     <div class="audit-grid-full grid-half">
-                        <div class="audit-card podio-high"><h3>EXCELENTE RENDIMIENTO EN FISCALIZACIÓN</h3>{gen_rows_simple(top_f, "status-ok-green")}</div>
-                        <div class="audit-card podio-high"><h3>EXCELENTE RENDIMIENTO EN COBRO Y MITIGACIÓN</h3>{gen_rows_simple(top_c, "status-ok-green")}</div>
+                        <div class="audit-card podio-high"><h3>MEJOR RENDIMIENTO FISCALIZACIÓN</h3>{gen_rows_simple(sorted([x for x in rank_fisc if x['n'].upper() in n_aprobadas], key=lambda x: x['v'])[:3], "status-ok-green")}</div>
+                        <div class="audit-card podio-high"><h3>MEJOR RENDIMIENTO COBROS</h3>{gen_rows_simple(sorted([x for x in rank_cobs if x['n'].upper() in n_aprobadas], key=lambda x: x['t'])[:3], "status-ok-green")}</div>
                     </div>
                 </div>
                 <div id="peores-{m}" class="tab-content">
-                    <h2 class="sub-title" style="background:var(--rojo); border-left-color:black;">GRAVE RENDIMIENTO EN FISCALIZACIÓN - {m_key}</h2>
+                    <h2 class="sub-title" style="background:var(--rojo); border-left-color:black;">RENDIMIENTO CRÍTICO - {m_key}</h2>
                     <div class="audit-grid-full grid-half">
-                        <div class="audit-card podio-low"><h3>GRAVE RENDIMIENTO EN FISCALIZACIÓN</h3>{gen_rows_simple(bad_f, "status-fail-red")}</div>
-                        <div class="audit-card podio-low"><h3>GRAVE RENDIMIENTO EN COBROS Y MITIGACIÓN</h3>{gen_rows_simple(bad_c, "status-fail-red")}</div>
+                        <div class="audit-card podio-low"><h3>PEOR RENDIMIENTO FISCALIZACIÓN</h3>{gen_rows_simple(sorted([x for x in rank_fisc if x['n'].upper() in n_reprobadas], key=lambda x: x['v'], reverse=True)[:3], "status-fail-red")}</div>
+                        <div class="audit-card podio-low"><h3>PEOR RENDIMIENTO COBROS</h3>{gen_rows_simple(sorted([x for x in rank_cobs if x['n'].upper() in n_reprobadas], key=lambda x: x['t'], reverse=True)[:3], "status-fail-red")}</div>
                     </div>
                 </div>
             </div>"""
@@ -173,29 +171,22 @@ def generar_panel_luxor_centralizado():
             .status-fail {{ color: var(--rojo); background: #ffebee; border-left-color: var(--rojo); }}
             .status-ok-green {{ color: white !important; background: var(--verde) !important; font-size: 14px; margin-bottom: 5px; }}
             .status-fail-red {{ color: white !important; background: var(--rojo) !important; font-size: 14px; margin-bottom: 5px; }}
-            .blue-box {{ background: white; padding: 15px; border-radius: 10px; border-top: 4px solid var(--azul); margin-bottom: 15px; }}
-            .grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }}
-            .card {{ padding: 10px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: 900; font-size: 10px; color: white; background: var(--azul); transition: 0.2s; }}
-            .card:hover {{ background: var(--amarillo); color: var(--azul); }}
-            .global-cobros-box {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px; }}
+            .blue-box {{ background: white; padding: 20px; border-radius: 10px; border-top: 4px solid var(--azul); margin-bottom: 15px; }}
+            .grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }}
+            .card {{ padding: 18px 10px; text-align: center; border-radius: 8px; text-decoration: none; font-weight: 900; font-size: 13px; color: white; background: var(--azul); transition: 0.2s; min-width: 140px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }}
+            .card:hover {{ background: var(--amarillo); color: var(--azul); transform: translateY(-2px); }}
+            .global-cobros-box {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 15px; }}
             .global-item {{ background: white; padding: 12px; border-radius: 8px; text-align: center; border-bottom: 4px solid var(--verde); }}
             .global-item b {{ font-size: 18px; display: block; }}
             .scroll-area {{ max-height: 350px; overflow-y: auto; }}
-            
-            @media (max-width: 600px) {{
-                h1 {{ font-size: 13px; }}
-                .logo-panel {{ height: 40px; }}
-                .tab-btn {{ width: 100%; }}
-                .global-item b {{ font-size: 16px; }}
-            }}
         </style></head><body>
             <header class="header-container"><img src="{RUTA_LOGO_PANEL}" class="logo-panel"><h1>FISCALIZACIÓN LUXOR</h1><img src="{RUTA_LOGO_PANEL}" class="logo-panel"></header>
             <div class="controls-bar">
                 <div class="selector-wrapper"><select id="mes-selector" onchange="cambiarMes()">{opciones_dropdown}</select></div>
                 <button class="tab-btn active" id="btn-inc" onclick="showGlobalTab('incs')">INCIDENCIAS</button>
                 <button class="tab-btn" id="btn-cob" onclick="showGlobalTab('cobs')">COBROS Y MITIGACION</button>
-                <button class="tab-btn" id="btn-hon" onclick="showGlobalTab('honor')">SUCURSAL CON MEJOR RENDIMIENTO</button>
-                <button class="tab-btn" id="btn-peo" onclick="showGlobalTab('peores')">SUCURSAL CON PEOR RENDIMIENTO</button>
+                <button class="tab-btn" id="btn-hon" onclick="showGlobalTab('honor')">MEJOR RENDIMIENTO</button>
+                <button class="tab-btn" id="btn-peo" onclick="showGlobalTab('peores')">RENDIMIENTO CRÍTICO</button>
             </div>
             <main class="main-content">{html_meses_data}</main>
             <script>
@@ -207,7 +198,9 @@ def generar_panel_luxor_centralizado():
                 }}
                 function showGlobalTab(t) {{
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    document.getElementById('btn-' + t.substring(0,3)).classList.add('active');
+                    let shortId = 'btn-' + t.substring(0,3);
+                    if(document.getElementById(shortId)) document.getElementById(shortId).classList.add('active');
+                    
                     let mes = document.querySelector('.mes-container.active');
                     if(mes) {{
                         mes.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -222,12 +215,30 @@ def generar_panel_luxor_centralizado():
                     if(document.getElementById('btn-peo').classList.contains('active')) t = 'peores';
                     showGlobalTab(t);
                 }}
-                window.onload = cambiarMes;
+                function cargarEstadoDesdeURL() {{
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const tabParam = urlParams.get('tab');
+                    const hash = window.location.hash;
+                    
+                    if (hash && hash.startsWith('#mes-')) {{
+                        const mesId = hash.substring(1);
+                        const selector = document.getElementById("mes-selector");
+                        for(let i=0; i<selector.options.length; i++) {{
+                            if(selector.options[i].value === mesId) {{
+                                selector.selectedIndex = i;
+                                break;
+                            }}
+                        }}
+                    }}
+                    cambiarMes();
+                    if (tabParam) showGlobalTab(tabParam);
+                }}
+                window.onload = cargarEstadoDesdeURL;
             </script></body></html>"""
         
         with open(os.path.join(ruta_raiz, "index.html"), "w", encoding="utf-8") as f:
             f.write(html_final)
-        print("\n✅ PANEL ACTUALIZADO: Optimizado para GitHub y dispositivos móviles.")
+        print("\n✅ PANEL ACTUALIZADO: Sucursales ampliadas y navegación inteligente activa.")
     except Exception as e: 
         print(f"\n❌ ERROR: {e}")
 
