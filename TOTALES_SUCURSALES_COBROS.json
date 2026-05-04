@@ -198,6 +198,12 @@
         "TOTAL_GESTIONADO": 0.0
     },
     {
+        "sucursal": "CIRCULO (MAYO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
         "sucursal": "IPSFA (MAYO)",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
@@ -205,6 +211,12 @@
     },
     {
         "sucursal": "MORA (MAYO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
+        "sucursal": "NAGUANAGUA (MAYO)",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "TOTAL_GESTIONADO": 0.0
