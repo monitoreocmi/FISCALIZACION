@@ -137,8 +137,8 @@ def generar_reporte_cobros_final():
         with open(os.path.join(ruta_base, "TOTALES_GLOBALES_COBROS.json"), "w", encoding="utf-8") as f_glob:
             json.dump(globales_por_mes, f_glob, indent=4)
 
-        # --- GENERACIÓN DE HTMLS (SIN CAMBIOS) ---
-        estilo_css = "<style>body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; } .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 4px solid #F9D908; } .logo-header { height: 50px; } h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; flex-grow: 1; } .resumen-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; } .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; transition: 0.3s; } .card-resumen .monto { font-size: 20px; font-weight: 900; color: #002060; margin: 10px 0; } .cobrado { border-color: #27ae60; } .recuperado { border-color: #f1c40f; } .no-pagado { border-color: #ed1c24; } .excedente { border-color: #0070c0; } .blue-box-container { background: #002060; padding: 15px; border-radius: 12px; width: 98%; margin: 10px auto; border: 2px solid #F9D908; color: white; box-sizing: border-box; } .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 15px; } table { width: 100%; border-collapse: collapse; min-width: 1000px; } th { background: #001a4d; color: #F9D908; padding: 8px; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #F9D908; white-space: nowrap; } td { padding: 6px; border-bottom: 1px solid #eee; font-size: 10px; font-weight: bold; text-align: left; } .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; display: inline-block; margin: 5px; font-size: 11px; } .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; } .modal-content { max-width: 95%; max-height: 95%; border: 3px solid #F9D908; }</style>"
+        # --- GENERACIÓN DE HTMLS ---
+        estilo_css = "<style>body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; } .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 4px solid #F9D908; } .logo-header { height: 50px; } h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; flex-grow: 1; } .resumen-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; } .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; transition: 0.3s; } .card-resumen .monto { font-size: 20px; font-weight: 900; color: #002060; margin: 10px 0; } .cobrado { border-color: #27ae60; } .recuperado { border-color: #f1c40f; } .no-pagado { border-color: #ed1c24; } .excedente { border-color: #0070c0; } .blue-box-container { background: #002060; padding: 15px; border-radius: 12px; width: 98%; margin: 10px auto; border: 2px solid #F9D908; color: white; box-sizing: border-box; } .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 15px; } table { width: 100%; border-collapse: collapse; min-width: 1000px; } th { background: #001a4d; color: #F9D908; padding: 8px; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #F9D908; white-space: nowrap; } td { padding: 6px; border-bottom: 1px solid #eee; font-size: 10px; font-weight: bold; text-align: left; } .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; display: inline-block; margin: 5px; font-size: 11px; } .foto-link { color: #002060; text-decoration: underline; font-weight: bold; }</style>"
 
         for periodo in sorted(df['PERIODO'].unique()):
             df_p = df[df['PERIODO'] == periodo]
@@ -157,7 +157,11 @@ def generar_reporte_cobros_final():
                             val_clean = str(val).strip() if val is not None else ""
                             if i == idx_actual['monto']:
                                 tds += f"<td>${r['MONTO_CALC']:,.2f}</td>"
-                            else: tds += f"<td>{val_clean}</td>"
+                            elif i == idx_actual['foto'] and val_clean not in ["", "None", "nan", "SIN FOTO"]:
+                                # CORRECCIÓN: Ruta a FACTURAS/MES/SUCURSAL
+                                tds += f"<td><a href='../../FACTURAS/{n_m}/{suc}/{val_clean}.jpeg' target='_blank' class='foto-link'>{val_clean}</a></td>"
+                            else: 
+                                tds += f"<td>{val_clean}</td>"
                         filas_html += f"<tr>{tds}</tr>"
                     
                     with open(os.path.join(p_suc, file_name), "w", encoding="utf-8") as f:
@@ -174,7 +178,7 @@ def generar_reporte_cobros_final():
                         f.write(f"<a href='{url}' class='card-resumen {cl}'><h3>{l}</h3><div class='monto'>${m:,.2f}</div></a>")
                     f.write(f"</div><a href='todo_detallado.html' class='btn'>VER TODO</a><a href='../../index.html?tab=cobs#mes-{n_m}' class='btn'>INICIO</a></body></html>")
 
-        print("\n✅ TODO SINCRONIZADO: Los archivos JSON ahora coinciden con lo que pide el Panel.")
+        print("\n✅ Reportes actualizados con enlaces corregidos a FACTURAS/MES/SUCURSAL.")
     except Exception as e: print(f"❌ Error: {e}")
 
 if __name__ == "__main__":
