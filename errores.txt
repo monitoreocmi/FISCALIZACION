@@ -51,3 +51,46 @@ WARNING: This is a development server. Do not use it in a production deployment.
  * Running on http://127.0.0.1:5000
  * Running on http://192.168.77.7:5000
 Press CTRL+C to quit
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.77.7:5000
+Press CTRL+C to quit
+192.168.77.7 - - [04/May/2026 09:41:09] "GET / HTTP/1.1" 200 -
+192.168.77.7 - - [04/May/2026 09:41:09] "GET /RECURSOS/LOGO.png HTTP/1.1" 200 -
+192.168.77.7 - - [04/May/2026 09:41:09] "GET /favicon.ico HTTP/1.1" 404 -
+192.168.77.7 - - [04/May/2026 09:41:13] "GET / HTTP/1.1" 200 -
+192.168.77.7 - - [04/May/2026 09:41:13] "GET /RECURSOS/LOGO.png HTTP/1.1" 304 -
+192.168.77.7 - - [04/May/2026 09:41:16] "GET /listar/MAYO/BARQUISIMETO HTTP/1.1" 200 -
+C:\Users\Admin\AppData\Local\Python\pythoncore-3.14-64\pythonw.exe: can't open file 'C:\\Users\\Admin\\Desktop\\FISCALIZACION\\SERVER.PY': [Errno 2] No such file or directory
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.77.7:5000
+Press CTRL+C to quit
+127.0.0.1 - - [04/May/2026 09:45:31] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2026 09:45:31] "GET /RECURSOS/LOGO.png HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2026 09:45:31] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [04/May/2026 09:45:38] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2026 09:45:38] "GET /RECURSOS/LOGO.png HTTP/1.1" 304 -
+C:\Users\Admin\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_reader.py:329: UserWarning: Data Validation extension is not supported and will be removed
+  warn(msg)
+127.0.0.1 - - [04/May/2026 09:45:45] "GET /listar/ABRIL/CENTRAL HTTP/1.1" 200 -
+C:\Users\Admin\AppData\Local\Python\pythoncore-3.14-64\pythonw.exe: can't open file 'C:\\Users\\Admin\\Desktop\\FISCALIZACION\\SERVER.PY': [Errno 2] No such file or directory
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.77.7:5000
+Press CTRL+C to quit
+127.0.0.1 - - [04/May/2026 10:30:41] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2026 10:30:41] "GET /RECURSOS/LOGO.png HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2026 10:30:44] "GET /logout HTTP/1.1" 302 -
+127.0.0.1 - - [04/May/2026 10:30:44] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2026 10:30:44] "GET /RECURSOS/LOGO.png HTTP/1.1" 304 -
+127.0.0.1 - - [04/May/2026 10:30:47] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2026 10:30:47] "GET /RECURSOS/LOGO.png HTTP/1.1" 304 -
+127.0.0.1 - - [04/May/2026 10:30:51] "GET /logout HTTP/1.1" 302 -
+127.0.0.1 - - [04/May/2026 10:30:51] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2026 10:30:51] "GET /RECURSOS/LOGO.png HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2026 10:30:52] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2026 10:30:52] "GET /RECURSOS/LOGO.png HTTP/1.1" 304 -
