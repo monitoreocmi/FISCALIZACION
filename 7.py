@@ -133,14 +133,14 @@ def generar_panel_luxor_centralizado():
                     <h2 class="sub-title" style="background:var(--verde); border-left-color:white;">EXCELENTE RENDIMIENTO - {m_key}</h2>
                     <div class="audit-grid-full grid-half">
                         <div class="audit-card podio-high"><h3>MEJOR RENDIMIENTO FISCALIZACIÓN</h3>{gen_rows_simple(sorted([x for x in rank_fisc if x['n'].upper() in n_aprobadas], key=lambda x: x['v'])[:3], "status-ok-green")}</div>
-                        <div class="audit-card podio-high"><h3>MEJOR RENDIMIENTO COBROS</h3>{gen_rows_simple(sorted([x for x in rank_cobs if x['n'].upper() in n_aprobadas], key=lambda x: x['t'])[:3], "status-ok-green")}</div>
+                        <div class="audit-card podio-high"><h3>MEJOR RENDIMIENTO COBROS Y MITIGACION</h3>{gen_rows_simple(sorted([x for x in rank_cobs if x['n'].upper() in n_aprobadas], key=lambda x: x['t'])[:3], "status-ok-green")}</div>
                     </div>
                 </div>
                 <div id="peores-{m}" class="tab-content">
                     <h2 class="sub-title" style="background:var(--rojo); border-left-color:black;">RENDIMIENTO CRÍTICO - {m_key}</h2>
                     <div class="audit-grid-full grid-half">
                         <div class="audit-card podio-low"><h3>PEOR RENDIMIENTO FISCALIZACIÓN</h3>{gen_rows_simple(sorted([x for x in rank_fisc if x['n'].upper() in n_reprobadas], key=lambda x: x['v'], reverse=True)[:3], "status-fail-red")}</div>
-                        <div class="audit-card podio-low"><h3>PEOR RENDIMIENTO COBROS</h3>{gen_rows_simple(sorted([x for x in rank_cobs if x['n'].upper() in n_reprobadas], key=lambda x: x['t'], reverse=True)[:3], "status-fail-red")}</div>
+                        <div class="audit-card podio-low"><h3>PEOR RENDIMIENTO COBROS Y MITIGACION</h3>{gen_rows_simple(sorted([x for x in rank_cobs if x['n'].upper() in n_reprobadas], key=lambda x: x['t'], reverse=True)[:3], "status-fail-red")}</div>
                     </div>
                 </div>
             </div>"""

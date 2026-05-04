@@ -10,3 +10,5 @@
  * Debug mode: off
  * Serving Flask app 'SERVIDOR'
  * Debug mode: off
+ * Serving Flask app 'SERVIDOR'
+ * Debug mode: off
