@@ -1,26 +1,26 @@
 {
+    "ABRIL": {
+        "TOTAL_COBRADO": 460.44,
+        "TOTAL_PERDIDA_PATRIMONIO": 1337.27,
+        "TOTAL_EXCEDENTE": 248.0,
+        "COLOR_COBRADO": "NEGRO"
+    },
     "VARIOS": {
         "TOTAL_COBRADO": 0.0,
         "TOTAL_PERDIDA_PATRIMONIO": 0.0,
-        "TOTAL_NO_COBRADO": 0.0,
-        "TOTAL_EXCEDENTE": 0.0
+        "TOTAL_EXCEDENTE": 0.0,
+        "COLOR_COBRADO": "NEGRO"
     },
     "MARZO": {
         "TOTAL_COBRADO": 426.47,
-        "TOTAL_PERDIDA_PATRIMONIO": 62252.85000000001,
-        "TOTAL_NO_COBRADO": 0.0,
-        "TOTAL_EXCEDENTE": 0.0
-    },
-    "ABRIL": {
-        "TOTAL_COBRADO": 460.44000000000005,
-        "TOTAL_PERDIDA_PATRIMONIO": 24500.042999999998,
-        "TOTAL_NO_COBRADO": 1913.1,
-        "TOTAL_EXCEDENTE": 248.0
+        "TOTAL_PERDIDA_PATRIMONIO": 62252.85,
+        "TOTAL_EXCEDENTE": 0.0,
+        "COLOR_COBRADO": "NEGRO"
     },
     "MAYO": {
-        "TOTAL_COBRADO": 211.98,
+        "TOTAL_COBRADO": 0.0,
         "TOTAL_PERDIDA_PATRIMONIO": 0.0,
-        "TOTAL_NO_COBRADO": 0.0,
-        "TOTAL_EXCEDENTE": 0.0
+        "TOTAL_EXCEDENTE": 0.0,
+        "COLOR_COBRADO": "NEGRO"
     }
 }
