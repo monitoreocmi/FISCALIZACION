@@ -29,6 +29,10 @@
             "v": "100%"
         },
         {
+            "n": "GUACARA (MAYO)",
+            "v": "100%"
+        },
+        {
             "n": "IPSFA (MAYO)",
             "v": "100%"
         },
@@ -45,16 +49,20 @@
             "v": "100%"
         },
         {
-            "n": "SAN JUAN (MAYO)",
+            "n": "SANTA RITA (MAYO)",
             "v": "100%"
         },
         {
-            "n": "SANTA RITA (MAYO)",
+            "n": "VICTORIA (MAYO)",
             "v": "100%"
         },
         {
             "n": "VILLAS DE ARAGUA (MAYO)",
             "v": "100%"
+        },
+        {
+            "n": "CASTAÑO (ABRIL)",
+            "v": "90%"
         },
         {
             "n": "CENTRAL (ABRIL)",
@@ -71,6 +79,10 @@
         {
             "n": "GUACARA (ABRIL)",
             "v": "80%"
+        },
+        {
+            "n": "CIRCULO (MAYO)",
+            "v": "75%"
         }
     ],
     "reprobadas": [
@@ -104,10 +116,6 @@
         },
         {
             "n": "BOSQUE (ABRIL)",
-            "v": "45%"
-        },
-        {
-            "n": "CASTAÑO (ABRIL)",
             "v": "45%"
         },
         {

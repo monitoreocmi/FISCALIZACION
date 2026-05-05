@@ -89,7 +89,7 @@ def generar_reporte_v30_final():
                 
                 filas_html_txt = ""
 
-                # GENERAR DETALLADO TOTAL DEL MES ACTUAL
+                # GENERAR TODO_EL_MES.HTML
                 if not df_suc_act.empty:
                     df_det_mes = df_suc_act.copy()
                     df_det_mes['FECHA'] = pd.to_datetime(df_det_mes['FECHA']).dt.strftime('%Y-%m-%d')
@@ -127,11 +127,9 @@ def generar_reporte_v30_final():
                         c_ant = len(df_det_ant)
                         
                         g_act_grupo += c_act; g_ant_grupo += c_ant; t_act += c_act; t_ant += c_ant
-                        
                         v_ant = "0" if c_ant == 0 else f"<a href='../../{n_m_ant}/{n_s}/{nombre_file}' class='link-incidencias'>{c_ant}</a>"
                         v_act = "0" if c_act == 0 else f"<a href='{nombre_file}' class='link-incidencias'>{c_act}</a>"
                         
-                        # MARCAR LÍNEA DE SEPARACIÓN: Si es el último item del grupo, añadimos estilo de borde grueso
                         estilo_separador = "border-bottom: 4px solid #333;" if idx_item == len(grupo["items"]) - 1 else ""
                         temp_filas.append(f"<tr style='background-color:{grupo['color']}; {estilo_separador}'><td style='text-align:left;'>{inc}.</td><td>{grupo['tipo']}</td><td>{v_ant}</td><td>{v_act}</td>")
                         
@@ -148,6 +146,19 @@ def generar_reporte_v30_final():
                         filas_html_txt += f_base + (f"<td rowspan='{len(grupo['items'])}' style='background-color:{color_p};'>{grupo['porc']}%</td></tr>" if idx == 0 else "</tr>")
 
                 nota_f = max(0, 100 - suma_impacto)
+                
+                # GENERAR SOLO_MES.HTML DENTRO DE LA SUCURSAL
+                color_eval = "#ed1c24" if nota_f < 75 else "#27ae60"
+                html_solo_mes = f"""<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body>
+                    <div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>RESUMEN {n_s} - {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div>
+                    <div class='main-container'>
+                        <table><thead><tr><th>MES</th><th>INCIDENCIAS</th><th>EVALUACIÓN</th></tr></thead>
+                        <tbody><tr><td>{n_m_act}</td><td>{t_act}</td><td style='background:{color_eval}; color:white;'>{nota_f}%</td></tr></tbody></table>
+                        <a href='reporte.html' class='btn-volver'>VER REPORTE DETALLADO</a>
+                    </div></body></html>"""
+                with open(os.path.join(p_f, "solo_mes.html"), "w", encoding="utf-8") as f: f.write(html_solo_mes)
+
+                # GENERAR REPORTE.HTML PRINCIPAL DE LA SUCURSAL
                 link_t_ant = f"<a href='../../{n_m_ant}/{n_s}/todo_el_mes.html' style='color:white; text-decoration:underline;'>{t_ant}</a>" if t_ant > 0 else "0"
                 link_t_act = f"<a href='todo_el_mes.html' style='color:white; text-decoration:underline;'>{t_act}</a>" if t_act > 0 else "0"
 
@@ -158,7 +169,7 @@ def generar_reporte_v30_final():
                             <table>
                                 <thead><tr><th>INCIDENCIA</th><th>TIPO</th><th>{n_m_ant}</th><th>{n_m_act}</th><th>APROBATORIO 75%</th></tr></thead>
                                 <tbody>{filas_html_txt}
-                                    <tr style='background-color:#0844a4;'><td style='text-align:right; color:white;' colspan='2'>TOTAL / CALIFICACIÓN</td><td style='color:white;'>{link_t_ant}</td><td style='color:white;'>{link_t_act}</td><td style='background:{'#ed1c24' if nota_f < 75 else '#27ae60'}; color:white;'>{nota_f}%</td></tr>
+                                    <tr style='background-color:#0844a4;'><td style='text-align:right; color:white;' colspan='2'>TOTAL / CALIFICACIÓN</td><td style='color:white;'>{link_t_ant}</td><td style='color:white;'>{link_t_act}</td><td style='background:{color_eval}; color:white;'>{nota_f}%</td></tr>
                                 </tbody>
                             </table>
                             <div class='ranking-title'>PERSONAS CON MAYOR NÚMERO DE INCIDENCIAS</div>
@@ -166,7 +177,7 @@ def generar_reporte_v30_final():
                             <br><a href='../../index.html#mes-{n_m_act}' class='btn-volver'>VOLVER AL PANEL PRINCIPAL</a>
                         </div></body></html>""")
 
-        print(f"\n✅ Reportes actualizados con líneas de separación por grupos.")
+        print(f"\n✅ Reportes actualizados. El archivo 'solo_mes.html' se generó en cada sucursal.")
     except Exception as e: print(f"\n❌ ERROR: {e}")
 
 if __name__ == "__main__":

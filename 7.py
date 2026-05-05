@@ -54,12 +54,10 @@ def generar_panel_luxor_centralizado():
             opciones_dropdown += f'<option value="mes-{m}" {"selected" if m == meses_carpetas[-1] else ""}>{m}</option>'
             ruta_mes = os.path.join(ruta_raiz, m)
             
-            # FILTRO: Ocultar CENTRAL de botones
             sucursales_fisicas = sorted([s for s in os.listdir(ruta_mes) if os.path.isdir(os.path.join(ruta_mes, s)) and s.upper() != "CENTRAL"])
 
             def limpiar(t): return str(t).split("(")[0].strip().upper()
 
-            # FILTRO: Ocultar CENTRAL de los listados JSON
             def filtrar_c(lista, es_dict=False):
                 if es_dict: return {k: v for k, v in lista.items() if limpiar(k) != "CENTRAL"}
                 return [i for i in lista if limpiar(i.get('n', '')) != "CENTRAL"]
@@ -69,7 +67,6 @@ def generar_panel_luxor_centralizado():
             list_aprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in filtrar_c(data_status.get("aprobadas", [])) if f"({m_key})" in str(i['n']).upper()]
             list_reprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in filtrar_c(data_status.get("reprobadas", [])) if f"({m_key})" in str(i['n']).upper()]
 
-            # Datos EXCLUSIVOS para Central
             c_key = f"CENTRAL ({m_key})"
             list_totales_c = [{'n': 'CENTRAL', 'v': data_totales.get(c_key, 0)}]
             list_graves_c = [{'n': 'CENTRAL', 'v': next((g.get('v', 0) for g in data_graves if str(g.get('n','')).upper() == c_key), 0)}]
@@ -233,7 +230,22 @@ def generar_panel_luxor_centralizado():
                     if(document.getElementById('btn-peo').classList.contains('active')) t = 'peores';
                     showGlobalTab(t);
                 }}
-                window.onload = cambiarMes;
+                
+                // LOGICA PARA MANTENER FILTRO AL VOLVER
+                window.onload = function() {{
+                    let hash = window.location.hash;
+                    if(hash && hash.startsWith('#mes-')) {{
+                        let mesId = hash.replace('#', '');
+                        let selector = document.getElementById("mes-selector");
+                        for(let i=0; i<selector.options.length; i++) {{
+                            if(selector.options[i].value === mesId) {{
+                                selector.selectedIndex = i;
+                                break;
+                            }}
+                        }}
+                    }}
+                    cambiarMes();
+                }};
             </script></body></html>"""
         
         with open(os.path.join(ruta_raiz, "index.html"), "w", encoding="utf-8") as f:

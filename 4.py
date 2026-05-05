@@ -11,7 +11,7 @@ MESES_ES = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGO
 
 def clasificar_estatus_unico():
     try:
-        print(">>> GENERANDO: sucursales_status.json (VERSION TABLA) <<<")
+        print(">>> GENERANDO: sucursales_status.json (VERSION TABLA ACTUALIZADA) <<<")
         ruta_raiz = os.path.dirname(os.path.abspath(sys.argv[0]))
         
         datos_estatus = {
@@ -36,16 +36,17 @@ def clasificar_estatus_unico():
                                 with open(fuente, "r", encoding="utf-8") as f:
                                     html = f.read()
                                     
-                                    # Captura todo lo que esté dentro de etiquetas <td>
-                                    celdas = re.findall(r"<td>(.*?)</td>", html, re.IGNORECASE)
+                                    # Ajuste de Regex: Captura contenido de <td> normales y <td> con estilos (donde va la nota)
+                                    celdas = re.findall(r"<td[^>]*>(.*?)</td>", html, re.IGNORECASE | re.DOTALL)
                                     
-                                    # Estructura esperada: [0]=Mes, [1]=Total, [2]=Porcentaje%
+                                    # Estructura de solo_mes.html: [0]=Mes, [1]=Total Incidencias, [2]=Porcentaje%
                                     if len(celdas) >= 3:
-                                        # Limpiar el porcentaje de etiquetas HTML y el signo %
+                                        # Limpiar etiquetas HTML y el signo %
                                         porcentaje_raw = re.sub(r'<.*?>', '', celdas[2]).replace('%', '').strip()
                                         
                                         try:
-                                            nota = int(porcentaje_raw)
+                                            # Convertir a número para clasificar
+                                            nota = int(float(porcentaje_raw)) 
                                             nombre_clave = f"{suc.strip()} ({mes_llave})"
                                             item = {"n": nombre_clave, "v": f"{nota}%", "num": nota}
                                             
@@ -54,15 +55,16 @@ def clasificar_estatus_unico():
                                                 datos_estatus["aprobadas"].append(item)
                                             else:
                                                 datos_estatus["reprobadas"].append(item)
-                                            print(f"   ✅ {suc}: {nota}%")
+                                            print(f"   ✅ {suc} ({mes_llave}): {nota}%")
                                         except ValueError:
+                                            print(f"   ⚠️ Error al procesar nota en: {suc} ({mes_llave}) -> {porcentaje_raw}")
                                             continue
 
         # 3. Ordenar por nota de mayor a menor
         for lista in ["aprobadas", "reprobadas"]:
             datos_estatus[lista].sort(key=lambda x: x["num"], reverse=True)
             for i in datos_estatus[lista]:
-                i.pop("num", None)
+                i.pop("num", None) # Eliminar campo auxiliar antes de guardar
 
         # 4. Guardar archivo final
         ruta_final = os.path.join(ruta_raiz, "sucursales_status.json")
@@ -73,7 +75,7 @@ def clasificar_estatus_unico():
         print(f"Aprobadas: {len(datos_estatus['aprobadas'])} | Reprobadas: {len(datos_estatus['reprobadas'])}")
 
     except Exception as e:
-        print(f"\n❌ ERROR: {e}")
+        print(f"\n❌ ERROR CRÍTICO: {e}")
 
 if __name__ == "__main__":
     clasificar_estatus_unico()

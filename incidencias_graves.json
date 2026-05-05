@@ -25,11 +25,6 @@
         "detalle": "D: 8 | E: 2"
     },
     {
-        "n": "VICTORIA (MARZO)",
-        "v": 10,
-        "detalle": "D: 0 | E: 10"
-    },
-    {
         "n": "TUCACAS (MAYO)",
         "v": 9,
         "detalle": "D: 0 | E: 9"
@@ -55,14 +50,19 @@
         "detalle": "D: 5 | E: 0"
     },
     {
+        "n": "ACACIAS (MARZO)",
+        "v": 5,
+        "detalle": "D: 5 | E: 0"
+    },
+    {
         "n": "GUACARA (MARZO)",
         "v": 5,
         "detalle": "D: 1 | E: 4"
     },
     {
-        "n": "ACACIAS (MARZO)",
+        "n": "VICTORIA (MARZO)",
         "v": 5,
-        "detalle": "D: 5 | E: 0"
+        "detalle": "D: 0 | E: 5"
     },
     {
         "n": "CIRCULO MILITAR (ABRIL)",
@@ -125,24 +125,14 @@
         "detalle": "D: 1 | E: 1"
     },
     {
-        "n": "MORA (ABRIL)",
-        "v": 2,
-        "detalle": "D: 2 | E: 0"
-    },
-    {
-        "n": "SAN JUAN (MARZO)",
-        "v": 2,
-        "detalle": "D: 0 | E: 2"
-    },
-    {
         "n": "IPSFA (ABRIL)",
         "v": 2,
         "detalle": "D: 2 | E: 0"
     },
     {
-        "n": "CIRCULO (MAYO)",
-        "v": 1,
-        "detalle": "D: 1 | E: 0"
+        "n": "MORA (ABRIL)",
+        "v": 2,
+        "detalle": "D: 2 | E: 0"
     },
     {
         "n": "GUACARA (MAYO)",
@@ -150,12 +140,22 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "LA MORA (MARZO)",
+        "n": "CIRCULO (MAYO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
     {
+        "n": "SAN JUAN (MARZO)",
+        "v": 1,
+        "detalle": "D: 0 | E: 1"
+    },
+    {
         "n": "NAGUANAGUA (MARZO)",
+        "v": 1,
+        "detalle": "D: 1 | E: 0"
+    },
+    {
+        "n": "LA MORA (MARZO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
