@@ -1,31 +1,24 @@
 import os
-import json
 import sys
 import pandas as pd
 from datetime import datetime
+from functools import wraps
 
-# Función para evitar que la ventana se cierre si hay un error de inicio
-def pausa_error(msj):
-    print("\n" + "!"*50)
-    print(f" ERROR AL INICIAR: {msj}")
-    print("!"*50)
-    input("\nPresiona ENTER para salir...")
-    sys.exit()
-
+# --- VERIFICACIÓN DE LIBRERÍAS ---
 try:
     from flask import Flask, request, jsonify, render_template_string, send_from_directory, session, redirect, url_for
-    from werkzeug.utils import secure_filename
-    from openpyxl import load_workbook
-    from functools import wraps
-except ImportError as e:
-    pausa_error(f"Faltan librerias. Ejecuta: pip install flask pandas openpyxl")
+except ImportError:
+    print("\n[!] ERROR: Faltan librerias. Ejecuta: pip install flask pandas openpyxl")
+    sys.exit()
 
 app = Flask(__name__)
-app.secret_key = 'luxor_secret_key_2026' 
+app.secret_key = 'luxor_secret_key_2026'
+
+# --- CONFIGURACIÓN DE RUTAS ---
 RUTA_RAIZ = os.path.dirname(os.path.abspath(__file__))
 os.chdir(RUTA_RAIZ)
 
-# --- CONFIGURACIÓN DE ACCESOS ---
+# --- ESTRUCTURA DE USUARIOS ---
 USUARIOS = {
     "admin": {"pw": "admin123", "sucursales": ["TODAS"]},
     "ahenriquez": {"pw": "2026", "sucursales": ["IPSFA", "GUACARA"]},
@@ -40,47 +33,35 @@ USUARIOS = {
     "hdelgado": {"pw": "2026", "sucursales": ["TODAS"]}
 }
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user' not in session: return redirect(url_for('login'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-# --- LÓGICA DE EXCEL ---
-SUCURSALES_FULL = ["BARQUISIMETO", "CASTAÑO", "CENTRAL", "CIRCULO", "BOSQUE", "GUACARA", "IPSFA", "MORA", "VICTORIA", "ACACIAS", "NAGUANAGUA", "SAN DIEGO", "SAN JUAN", "SANTA RITA", "TUCACAS", "VILLAS"]
+SUCURSALES_FULL = ["BARQUISIMETO", "CASTAÑO", "CENTRAL", "CIRCULO", "BOSQUE", "GUACARA", "IPSFA", "MORA", "VICTORIA", "ACACIAS", "NAGUANAGUA", "SAN DIEGO", "SAN JUAN", "SANTA RITA", "TUCACAS", "VILLAS DE ARAGUA"]
 MESES_ES = {1: "ENERO", 2: "FEBRERO", 3: "MARZO", 4: "ABRIL", 5: "MAYO", 6: "JUNIO", 7: "JULIO", 8: "AGOSTO", 9: "SEPTIEMBRE", 10: "OCTUBRE", 11: "NOVIEMBRE", 12: "DICIEMBRE"}
 INCIDENCIAS_REF = {"NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO.": "TIPO A", "FALTA SELLO, FIRMA O CÉDULA.": "TIPO A", "DOCUMENTO NO LEGIBLE": "TIPO A", "DOCUMENTACIÓN ERRÓNEA": "TIPO B", "FISCALIZACIÓN A DESTIEMPO": "TIPO B", "PRODUCTO O SKU DUPLICADO.": "TIPO B", "RECEPCIÓN FUERA DE VISUAL / CON OBSTRUCCIÓN.": "TIPO B", "FISCALIZACIÓN con USUARIO NO CORRESPONDIENTE": "TIPO C", "ERROR DE KG EN TARA.": "TIPO C", "PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN.": "TIPO C", "NO FISCALIZÓ UNO O VARIOS PRODUCTOS": "TIPO C", "NO SE INDICÓ DIFERENCIA AL DORSO DE LA FACTURA.": "TIPO D", "DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO.": "TIPO D", "RECEPCIÓN SIN AUTORIZACIÓN DE CMF.": "TIPO E", "NO SE COMPLETA EL PROCESO DE FISCALIZACION Y SE ELIMINA.": "TIPO E"}
 
-def asegurar_id(df):
-    columnas_ordenadas = ['SUCURSAL', 'PROVEEDOR', 'FACTURA', 'FECHA', 'TIPO FISCALIZACIÓN', 'RESPONSABLE', 'INCIDENCIA', 'TIPO DE ERROR', 'OBSERVACIÓN', 'MONTO $', 'F COBRADA', 'CLASIFICACIÓN MONTO', 'ID']
-    if df.empty: return pd.DataFrame(columns=columnas_ordenadas)
-    if 'ID' not in df.columns:
-        df['ID'] = [f"HIST_{datetime.now().strftime('%Y%m%d%H%M%S')}_{i}" for i in range(len(df))]
-    df['ID'] = df['ID'].astype(str).str.strip()
-    for col in columnas_ordenadas:
-        if col not in df.columns: df[col] = ""
-    return df[columnas_ordenadas]
+def login_required(f):
+    @wraps(f)
+    def dec(*args, **kwargs):
+        if 'user' not in session: return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return dec
 
-def buscar_archivo_lectura(mes, sucursal):
-    ruta_dir = os.path.join(RUTA_RAIZ, "cuadros", mes)
-    if not os.path.exists(ruta_dir): return None
-    suc_norm = sucursal.upper().replace(" ", "").replace("_", "")
-    for archivo in os.listdir(ruta_dir):
-        if archivo.startswith('~$') or not archivo.endswith(".xlsx"): continue
-        nombre_norm = archivo.upper().replace(" ", "").replace("_", "")
-        if suc_norm in nombre_norm: return os.path.join(ruta_dir, archivo)
+def buscar_archivo(mes, sucursal):
+    rd = os.path.join(RUTA_RAIZ, "cuadros", mes.upper())
+    if not os.path.exists(rd): return None
+    sn = sucursal.upper().replace(" ", "")
+    for a in os.listdir(rd):
+        if not a.startswith('~$') and a.endswith(".xlsx") and sn in a.upper().replace(" ", ""):
+            return os.path.join(rd, a)
     return None
 
-# --- RUTAS ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         u, p = request.form.get('user'), request.form.get('pass')
         if u in USUARIOS and USUARIOS[u]['pw'] == p:
-            session['user'], session['sucursales'] = u, USUARIOS[u]['sucursales']
+            session.clear()
+            session['user'] = u
+            session['sucursales_permitidas'] = USUARIOS[u]['sucursales']
             return redirect(url_for('home'))
-        return render_template_string(HTML_LOGIN, error="Acceso denegado")
     return render_template_string(HTML_LOGIN)
 
 @app.route('/logout')
@@ -88,220 +69,218 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+@app.route('/recursos/<path:filename>')
+def custom_static(filename):
+    return send_from_directory(os.path.join(RUTA_RAIZ, 'recursos'), filename)
+
 @app.route('/')
 @login_required
 def home():
     hoy = datetime.now().strftime('%Y-%m-%d')
-    ruta_cuadros = os.path.join(RUTA_RAIZ, "cuadros")
-    os.makedirs(ruta_cuadros, exist_ok=True)
-    meses_existentes = sorted([m for m in os.listdir(ruta_cuadros) if os.path.isdir(os.path.join(ruta_cuadros, m))])
-    mis_suc = SUCURSALES_FULL if "TODAS" in session['sucursales'] else session['sucursales']
-    return render_template_string(HTML_FORM, sucursales=mis_suc, incidencias=INCIDENCIAS_REF, fecha_hoy=hoy, meses_con_datos=meses_existentes, usuario=session['user'])
+    p_cuadros = os.path.join(RUTA_RAIZ, "cuadros")
+    mc = sorted([m for m in os.listdir(p_cuadros) if os.path.isdir(os.path.join(p_cuadros, m))]) if os.path.exists(p_cuadros) else []
+    permisos = session.get('sucursales_permitidas', [])
+    sucs_usuario = SUCURSALES_FULL if "TODAS" in permisos else [s for s in SUCURSALES_FULL if s in permisos]
+    return render_template_string(HTML_FORM, sucursales=sucs_usuario, incidencias=INCIDENCIAS_REF, fecha_hoy=hoy, meses_con_datos=mc, usuario=session.get('user'))
 
 @app.route('/guardar', methods=['POST'])
 @login_required
 def guardar():
     try:
-        datos = request.form
-        sucursal = datos.get('SUCURSAL')
-        id_edicion = str(datos.get('ID_EDICION') or "").strip()
-        fecha_dt = datetime.strptime(datos.get('FECHA'), '%Y-%m-%d')
-        mes_nombre = MESES_ES[fecha_dt.month]
+        d = request.form
+        suc, fec, ide = d.get('SUCURSAL'), d.get('FECHA'), str(d.get('ID_EDICION') or "").strip()
+        mes = MESES_ES[datetime.strptime(fec, '%Y-%m-%d').month]
+        path_xlsx = buscar_archivo(mes, suc) or os.path.join(RUTA_RAIZ, "cuadros", mes, f"{suc}.xlsx")
+        os.makedirs(os.path.dirname(path_xlsx), exist_ok=True)
+        f_cob_val = d.get('F_COBRADA_INPUT') or "SIN_FOTO"
+        f_inc_name = d.get('F_INC_EXISTENTE') or ""
         
-        # 1. Gestionar Archivo Excel
-        archivo_excel = buscar_archivo_lectura(mes_nombre, sucursal)
-        if not archivo_excel:
-            os.makedirs(os.path.join(RUTA_RAIZ, "cuadros", mes_nombre), exist_ok=True)
-            archivo_excel = os.path.join(RUTA_RAIZ, "cuadros", mes_nombre, f"{sucursal}.xlsx")
+        for key, folder in [('FOTO_FILE', 'FACTURAS'), ('FOTO_INCIDENCIA_FILE', 'fotos_incidencias')]:
+            file = request.files.get(key)
+            if file and file.filename != '':
+                ext = file.filename.rsplit('.', 1)[1].lower()
+                n_final = f"{f_cob_val}.{ext}" if key == 'FOTO_FILE' else f"INC_{datetime.now().strftime('%H%M%S')}.{ext}"
+                dest = os.path.join(RUTA_RAIZ, folder, mes, suc)
+                os.makedirs(dest, exist_ok=True)
+                file.save(os.path.join(dest, n_final))
+                if key == 'FOTO_FILE': f_cob_val = n_final
+                else: f_inc_name = n_final
 
-        # 2. Gestionar Foto - AJUSTE DE RUTA SOLICITADO
-        f_cobrada_nombre = datos.get('F_COBRADA_INPUT') or "SIN_FOTO"
-        foto = request.files.get('FOTO_FILE')
-        if foto and foto.filename != '':
-            ext = foto.filename.rsplit('.', 1)[1].lower()
-            nombre_archivo_foto = f"{f_cobrada_nombre}.{ext}"
-            # Nueva ruta: carpeta raíz / facturas / mes / sucursal
-            ruta_carpetas_foto = os.path.join(RUTA_RAIZ, "facturas", mes_nombre, sucursal)
-            os.makedirs(ruta_carpetas_foto, exist_ok=True)
-            foto.save(os.path.join(ruta_carpetas_foto, nombre_archivo_foto))
-
-        # 3. Leer y Modificar Datos
-        if os.path.exists(archivo_excel):
-            df = pd.read_excel(archivo_excel, dtype={'ID': str})
-        else:
-            df = pd.DataFrame()
-
-        if not df.empty and id_edicion:
-            df['ID'] = df['ID'].astype(str).str.strip()
-            df = df[df['ID'] != id_edicion]
-            
-        nueva_fila = {
-            'SUCURSAL': sucursal, 
-            'PROVEEDOR': datos.get('PROVEEDOR'), 
-            'FACTURA': datos.get('FACTURA'), 
-            'FECHA': datos.get('FECHA'), 
-            'TIPO FISCALIZACIÓN': datos.get('TIPO_FISC'), 
-            'RESPONSABLE': datos.get('RESPONSABLE'),
-            'INCIDENCIA': datos.get('INCIDENCIA'), 
-            'TIPO DE ERROR': INCIDENCIAS_REF.get(datos.get('INCIDENCIA'), "N/A"),
-            'OBSERVACIÓN': datos.get('OBSERVACION'), 
-            'MONTO $': float(datos.get('MONTO') or 0), 
-            'F COBRADA': f_cobrada_nombre, 
-            'CLASIFICACIÓN MONTO': datos.get('CLASIFICACION_MONTO'), 
-            'ID': id_edicion if id_edicion else f"HIST_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        df = pd.read_excel(path_xlsx) if os.path.exists(path_xlsx) else pd.DataFrame()
+        if not df.empty and ide: df = df[df['ID'].astype(str) != ide]
+        nueva = {
+            'SUCURSAL': suc, 'PROVEEDOR': d.get('PROVEEDOR'), 'FACTURA': d.get('FACTURA'),
+            'FECHA': fec, 'TIPO FISCALIZACIÓN': d.get('TIPO_FISC'), 'RESPONSABLE': d.get('RESPONSABLE'),
+            'INCIDENCIA': d.get('INCIDENCIA'), 'TIPO DE ERROR': INCIDENCIAS_REF.get(d.get('INCIDENCIA'), "N/A"),
+            'OBSERVACIÓN': d.get('OBSERVACION'), 'MONTO $': float(d.get('MONTO') or 0),
+            'F COBRADA': f_cob_val, 'CLASIFICACIÓN MONTO': d.get('CLASIFICACION_MONTO'),
+            'FOTO_INCIDENCIA': f_inc_name, 'ID': ide if ide else f"ID_{datetime.now().strftime('%Y%m%d%H%M%S')}"
         }
-        
-        df = pd.concat([df, pd.DataFrame([nueva_fila])], ignore_index=True)
-        asegurar_id(df).to_excel(archivo_excel, index=False)
+        df = pd.concat([df, pd.DataFrame([nueva])], ignore_index=True)
+        df.to_excel(path_xlsx, index=False)
         return jsonify({"status": "ok"})
-    except Exception as e:
-        print(f"Error en guardar: {str(e)}")
-        return jsonify({"status": "error", "message": str(e)}), 500
+    except Exception as e: return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/ver_foto/<tipo>/<mes>/<sucursal>/<nombre>')
+@login_required
+def ver_foto(tipo, mes, sucursal, nombre):
+    carpeta = "FACTURAS" if tipo.upper() == "FACTURAS" else "fotos_incidencias"
+    dir_f = os.path.join(RUTA_RAIZ, carpeta, mes.upper(), sucursal.upper())
+    return send_from_directory(dir_f, nombre)
 
 @app.route('/listar/<mes>/<sucursal>')
 @login_required
 def listar(mes, sucursal):
-    try:
-        ruta = buscar_archivo_lectura(mes, sucursal)
-        if ruta and os.path.exists(ruta):
-            df = pd.read_excel(ruta, dtype={'ID': str})
-            df = df[df['SUCURSAL'].astype(str).str.upper() == sucursal.upper()]
-            if 'FECHA' in df.columns:
-                df['FECHA'] = df['FECHA'].astype(str).str.split(' ').str[0]
-            return jsonify(df.fillna("").to_dict(orient='records'))
-        return jsonify([])
-    except:
-        return jsonify([])
+    ruta = buscar_archivo(mes, sucursal)
+    if ruta and os.path.exists(ruta):
+        df = pd.read_excel(ruta).fillna("")
+        for col in df.columns:
+            if 'FECHA' in col.upper():
+                df[col] = pd.to_datetime(df[col], errors='coerce').dt.strftime('%Y-%m-%d').fillna("")
+        return jsonify(df.to_dict(orient='records'))
+    return jsonify([])
 
 @app.route('/borrar', methods=['POST'])
 @login_required
 def borrar():
-    try:
-        data = request.json
-        fecha_str = data.get('fecha').split(' ')[0]
-        mes = MESES_ES[datetime.strptime(fecha_str, '%Y-%m-%d').month]
-        ruta = buscar_archivo_lectura(mes, data.get('sucursal'))
-        if ruta and os.path.exists(ruta):
-            df = pd.read_excel(ruta, dtype={'ID': str})
-            df['ID'] = df['ID'].astype(str).str.strip()
-            df = df[df['ID'] != str(data.get('id')).strip()]
-            df.to_excel(ruta, index=False)
-            return jsonify({"status": "ok"})
-    except:
-        return jsonify({"status": "error"}), 500
+    data = request.json
+    mes = MESES_ES[datetime.strptime(data['fecha'], '%Y-%m-%d').month]
+    rx = buscar_archivo(mes, data['sucursal'])
+    if rx:
+        df = pd.read_excel(rx)
+        df = df[df['ID'].astype(str) != str(data['id'])]
+        df.to_excel(rx, index=False)
+    return jsonify({"status": "ok"})
 
-@app.route('/RECURSOS/<path:path>')
-def recursos(path):
-    return send_from_directory(os.path.join(RUTA_RAIZ, 'RECURSOS'), path)
+@app.route('/borrar_foto', methods=['POST'])
+@login_required
+def borrar_foto():
+    data = request.json
+    mes = MESES_ES[datetime.strptime(data['fecha'], '%Y-%m-%d').month]
+    rx = buscar_archivo(mes, data['sucursal'])
+    if rx:
+        df = pd.read_excel(rx).fillna("")
+        col = 'F COBRADA' if data['tipo'].upper() == 'FACTURAS' else 'FOTO_INCIDENCIA'
+        df.loc[df['ID'].astype(str) == str(data['id']), col] = ("SIN_FOTO" if col == 'F COBRADA' else "")
+        df.to_excel(rx, index=False)
+    return jsonify({"status": "ok"})
 
-# --- VISTAS (DISEÑO INTACTO) ---
-HTML_LOGIN = """
-<!DOCTYPE html><html><head><meta charset="UTF-8"><style>:root { --azul: #0844a4; --amarillo: #F9D908; } body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; } .login-card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; border-top: 8px solid var(--azul); width: 300px; } input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; } button { width: 100%; padding: 12px; background: var(--azul); color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }</style></head>
-<body><div class="login-card"><img src="/RECURSOS/LOGO.png" height="40" style="margin-bottom:20px;"><h2 style="color:var(--azul); margin-top:0;">FISCALIZACION</h2>{% if error %}<p style="color:red; font-size:12px;">{{error}}</p>{% endif %}<form method="POST"><input type="text" name="user" placeholder="Usuario" required><input type="password" name="pass" placeholder="Contraseña" required><button type="submit">INGRESAR</button></form></div></body></html>
-"""
+HTML_LOGIN = """<!DOCTYPE html><html><head><meta charset="UTF-8"><style>:root { --azul: #0844a4; } body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; } .card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; border-top: 8px solid var(--azul); width: 300px; } input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; } button { width: 100%; padding: 12px; background: var(--azul); color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }</style></head><body><div class="card"><h2>LUXOR</h2><form method="POST"><input type="text" name="user" placeholder="Usuario"><input type="password" name="pass" placeholder="Clave"><button>INGRESAR</button></form></div></body></html>"""
 
 HTML_FORM = """
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Sistema Luxor</title><style>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 :root { --azul: #0844a4; --amarillo: #F9D908; --fondo: #f4f7f6; }
 body { font-family: 'Segoe UI', sans-serif; background: var(--fondo); margin: 0; font-size: 11px; }
 .header { background: white; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid var(--amarillo); }
-.header img { height: 40px; }
 .tabs { display: flex; justify-content: center; background: #ddd; border-bottom: 1px solid #ccc; }
-.tab-btn { padding: 12px 25px; cursor: pointer; border: none; background: none; font-weight: bold; color: #555; outline: none; }
+.tab-btn { padding: 12px 25px; cursor: pointer; border: none; background: none; font-weight: bold; color: #555; }
 .tab-btn.active { background: white; color: var(--azul); border-top: 4px solid var(--azul); border-bottom: 2px solid white; margin-bottom: -1px; }
 .tab-content { display: none; padding: 20px; }
 .tab-content.active { display: block; }
-.card { background: white; max-width: 700px; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.card { background: white; max-width: 850px; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 label { font-weight: bold; color: #555; }
-select, input, textarea { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-size: 11px; }
-.btn-main { background: var(--azul); color: white; border: none; font-size: 14px; cursor: pointer; font-weight: bold; margin-top: 10px; padding: 10px; width: 100%; }
-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 9px; background: white; }
-th, td { border: 1px solid #ddd; padding: 5px; text-align: left; white-space: nowrap; }
-th { background: var(--azul); color: white; position: sticky; top:0; }
-.btn-icon { border: none; width: 22px; height: 22px; cursor: pointer; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; margin-right: 2px; }
-.btn-edit { background: #f0ad4e; color: white; }
-.btn-del { background: #d9534f; color: white; }
+input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 11px; box-sizing: border-box; }
+.btn-main { background: var(--azul); color: white; border: none; font-size: 14px; cursor: pointer; font-weight: bold; padding: 10px; width: 100%; margin-top: 10px; }
+table { width: 100%; border-collapse: collapse; background: white; font-size: 9px; margin-top: 10px; }
+th, td { border: 1px solid #ddd; padding: 6px; text-align: left; }
+th { background: var(--azul); color: white; position: sticky; top: 0; }
+.btn-icon { border: none; width: 28px; height: 28px; cursor: pointer; border-radius: 4px; color: white; margin-right: 4px; display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; font-size: 14px; }
+.btn-icon img { width: 20px; height: 20px; display: block; pointer-events: none; }
+.btn-del-x { background: #d9534f; color: white; font-size: 9px; padding: 2px 5px; border-radius: 50%; cursor: pointer; border: none; vertical-align: top; margin-left: -8px; font-weight: bold; position: relative; z-index: 5; }
+#modalImg { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+#modalImg img { max-width: 90%; max-height: 90%; border: 4px solid white; }
 </style></head><body>
-<div class="header"><img src="/RECURSOS/LOGO.png"><div style="text-align:center"><h1 style="color:var(--azul); font-size:16px; margin:0;">MATRIZ DE FISCALIZACION</h1><span>👤 {{usuario}} | <a href="/logout">Salir</a></span></div><img src="/RECURSOS/LOGO.png"></div>
+<div id="modalImg" onclick="this.style.display='none'"><img id="imgFull"></div>
+<div class="header"><h3>MATRIZ FISCALIZACION LUXOR</h3><span>{{usuario}} | <a href="/logout">Salir</a></span></div>
 <div class="tabs">
-    <button id="btn-tab-crear" class="tab-btn active" onclick="openTab(event, 'tab-crear')">AÑADIR / MODIFICAR</button>
-    <button id="btn-tab-ver" class="tab-btn" onclick="openTab(event, 'tab-ver')">GESTIONAR</button>
+    <button id="t1" class="tab-btn active" onclick="openTab(event, 'crear')">AÑADIR / EDITAR</button>
+    <button id="t2" class="tab-btn" onclick="openTab(event, 'ver')">GESTIONAR</button>
 </div>
-<div id="tab-crear" class="tab-content active"><div class="card"><form id="formMatriz" enctype="multipart/form-data"><input type="hidden" name="ID_EDICION" id="id_edicion"><div class="grid"><div style="grid-column: span 2;"><label>SUCURSAL</label><select name="SUCURSAL" id="f_suc" required>{% for s in sucursales %}<option value="{{s}}">{{s}}</option>{% endfor %}</select></div><div><label>FECHA</label><input type="date" name="FECHA" id="f_fec" value="{{fecha_hoy}}" required></div><div><label>PROVEEDOR</label><input type="text" name="PROVEEDOR" id="f_pro" required></div><div><label>FACTURA</label><input type="text" name="FACTURA" id="f_fac" required></div><div><label>TIPO FISCALIZACIÓN</label><select name="TIPO_FISC" id="f_tip"><option value="RECEPCION">RECEPCIÓN</option><option value="DEVOLUCION">DEVOLUCIÓN</option></select></div><div><label>RESPONSABLE</label><input type="text" name="RESPONSABLE" id="f_res" required></div><div style="grid-column: span 2;"><label>CLASIFICACIÓN MONTO</label><select name="CLASIFICACION_MONTO" id="f_clasm" onchange="toggleMonto()"><option value="NINGUNA">NINGUNA</option><option value="COBRO">COBRO</option><option value="RECUPERACIÓN">RECUPERACIÓN</option></select></div><div id="box-monto" style="display:none;"><label>MONTO $</label><input type="number" name="MONTO" id="f_mon" step="0.01"></div><div id="box-fco"><label>F COBRADA</label><input type="text" name="F_COBRADA_INPUT" id="f_fco_in"></div><div id="box-foto" style="grid-column: span 2;"><label>CARGAR FOTO</label><input type="file" name="FOTO_FILE" id="f_foto_file" accept="image/*"></div><div style="grid-column: span 2;"><label>INCIDENCIA</label><select name="INCIDENCIA" id="f_inc" required><option value="">Seleccione...</option>{% for inc in incidencias %}<option value="{{inc}}">{{inc}}</option>{% endfor %}</select></div><div style="grid-column: span 2;"><label>OBSERVACIONES</label><textarea name="OBSERVACION" id="f_obs" rows="2"></textarea></div></div><button type="submit" class="btn-main">GUARDAR REGISTRO</button></form></div></div>
-<div id="tab-ver" class="tab-content"><div class="card" style="max-width:98%"><div class="grid" style="grid-template-columns: 1fr 1fr 150px; margin-bottom:15px;"><select id="filtro_mes">{% for m in meses_con_datos %}<option value="{{m}}">{{m}}</option>{% endfor %}</select><select id="filtro_suc">{% for s in sucursales %}<option value="{{s}}">{{s}}</option>{% endfor %}</select><button onclick="cargarDatos()" style="background:#555; color:white; border:none; cursor:pointer; font-weight:bold;">FILTRAR</button></div><div style="overflow-x:auto; max-height:550px; border:1px solid #ccc;"><table id="tabla"><thead><tr><th>ACCIONES</th><th>SUCURSAL</th><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>TIPO FISC.</th><th>RESPONSABLE</th><th>INCIDENCIA</th><th>TIPO ERROR</th><th>OBSERVACIÓN</th><th>MONTO $</th><th>F COBRADA</th></tr></thead><tbody></tbody></table></div></div></div>
+<div id="crear" class="tab-content active"><div class="card"><form id="fM">
+<input type="hidden" name="ID_EDICION" id="e_id"><input type="hidden" name="F_INC_EXISTENTE" id="e_inc_ex">
+<div class="grid">
+<div style="grid-column:span 2"><label>SUCURSAL</label><select name="SUCURSAL" id="e_suc">{% for s in sucursales %}<option>{{s}}</option>{% endfor %}</select></div>
+<div><label>FECHA</label><input type="date" name="FECHA" id="e_fec" value="{{fecha_hoy}}"></div>
+<div><label>PROVEEDOR</label><input type="text" name="PROVEEDOR" id="e_pro"></div>
+<div><label>FACTURA</label><input type="text" name="FACTURA" id="e_fac"></div>
+<div><label>RESPONSABLE</label><input type="text" name="RESPONSABLE" id="e_res"></div>
+<div style="grid-column:span 2"><label>TIPO FISCALIZACIÓN</label><select name="TIPO_FISC" id="e_tip"><option value="RECEPCION">RECEPCIÓN</option><option value="DEVOLUCION">DEVOLUCIÓN</option><option value="TRANSFERENCIA">TRANSFERENCIA</option></select></div>
+<div style="grid-column:span 2"><label>CLASIFICACIÓN MONTO</label><select name="CLASIFICACION_MONTO" id="e_clasm" onchange="toggleM()"><option value="NINGUNA">NINGUNA</option><option value="COBRO">COBRO</option><option value="RECUPERACIÓN">RECUPERACIÓN</option></select></div>
+<div id="b_m" style="display:none"><label>MONTO $</label><input type="number" name="MONTO" id="e_mon" step="0.01"></div>
+<div><label>ID FACTURA COBRADA</label><input type="text" name="F_COBRADA_INPUT" id="e_fco"></div>
+<div><label>📸 FOTO FACTURA</label><input type="file" name="FOTO_FILE" accept="image/*"></div>
+<div><label>📷 FOTO INCIDENCIA</label><input type="file" name="FOTO_INCIDENCIA_FILE" accept="image/*"></div>
+<div style="grid-column:span 2"><label>INCIDENCIA</label><select name="INCIDENCIA" id="e_inc">{% for inc in incidencias %}<option>{{inc}}</option>{% endfor %}</select></div>
+<div style="grid-column:span 2"><label>OBSERVACIONES</label><textarea name="OBSERVACION" id="e_obs" rows="2"></textarea></div>
+</div><button type="submit" class="btn-main">GUARDAR REGISTRO</button></form></div></div>
+<div id="ver" class="tab-content"><div class="card" style="max-width:98%"><div class="grid" style="grid-template-columns: 1fr 1fr 100px;">
+<select id="s_m">{% for m in meses_con_datos %}<option>{{m}}</option>{% endfor %}</select>
+<select id="s_s">{% for s in sucursales %}<option>{{s}}</option>{% endfor %}</select>
+<button onclick="cargar()" style="background:var(--azul); color:white; font-weight:bold; cursor:pointer;">FILTRAR</button>
+</div><div style="overflow-x:auto;"><table id="tabla"><thead><tr>
+    <th>ACCIONES</th><th>SUCURSAL</th><th>PROVEEDOR</th><th>FACTURA</th><th>FECHA</th><th>TIPO FISC.</th><th>RESPONSABLE</th><th>INCIDENCIA</th><th>TIPO ERROR</th><th>OBSERVACIÓN</th><th>MONTO $</th><th>FACTURA COBRADA</th><th>FOTO INCID.</th>
+</tr></thead><tbody></tbody></table></div></div></div>
 <script>
-function toggleMonto() {
-    let v = document.getElementById('f_clasm').value;
-    document.getElementById('box-monto').style.display = (v === "COBRO" || v === "RECUPERACIÓN") ? "block" : "none";
-}
-function openTab(e, n) {
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(n).classList.add('active');
-    e.currentTarget.classList.add('active');
-}
-document.getElementById('formMatriz').onsubmit = async (e) => {
+const meses_lista = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
+
+function toggleM(){ let v=document.getElementById('e_clasm').value; document.getElementById('b_m').style.display=(v!=='NINGUNA')?'block':'none'; }
+function openTab(e, n){ document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b=>(b.classList.remove('active'))); document.getElementById(n).classList.add('active'); e.currentTarget.classList.add('active'); }
+
+document.getElementById('fM').onsubmit=async(e)=>{
     e.preventDefault();
-    const res = await fetch('/guardar', { method: 'POST', body: new FormData(e.target) });
-    if(res.ok) { 
-        alert("Registro procesado correctamente"); 
-        const m = document.getElementById('filtro_mes').value;
-        const s = document.getElementById('filtro_suc').value;
-        sessionStorage.setItem('last_mes', m);
-        sessionStorage.setItem('last_suc', s);
-        location.reload(); 
-    } else {
-        const err = await res.json();
-        alert("Error: " + err.message);
-    }
+    const fd = new FormData(e.target);
+    localStorage.setItem('last_suc', fd.get('SUCURSAL'));
+    const mes = meses_lista[new Date(fd.get('FECHA')).getUTCMonth()];
+    localStorage.setItem('last_mes', mes);
+    await fetch('/guardar',{method:'POST', body:fd});
+    alert("¡Guardado!"); location.reload();
 };
-async function cargarDatos() {
-    const m = document.getElementById('filtro_mes').value, s = document.getElementById('filtro_suc').value;
+
+async function cargar(){
+    const m = document.getElementById('s_m').value, s = document.getElementById('s_s').value;
     if(!m || !s) return;
-    sessionStorage.setItem('last_mes', m); sessionStorage.setItem('last_suc', s);
     const res = await fetch(`/listar/${m}/${s}`);
     const data = await res.json();
     const b = document.querySelector("#tabla tbody"); b.innerHTML = "";
     data.forEach(r => {
-        let rData = encodeURIComponent(JSON.stringify(r));
-        b.innerHTML += `<tr><td><button class="btn-icon btn-edit" onclick="editar('${rData}')">✏️</button><button class="btn-icon btn-del" onclick="borrar('${r.ID}', '${r.FECHA}', '${r.SUCURSAL}')">🗑️</button></td><td>${r.SUCURSAL}</td><td>${r.PROVEEDOR}</td><td>${r.FACTURA}</td><td>${r.FECHA}</td><td>${r['TIPO FISCALIZACIÓN']}</td><td>${r.RESPONSABLE}</td><td>${r.INCIDENCIA}</td><td>${r['TIPO DE ERROR']}</td><td>${r.OBSERVACIÓN}</td><td>${r['MONTO $']}</td><td>${r['F COBRADA']}</td></tr>`;
+        let f1 = (r['F COBRADA'] && r['F COBRADA']!='SIN_FOTO') ? `<div style="display:inline-block; white-space:nowrap;"><button class="btn-icon" style="background:#5bc0de" onclick="vI('FACTURAS','${r.FECHA}','${r.SUCURSAL}','${r['F COBRADA']}')">📄</button><button class="btn-del-x" onclick="bF('${r.ID}','${r.FECHA}','${r.SUCURSAL}','FACTURAS')">x</button></div>` : '-';
+        let f2 = (r['FOTO_INCIDENCIA']) ? `<div style="display:inline-block; white-space:nowrap;"><button class="btn-icon" style="background:#5bc0de" onclick="vI('fotos_incidencias','${r.FECHA}','${r.SUCURSAL}','${r['FOTO_INCIDENCIA']}')">📸</button><button class="btn-del-x" onclick="bF('${r.ID}','${r.FECHA}','${r.SUCURSAL}','fotos_incidencias')">x</button></div>` : '-';
+        
+        b.innerHTML += `<tr><td style="white-space:nowrap;"><button class="btn-icon" style="background:orange" onclick='editar(${JSON.stringify(r)})'>✏️</button><button class="btn-icon" style="background:red" onclick="borrarR('${r.ID}','${r.FECHA}','${r.SUCURSAL}')">🗑️</button><button class="btn-icon" style="background:green" onclick='sendWA(${JSON.stringify(r)})'><img src="/recursos/WhatsApp.ico" alt="WA"></button></td><td>${r.SUCURSAL}</td><td>${r.PROVEEDOR}</td><td>${r.FACTURA}</td><td>${r.FECHA}</td><td>${r['TIPO FISCALIZACIÓN']}</td><td>${r.RESPONSABLE}</td><td>${r.INCIDENCIA}</td><td>${r['TIPO DE ERROR']}</td><td>${r.OBSERVACIÓN}</td><td>${r['MONTO $']}</td><td>${f1}</td><td>${f2}</td></tr>`;
     });
 }
+
+function vI(t,f,s,n){ 
+    const mes = meses_lista[new Date(f).getUTCMonth()];
+    document.getElementById('imgFull').src = `/ver_foto/${t}/${mes}/${s}/${n}`;
+    document.getElementById('modalImg').style.display = 'flex';
+}
+
+async function bF(id,f,s,t){ if(confirm("¿Quitar foto?")){ await fetch('/borrar_foto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,fecha:f,sucursal:s,tipo:t})}); cargar(); } }
+async function borrarR(id,f,s){ if(confirm("¿Borrar registro?")){ await fetch('/borrar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,fecha:f,sucursal:s})}); cargar(); } }
+
+function sendWA(r){
+    const t=`*REPORTE FISCALIZACIÓN*%0A%0A🏢 *SUCURSAL:* ${r.SUCURSAL}%0A📅 *FECHA:* ${r.FECHA}%0A🚛 *PROVEEDOR:* ${r.PROVEEDOR}%0A📄 *FACTURA:* ${r.FACTURA}%0A👤 *RESPONSABLE:* ${r.RESPONSABLE}%0A🔍 *TIPO FISC:* ${r['TIPO FISCALIZACIÓN']}%0A⚠️ *INCIDENCIA:* ${r.INCIDENCIA}%0A🚫 *TIPO ERROR:* ${r['TIPO DE ERROR']}%0A💰 *MONTO:* ${r['MONTO $']}$%0A📌 *CLASIFICACIÓN:* ${r['CLASIFICACIÓN MONTO']}%0A📝 *OBS:* ${r.OBSERVACIÓN}`;
+    window.open(`https://wa.me/584140511731?text=${t}`,'_blank');
+}
+
+function editar(r){
+    document.getElementById('e_id').value=r.ID; document.getElementById('e_suc').value=r.SUCURSAL; document.getElementById('e_fec').value=r.FECHA;
+    document.getElementById('e_pro').value=r.PROVEEDOR; document.getElementById('e_fac').value=r.FACTURA; document.getElementById('e_res').value=r.RESPONSABLE;
+    document.getElementById('e_tip').value=r['TIPO FISCALIZACIÓN']; document.getElementById('e_clasm').value=r['CLASIFICACIÓN MONTO'];
+    document.getElementById('e_mon').value=r['MONTO $']; document.getElementById('e_fco').value=r['F COBRADA']; 
+    document.getElementById('e_inc').value=r.INCIDENCIA; document.getElementById('e_obs').value=r.OBSERVACIÓN;
+    document.getElementById('e_inc_ex').value=r['FOTO_INCIDENCIA']; toggleM(); document.getElementById('t1').click();
+}
+
 window.onload = () => {
-    const lm = sessionStorage.getItem('last_mes'), ls = sessionStorage.getItem('last_suc');
-    if(lm) document.getElementById('filtro_mes').value = lm;
-    if(ls) document.getElementById('filtro_suc').value = ls;
-    if(lm && ls) cargarDatos();
+    const lm = localStorage.getItem('last_mes'), ls = localStorage.getItem('last_suc');
+    if(lm) document.getElementById('s_m').value = lm;
+    if(ls) document.getElementById('s_s').value = ls;
 };
-function editar(data) {
-    const r = JSON.parse(decodeURIComponent(data));
-    document.getElementById('id_edicion').value = r.ID;
-    document.getElementById('f_suc').value = r.SUCURSAL;
-    document.getElementById('f_fec').value = r.FECHA;
-    document.getElementById('f_pro').value = r.PROVEEDOR;
-    document.getElementById('f_fac').value = r.FACTURA;
-    document.getElementById('f_tip').value = r['TIPO FISCALIZACIÓN'];
-    document.getElementById('f_res').value = r.RESPONSABLE;
-    document.getElementById('f_clasm').value = r['CLASIFICACIÓN MONTO'] || "NINGUNA";
-    document.getElementById('f_mon').value = r['MONTO $'];
-    document.getElementById('f_fco_in').value = r['F COBRADA'];
-    document.getElementById('f_inc').value = r.INCIDENCIA;
-    document.getElementById('f_obs').value = r.OBSERVACIÓN;
-    toggleMonto();
-    document.getElementById('btn-tab-crear').click();
-}
-async function borrar(id, fecha, suc) {
-    if(!confirm("¿Desea eliminar este registro definitivamente?")) return;
-    const res = await fetch('/borrar', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id: id, fecha: fecha, sucursal: suc}) });
-    if(res.ok) cargarDatos();
-}
 </script></body></html>
 """
 
 if __name__ == "__main__":
-    try:
-        print(">>> Iniciando Sistema Luxor (Puerto 5000)...")
-        app.run(host='0.0.0.0', port=5000, debug=False)
-    except Exception as e:
-        pausa_error(e)
+    app.run(host='0.0.0.0', port=5000, debug=False)

@@ -192,6 +192,24 @@
         "TOTAL_GESTIONADO": 2580.94
     },
     {
+        "sucursal": "ACACIAS (MAYO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
+        "sucursal": "BARQUISIMETO (MAYO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
+        "sucursal": "BOSQUE (MAYO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
         "sucursal": "CASTAÑO (MAYO)",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
@@ -199,6 +217,12 @@
     },
     {
         "sucursal": "CIRCULO (MAYO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
+        "sucursal": "GUACARA (MAYO)",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "TOTAL_GESTIONADO": 0.0
@@ -229,6 +253,12 @@
     },
     {
         "sucursal": "SANTA RITA (MAYO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
+        "sucursal": "TUCACAS (MAYO)",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "TOTAL_GESTIONADO": 0.0

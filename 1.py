@@ -87,7 +87,6 @@ def generar_reporte_v30_final():
                 df_suc_act = df_m_act[df_m_act['SUCURSAL'] == suc]
                 p_f = os.path.join(ruta_base, n_m_act, n_s); os.makedirs(p_f, exist_ok=True)
                 
-                filas_html, suma_impacto, t_act, t_ant = 0, 0, 0, 0
                 filas_html_txt = ""
 
                 # GENERAR DETALLADO TOTAL DEL MES ACTUAL
@@ -114,10 +113,11 @@ def generar_reporte_v30_final():
                         html_pers = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>INCIDENCIAS: {nombre}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_p])}</tr></thead><tbody>{cuerpo_p}</tbody></table><a onclick='window.history.back()' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
                         with open(os.path.join(p_f, archivo_persona), "w", encoding="utf-8") as f: f.write(html_pers)
 
+                suma_impacto, t_act, t_ant = 0, 0, 0
                 for grupo in grupos_defs:
                     g_act_grupo, g_ant_grupo = 0, 0
                     temp_filas = []
-                    for inc in grupo["items"]:
+                    for idx_item, inc in enumerate(grupo["items"]):
                         busq = inc.upper().replace('.', '')
                         nombre_file = f"{limpiar_nombre_archivo(inc)}.html"
                         
@@ -131,7 +131,9 @@ def generar_reporte_v30_final():
                         v_ant = "0" if c_ant == 0 else f"<a href='../../{n_m_ant}/{n_s}/{nombre_file}' class='link-incidencias'>{c_ant}</a>"
                         v_act = "0" if c_act == 0 else f"<a href='{nombre_file}' class='link-incidencias'>{c_act}</a>"
                         
-                        temp_filas.append(f"<tr style='background-color:{grupo['color']};'><td style='text-align:left;'>{inc}.</td><td>{grupo['tipo']}</td><td>{v_ant}</td><td>{v_act}</td>")
+                        # MARCAR LÍNEA DE SEPARACIÓN: Si es el último item del grupo, añadimos estilo de borde grueso
+                        estilo_separador = "border-bottom: 4px solid #333;" if idx_item == len(grupo["items"]) - 1 else ""
+                        temp_filas.append(f"<tr style='background-color:{grupo['color']}; {estilo_separador}'><td style='text-align:left;'>{inc}.</td><td>{grupo['tipo']}</td><td>{v_ant}</td><td>{v_act}</td>")
                         
                         if c_act > 0:
                             df_det_act['FECHA'] = pd.to_datetime(df_det_act['FECHA']).dt.strftime('%Y-%m-%d')
@@ -146,8 +148,6 @@ def generar_reporte_v30_final():
                         filas_html_txt += f_base + (f"<td rowspan='{len(grupo['items'])}' style='background-color:{color_p};'>{grupo['porc']}%</td></tr>" if idx == 0 else "</tr>")
 
                 nota_f = max(0, 100 - suma_impacto)
-                
-                # SOLUCIÓN: Link del mes anterior apunta a su detallado total (todo_el_mes.html)
                 link_t_ant = f"<a href='../../{n_m_ant}/{n_s}/todo_el_mes.html' style='color:white; text-decoration:underline;'>{t_ant}</a>" if t_ant > 0 else "0"
                 link_t_act = f"<a href='todo_el_mes.html' style='color:white; text-decoration:underline;'>{t_act}</a>" if t_act > 0 else "0"
 
@@ -166,7 +166,7 @@ def generar_reporte_v30_final():
                             <br><a href='../../index.html#mes-{n_m_act}' class='btn-volver'>VOLVER AL PANEL PRINCIPAL</a>
                         </div></body></html>""")
 
-        print(f"\n✅ Reportes actualizados. Link del mes anterior corregido.")
+        print(f"\n✅ Reportes actualizados con líneas de separación por grupos.")
     except Exception as e: print(f"\n❌ ERROR: {e}")
 
 if __name__ == "__main__":

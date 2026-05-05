@@ -18,3 +18,11 @@
  * Debug mode: off
  * Serving Flask app 'SERVIDOR'
  * Debug mode: off
+>>> Iniciando Sistema Luxor (Puerto 5000)...
+ * Serving Flask app 'SERVIDOR'
+ * Debug mode: off
+>>> Iniciando Sistema Luxor (Puerto 5000)...
+ * Serving Flask app 'SERVIDOR'
+ * Debug mode: off
+ * Serving Flask app 'SERVIDOR'
+ * Debug mode: off
