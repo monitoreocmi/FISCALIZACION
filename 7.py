@@ -27,12 +27,12 @@ def generar_panel_luxor_centralizado():
                 with open(p, "r", encoding="utf-8") as f:
                     try:
                         data = json.load(f)
-                        print(f"   ✅ {nombre} cargado.")
+                        print(f"   ✅ {nombre} cargado correctamente.")
                         return data
                     except:
-                        print(f"   ⚠️ Error en formato de {nombre}.")
+                        print(f"   ⚠️ Error en formato de {nombre}. Se usará lista vacía.")
                         return [] if "sucursales" in nombre or "graves" in nombre else {}
-            print(f"   ❌ {nombre} no encontrado.")
+            print(f"   ❌ {nombre} no encontrado en la ruta.")
             return [] if "sucursales" in nombre or "graves" in nombre else {}
 
         data_totales = cargar_json("incidencias_totales.json")
@@ -45,9 +45,9 @@ def generar_panel_luxor_centralizado():
                                 key=lambda x: MESES_ES.index(x.upper()))
 
         if not meses_carpetas:
-            print("\n❌ Error: No hay carpetas de meses."); return
+            print("\n❌ Error: No se encontraron carpetas de meses válidas."); return
 
-        print(f"\n📊 Procesando {len(meses_carpetas)} meses...")
+        print(f"\n📊 Procesando datos para {len(meses_carpetas)} meses...")
         html_meses_data = ""
         opciones_dropdown = ""
 
@@ -62,7 +62,7 @@ def generar_panel_luxor_centralizado():
 
         for m in meses_carpetas:
             m_key = m.upper()
-            print(f"   > Generando HTML para: {m_key}")
+            print(f"   > Generando vista para: {m_key}")
             opciones_dropdown += f'<option value="mes-{m}" {"selected" if m == meses_carpetas[-1] else ""}>{m}</option>'
             ruta_mes = os.path.join(ruta_raiz, m)
             sucursales_fisicas = sorted([s for s in os.listdir(ruta_mes) if os.path.isdir(os.path.join(ruta_mes, s))])
@@ -85,9 +85,7 @@ def generar_panel_luxor_centralizado():
                 c_val, p_val = 0, 0
                 for cb in cobros_db:
                     if str(cb.get('sucursal','')).upper() == s_key: c_val, p_val = cb.get('c',0), cb.get('p',0); break
-                
-                score_fisc = inc_val + (grv_val * 10)
-                rank_fisc.append({'n': s, 'v': score_fisc})
+                rank_fisc.append({'n': s, 'v': inc_val + (grv_val * 10)})
                 rank_cobs.append({'n': s, 'c': c_val, 'p': p_val, 't': c_val + p_val})
 
             top_f = sorted([x for x in rank_fisc if x['n'].upper() in n_aprobadas], key=lambda x: x['v'])[:3]
@@ -98,16 +96,16 @@ def generar_panel_luxor_centralizado():
             def gen_rows_simple(lista, css=""):
                 html = ""
                 for i in lista:
-                    hide_class = "sucursal-central" if i['n'].upper() == "CENTRAL" else ""
-                    html += f"<div class='audit-row {css} {hide_class}'><span>{i['n']}</span></div>"
+                    tipo = "sucursal-central" if "CENTRAL" in i['n'].upper() else "sucursal-comun"
+                    html += f"<div class='audit-row {css} {tipo}'><span>{i['n']}</span></div>"
                 return html or '<div class="audit-row">Sin datos</div>'
 
             def gen_rows(lista, key="v", css="", money=False):
                 html = ""
                 for i in lista:
                     val = f"${i[key]:,.2f}" if money else i[key]
-                    hide_class = "sucursal-central" if i['n'].upper() == "CENTRAL" else ""
-                    html += f"<div class='audit-row {css} {hide_class}'><span>{i['n']}</span><b>{val}</b></div>"
+                    tipo = "sucursal-central" if "CENTRAL" in i['n'].upper() else "sucursal-comun"
+                    html += f"<div class='audit-row {css} {tipo}'><span>{i['n']}</span><b>{val}</b></div>"
                 return html or '<div class="audit-row">Sin datos</div>'
 
             c_glob = data_cobros_glob.get(m_key, {})
@@ -115,22 +113,14 @@ def generar_panel_luxor_centralizado():
             color_label = c_glob.get("COLOR_COBRADO", "NEGRO")
             estilo_monto = f"color: {'var(--verde)' if color_label == 'VERDE' else 'var(--rojo)' if color_label == 'ROJO' else '#333'};"
 
-            # Generación de cuadrícula de botones filtrando CENTRAL inicialmente
-            botones_sucursales = ""
-            for s in sucursales_fisicas:
-                hide_class = "sucursal-central" if s.upper() == "CENTRAL" else ""
-                botones_sucursales += f'<a href="{m}/{s}/reporte.html" class="card card-inc {hide_class}">{s}</a>'
-
-            botones_cobros = ""
-            for s in sucursales_fisicas:
-                hide_class = "sucursal-central" if s.upper() == "CENTRAL" else ""
-                botones_cobros += f'<a href="{m}/{s}/cobros_detalles.html" class="card {hide_class}">{s}</a>'
+            botones_suc = "".join([f'<a href="{m}/{s}/reporte.html" class="card card-inc {"sucursal-central" if s.upper()=="CENTRAL" else "sucursal-comun"}">{s}</a>' for s in sucursales_fisicas])
+            botones_cob = "".join([f'<a href="{m}/{s}/cobros_detalles.html" class="card {"sucursal-central" if s.upper()=="CENTRAL" else "sucursal-comun"}">{s}</a>' for s in sucursales_fisicas])
 
             html_meses_data += f"""
             <div id="mes-{m}" class="mes-container">
                 <div id="incs-{m}" class="tab-content active">
                     <h2 class="sub-title">REPORTES DE INCIDENCIAS - {m_key}</h2>
-                    <div class="blue-box"><div class="grid">{botones_sucursales}</div></div>
+                    <div class="blue-box"><div class="grid">{botones_suc}</div></div>
                     <div class="audit-grid-full">
                         <div class="audit-card"><h3>INCIDENCIAS TOTALES</h3><div class="scroll-area">{gen_rows(list_totales, css="row-blue")}</div></div>
                         <div class="audit-card"><h3>SUCURSALES APROBADAS</h3><div class="scroll-area">{gen_rows(list_aprob, "v", "status-ok")}</div></div>
@@ -140,7 +130,7 @@ def generar_panel_luxor_centralizado():
                 </div>
                 <div id="cobs-{m}" class="tab-content">
                     <h2 class="sub-title">REPORTES DE COBROS Y RECUPERACIÓN - {m_key}</h2>
-                    <div class="blue-box"><div class="grid">{botones_cobros}</div></div>
+                    <div class="blue-box"><div class="grid">{botones_cob}</div></div>
                     <div class="global-cobros-box">
                         <div class="global-item"><span>TOTAL COBRADO</span><br><b style="{estilo_monto}">${tc:,.2f}</b></div>
                         <div class="global-item"><span>PÉRDIDA MITIGADA</span><br><b>${tp:,.2f}</b></div>
@@ -189,7 +179,13 @@ def generar_panel_luxor_centralizado():
             .grid-half {{ grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }}
             .audit-card {{ background: white; border-radius: 8px; padding: 12px; border-top: 4px solid var(--azul); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }}
             .audit-row {{ display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; font-size: 11px; font-weight: bold; border-left: 4px solid transparent; }}
-            .sucursal-central {{ display: none !important; }} /* OCULTA CENTRAL POR DEFECTO */
+            
+            /* ESTADOS DE VISIBILIDAD */
+            .sucursal-central {{ display: none !important; }} /* Oculta Central por defecto */
+            .modo-central .sucursal-comun {{ display: none !important; }} /* Oculta comunes en modo central */
+            .modo-central .sucursal-central {{ display: flex !important; }} /* Muestra Central en modo central */
+            a.sucursal-central {{ display: block !important; }} /* Ajuste para enlaces */
+
             .row-blue {{ background: #e3f2fd; color: #0d47a1; border-left-color: var(--azul); }}
             .status-ok {{ color: var(--verde); background: #e8f5e9; border-left-color: var(--verde); }}
             .status-fail {{ color: var(--rojo); background: #ffebee; border-left-color: var(--rojo); }}
@@ -216,19 +212,11 @@ def generar_panel_luxor_centralizado():
                 <button class="tab-btn" id="btn-hon" onclick="showGlobalTab('honor')">MEJOR RENDIMIENTO</button>
                 <button class="tab-btn" id="btn-peo" onclick="showGlobalTab('peores')">RENDIMIENTO CRÍTICO</button>
             </div>
-            <main class="main-content">{html_meses_data}</main>
+            <main class="main-content" id="main-panel">{html_meses_data}</main>
             <script>
                 function toggleCentral() {{
-                    document.querySelectorAll('.sucursal-central').forEach(el => {{
-                        if (el.style.display === 'flex' || el.style.display === 'block' || el.classList.contains('show-central')) {{
-                            el.style.setProperty('display', 'none', 'important');
-                            el.classList.remove('show-central');
-                        }} else {{
-                            let targetDisplay = el.tagName === 'A' ? 'block' : 'flex';
-                            el.style.setProperty('display', targetDisplay, 'important');
-                            el.classList.add('show-central');
-                        }}
-                    }});
+                    const body = document.body;
+                    body.classList.toggle('modo-central');
                 }}
                 function cambiarMes() {{
                     document.querySelectorAll(".mes-container").forEach(e => e.classList.remove('active'));
@@ -258,8 +246,7 @@ def generar_panel_luxor_centralizado():
         
         with open(os.path.join(ruta_raiz, "index.html"), "w", encoding="utf-8") as f:
             f.write(html_final)
-        print("\n✅ PANEL ACTUALIZADO CORRECTAMENTE (CENTRAL OCULTA).")
-
+        print("\n✅ PANEL ACTUALIZADO CORRECTAMENTE.")
     except Exception as e: print(f"\n❌ ERROR CRÍTICO: {e}")
 
     print("\nPresiona ENTER para salir o espera 10 segundos...")
