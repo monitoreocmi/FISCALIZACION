@@ -35,7 +35,6 @@ def generar_panel_luxor_centralizado():
             print(f"   ❌ {nombre} no encontrado.")
             return [] if "sucursales" in nombre or "graves" in nombre else {}
 
-        # Carga de datos
         data_totales = cargar_json("incidencias_totales.json")
         data_status = cargar_json("sucursales_status.json")
         data_graves = cargar_json("incidencias_graves.json")
@@ -46,14 +45,12 @@ def generar_panel_luxor_centralizado():
                                 key=lambda x: MESES_ES.index(x.upper()))
 
         if not meses_carpetas:
-            print("\n❌ Error: No hay carpetas de meses.")
-            return
+            print("\n❌ Error: No hay carpetas de meses."); return
 
         print(f"\n📊 Procesando {len(meses_carpetas)} meses...")
         html_meses_data = ""
         opciones_dropdown = ""
 
-        # Lógica de Cobros
         cobros_db = []
         c_raw = data_suc_cobros_raw if isinstance(data_suc_cobros_raw, (dict, list)) else []
         if isinstance(c_raw, dict):
@@ -72,11 +69,8 @@ def generar_panel_luxor_centralizado():
 
             def limpiar(t): return str(t).split("(")[0].strip().upper()
 
-            # Filtrado de Incidencias
             list_totales = sorted([{'n': limpiar(k), 'v': v} for k, v in data_totales.items() if f"({m_key})" in str(k).upper()], key=lambda x: x['v'], reverse=True)
             list_graves = sorted([{'n': limpiar(i['n']), 'v': i['v']} for i in data_graves if f"({m_key})" in str(i['n']).upper()], key=lambda x: x['v'], reverse=True)
-            
-            # Listas de Status (Aprobadas/Reprobadas)
             list_aprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in data_status.get("aprobadas", []) if f"({m_key})" in str(i['n']).upper()]
             list_reprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in data_status.get("reprobadas", []) if f"({m_key})" in str(i['n']).upper()]
 
@@ -103,14 +97,17 @@ def generar_panel_luxor_centralizado():
 
             def gen_rows_simple(lista, css=""):
                 html = ""
-                for i in lista: html += f"<div class='audit-row {css}'><span>{i['n']}</span></div>"
+                for i in lista:
+                    hide_class = "sucursal-central" if i['n'].upper() == "CENTRAL" else ""
+                    html += f"<div class='audit-row {css} {hide_class}'><span>{i['n']}</span></div>"
                 return html or '<div class="audit-row">Sin datos</div>'
 
             def gen_rows(lista, key="v", css="", money=False):
                 html = ""
                 for i in lista:
                     val = f"${i[key]:,.2f}" if money else i[key]
-                    html += f"<div class='audit-row {css}'><span>{i['n']}</span><b>{val}</b></div>"
+                    hide_class = "sucursal-central" if i['n'].upper() == "CENTRAL" else ""
+                    html += f"<div class='audit-row {css} {hide_class}'><span>{i['n']}</span><b>{val}</b></div>"
                 return html or '<div class="audit-row">Sin datos</div>'
 
             c_glob = data_cobros_glob.get(m_key, {})
@@ -118,11 +115,22 @@ def generar_panel_luxor_centralizado():
             color_label = c_glob.get("COLOR_COBRADO", "NEGRO")
             estilo_monto = f"color: {'var(--verde)' if color_label == 'VERDE' else 'var(--rojo)' if color_label == 'ROJO' else '#333'};"
 
+            # Generación de cuadrícula de botones filtrando CENTRAL inicialmente
+            botones_sucursales = ""
+            for s in sucursales_fisicas:
+                hide_class = "sucursal-central" if s.upper() == "CENTRAL" else ""
+                botones_sucursales += f'<a href="{m}/{s}/reporte.html" class="card card-inc {hide_class}">{s}</a>'
+
+            botones_cobros = ""
+            for s in sucursales_fisicas:
+                hide_class = "sucursal-central" if s.upper() == "CENTRAL" else ""
+                botones_cobros += f'<a href="{m}/{s}/cobros_detalles.html" class="card {hide_class}">{s}</a>'
+
             html_meses_data += f"""
             <div id="mes-{m}" class="mes-container">
                 <div id="incs-{m}" class="tab-content active">
                     <h2 class="sub-title">REPORTES DE INCIDENCIAS - {m_key}</h2>
-                    <div class="blue-box"><div class="grid">{''.join([f'<a href="{m}/{s}/reporte.html" class="card card-inc">{s}</a>' for s in sucursales_fisicas])}</div></div>
+                    <div class="blue-box"><div class="grid">{botones_sucursales}</div></div>
                     <div class="audit-grid-full">
                         <div class="audit-card"><h3>INCIDENCIAS TOTALES</h3><div class="scroll-area">{gen_rows(list_totales, css="row-blue")}</div></div>
                         <div class="audit-card"><h3>SUCURSALES APROBADAS</h3><div class="scroll-area">{gen_rows(list_aprob, "v", "status-ok")}</div></div>
@@ -132,7 +140,7 @@ def generar_panel_luxor_centralizado():
                 </div>
                 <div id="cobs-{m}" class="tab-content">
                     <h2 class="sub-title">REPORTES DE COBROS Y RECUPERACIÓN - {m_key}</h2>
-                    <div class="blue-box"><div class="grid">{''.join([f'<a href="{m}/{s}/cobros_detalles.html" class="card">{s}</a>' for s in sucursales_fisicas])}</div></div>
+                    <div class="blue-box"><div class="grid">{botones_cobros}</div></div>
                     <div class="global-cobros-box">
                         <div class="global-item"><span>TOTAL COBRADO</span><br><b style="{estilo_monto}">${tc:,.2f}</b></div>
                         <div class="global-item"><span>PÉRDIDA MITIGADA</span><br><b>${tp:,.2f}</b></div>
@@ -164,7 +172,7 @@ def generar_panel_luxor_centralizado():
             :root {{ --azul: #0844a4; --amarillo: #F9D908; --verde: #27ae60; --rojo: #ed1c24; --fondo: #f4f7f6; }}
             body {{ font-family: 'Segoe UI', sans-serif; background: var(--fondo); margin: 0; padding: 0; }}
             .header-container {{ background: white; height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--amarillo); }}
-            .logo-panel {{ height: 50px; max-width: 90px; object-fit: contain; }}
+            .logo-panel {{ height: 50px; max-width: 90px; object-fit: contain; cursor: pointer; }}
             h1 {{ color: var(--azul); text-transform: uppercase; font-weight: 900; font-size: 16px; text-align: center; flex-grow: 1; margin: 0 10px; }}
             .controls-bar {{ display: flex; justify-content: center; gap: 8px; margin: 15px 0; flex-wrap: wrap; padding: 0 10px; }}
             .selector-wrapper {{ background: var(--azul); padding: 8px 15px; border-radius: 5px; border: 2px solid var(--amarillo); }}
@@ -181,6 +189,7 @@ def generar_panel_luxor_centralizado():
             .grid-half {{ grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }}
             .audit-card {{ background: white; border-radius: 8px; padding: 12px; border-top: 4px solid var(--azul); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }}
             .audit-row {{ display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; font-size: 11px; font-weight: bold; border-left: 4px solid transparent; }}
+            .sucursal-central {{ display: none !important; }} /* OCULTA CENTRAL POR DEFECTO */
             .row-blue {{ background: #e3f2fd; color: #0d47a1; border-left-color: var(--azul); }}
             .status-ok {{ color: var(--verde); background: #e8f5e9; border-left-color: var(--verde); }}
             .status-fail {{ color: var(--rojo); background: #ffebee; border-left-color: var(--rojo); }}
@@ -195,7 +204,11 @@ def generar_panel_luxor_centralizado():
             .global-item b {{ font-size: 18px; display: block; }}
             .scroll-area {{ max-height: 350px; overflow-y: auto; }}
         </style></head><body>
-            <header class="header-container"><img src="{RUTA_LOGO_PANEL}" class="logo-panel"><h1>FISCALIZACIÓN LUXOR</h1><img src="{RUTA_LOGO_PANEL}" class="logo-panel"></header>
+            <header class="header-container">
+                <img src="{RUTA_LOGO_PANEL}" class="logo-panel" onclick="toggleCentral()">
+                <h1>FISCALIZACIÓN LUXOR</h1>
+                <img src="{RUTA_LOGO_PANEL}" class="logo-panel" onclick="toggleCentral()">
+            </header>
             <div class="controls-bar">
                 <div class="selector-wrapper"><select id="mes-selector" onchange="cambiarMes()">{opciones_dropdown}</select></div>
                 <button class="tab-btn active" id="btn-inc" onclick="showGlobalTab('incs')">INCIDENCIAS</button>
@@ -205,6 +218,18 @@ def generar_panel_luxor_centralizado():
             </div>
             <main class="main-content">{html_meses_data}</main>
             <script>
+                function toggleCentral() {{
+                    document.querySelectorAll('.sucursal-central').forEach(el => {{
+                        if (el.style.display === 'flex' || el.style.display === 'block' || el.classList.contains('show-central')) {{
+                            el.style.setProperty('display', 'none', 'important');
+                            el.classList.remove('show-central');
+                        }} else {{
+                            let targetDisplay = el.tagName === 'A' ? 'block' : 'flex';
+                            el.style.setProperty('display', targetDisplay, 'important');
+                            el.classList.add('show-central');
+                        }}
+                    }});
+                }}
                 function cambiarMes() {{
                     document.querySelectorAll(".mes-container").forEach(e => e.classList.remove('active'));
                     let sel = document.getElementById("mes-selector").value;
@@ -233,19 +258,13 @@ def generar_panel_luxor_centralizado():
         
         with open(os.path.join(ruta_raiz, "index.html"), "w", encoding="utf-8") as f:
             f.write(html_final)
-        print("\n✅ PANEL ACTUALIZADO CORRECTAMENTE.")
+        print("\n✅ PANEL ACTUALIZADO CORRECTAMENTE (CENTRAL OCULTA).")
 
-    except Exception as e: 
-        print(f"\n❌ ERROR CRÍTICO: {e}")
+    except Exception as e: print(f"\n❌ ERROR CRÍTICO: {e}")
 
-    # Temporizador de 10 segundos para cerrar
     print("\nPresiona ENTER para salir o espera 10 segundos...")
-    timer = threading.Timer(10.0, lambda: os._exit(0))
-    timer.start()
-    try:
-        input()
-    finally:
-        timer.cancel()
+    timer = threading.Timer(10.0, lambda: os._exit(0)); timer.start()
+    try: input()
+    finally: timer.cancel()
 
-if __name__ == "__main__": 
-    generar_panel_luxor_centralizado()
+if __name__ == "__main__": generar_panel_luxor_centralizado()
