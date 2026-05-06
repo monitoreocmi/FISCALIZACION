@@ -77,6 +77,13 @@
         "TOTAL_GESTIONADO": 15080.94
     },
     {
+        "sucursal": "CASTAÑO (MAYO)",
+        "COBRADO": 17.96,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 17.96
+    },
+    {
         "sucursal": "CIRCULO MILITAR (ABRIL)",
         "COBRADO": 15.24,
         "PERDIDA_PATRIMONIO": 655.35,
@@ -154,7 +161,7 @@
         "TOTAL_GESTIONADO": 3.14
     },
     {
-        "sucursal": "CIRCULO (MAYO)",
+        "sucursal": "CIRCULO MILITAR (MAYO)",
         "COBRADO": 2.7,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
@@ -180,6 +187,13 @@
         "PERDIDA_PATRIMONIO": 74.78,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 76.36
+    },
+    {
+        "sucursal": "TUCACAS (MAYO)",
+        "COBRADO": 1.31,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 1.31
     },
     {
         "sucursal": "SANTA RITA (MARZO)",
@@ -273,13 +287,6 @@
         "TOTAL_GESTIONADO": 0.0
     },
     {
-        "sucursal": "CASTAÑO (MAYO)",
-        "COBRADO": 0.0,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 0.0
-    },
-    {
         "sucursal": "IPSFA (MAYO)",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
@@ -302,13 +309,6 @@
     },
     {
         "sucursal": "SANTA RITA (MAYO)",
-        "COBRADO": 0.0,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 0.0
-    },
-    {
-        "sucursal": "TUCACAS (MAYO)",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,

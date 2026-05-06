@@ -45,9 +45,9 @@
         "detalle": "D: 1 | E: 5"
     },
     {
-        "n": "GUACARA (MARZO)",
+        "n": "ACACIAS (MARZO)",
         "v": 5,
-        "detalle": "D: 1 | E: 4"
+        "detalle": "D: 5 | E: 0"
     },
     {
         "n": "VICTORIA (MARZO)",
@@ -55,17 +55,22 @@
         "detalle": "D: 0 | E: 5"
     },
     {
+        "n": "GUACARA (MARZO)",
+        "v": 5,
+        "detalle": "D: 1 | E: 4"
+    },
+    {
         "n": "BARQUISIMETO (ABRIL)",
         "v": 5,
         "detalle": "D: 5 | E: 0"
     },
     {
-        "n": "ACACIAS (MARZO)",
-        "v": 5,
-        "detalle": "D: 5 | E: 0"
+        "n": "CIRCULO MILITAR (ABRIL)",
+        "v": 4,
+        "detalle": "D: 3 | E: 1"
     },
     {
-        "n": "CIRCULO MILITAR (ABRIL)",
+        "n": "IPSFA (MARZO)",
         "v": 4,
         "detalle": "D: 3 | E: 1"
     },
@@ -85,22 +90,12 @@
         "detalle": "D: 2 | E: 2"
     },
     {
-        "n": "IPSFA (MARZO)",
-        "v": 4,
-        "detalle": "D: 3 | E: 1"
-    },
-    {
-        "n": "VICTORIA (ABRIL)",
-        "v": 3,
-        "detalle": "D: 1 | E: 2"
-    },
-    {
         "n": "NAGUANAGUA (ABRIL)",
         "v": 3,
         "detalle": "D: 3 | E: 0"
     },
     {
-        "n": "GUACARA (ABRIL)",
+        "n": "VICTORIA (ABRIL)",
         "v": 3,
         "detalle": "D: 1 | E: 2"
     },
@@ -110,17 +105,22 @@
         "detalle": "D: 3 | E: 0"
     },
     {
+        "n": "GUACARA (ABRIL)",
+        "v": 3,
+        "detalle": "D: 1 | E: 2"
+    },
+    {
         "n": "SANTA RITA (MARZO)",
         "v": 3,
         "detalle": "D: 3 | E: 0"
     },
     {
-        "n": "IPSFA (ABRIL)",
+        "n": "BARQUISIMETO (MARZO)",
         "v": 2,
         "detalle": "D: 2 | E: 0"
     },
     {
-        "n": "BARQUISIMETO (MARZO)",
+        "n": "IPSFA (ABRIL)",
         "v": 2,
         "detalle": "D: 2 | E: 0"
     },
@@ -140,7 +140,12 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "CIRCULO (MAYO)",
+        "n": "BOSQUE (MAYO)",
+        "v": 1,
+        "detalle": "D: 1 | E: 0"
+    },
+    {
+        "n": "CASTAÑO (MAYO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
@@ -155,7 +160,7 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "BOSQUE (MAYO)",
+        "n": "CIRCULO MILITAR (MAYO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
