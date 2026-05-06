@@ -3,6 +3,8 @@ import os
 import sys
 import re
 import warnings
+import threading
+import time
 
 # Silenciar advertencias de validación de Excel
 warnings.filterwarnings("ignore")
@@ -40,9 +42,15 @@ CSS_UNIFICADO = f"""
 
 def generar_reporte_v30_final():
     try:
+        print("\n" + "="*60)
+        print(">>> INICIANDO GENERACIÓN DE REPORTES V3.0 <<<")
+        print("="*60)
+        
         ruta_base = os.path.dirname(os.path.abspath(sys.argv[0]))
         ruta_cuadros = os.path.join(ruta_base, "cuadros")
         archivos = [os.path.join(root, f) for root, dirs, files in os.walk(ruta_cuadros) for f in files if f.endswith(('.xlsx', '.xls')) and not f.startswith('~$')]
+
+        print(f"📁 Archivos encontrados: {len(archivos)}")
 
         lista_df = []
         for f in archivos:
@@ -78,12 +86,17 @@ def generar_reporte_v30_final():
 
         for p_act in sorted(df_master['PERIODO'].unique()):
             n_m_act = MESES_ES[p_act.month]
+            print(f"\n📅 PROCESANDO MES: {n_m_act}")
+            print("-" * 30)
+
             p_ant = p_act - 1
             n_m_ant = MESES_ES[p_ant.month] if p_ant.month in MESES_ES else "ANT."
             df_m_act = df_master[df_master['PERIODO'] == p_act]
 
             for suc in sorted(df_m_act['SUCURSAL'].dropna().unique()):
                 n_s = str(suc).strip().upper()
+                print(f"   🏢 Sucursal: {n_s}")
+                
                 df_suc_act = df_m_act[df_m_act['SUCURSAL'] == suc]
                 p_f = os.path.join(ruta_base, n_m_act, n_s); os.makedirs(p_f, exist_ok=True)
                 
@@ -147,7 +160,7 @@ def generar_reporte_v30_final():
 
                 nota_f = max(0, 100 - suma_impacto)
                 
-                # GENERAR SOLO_MES.HTML DENTRO DE LA SUCURSAL
+                # GENERAR SOLO_MES.HTML
                 color_eval = "#ed1c24" if nota_f < 75 else "#27ae60"
                 html_solo_mes = f"""<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body>
                     <div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>RESUMEN {n_s} - {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div>
@@ -158,7 +171,7 @@ def generar_reporte_v30_final():
                     </div></body></html>"""
                 with open(os.path.join(p_f, "solo_mes.html"), "w", encoding="utf-8") as f: f.write(html_solo_mes)
 
-                # GENERAR REPORTE.HTML PRINCIPAL DE LA SUCURSAL
+                # GENERAR REPORTE.HTML
                 link_t_ant = f"<a href='../../{n_m_ant}/{n_s}/todo_el_mes.html' style='color:white; text-decoration:underline;'>{t_ant}</a>" if t_ant > 0 else "0"
                 link_t_act = f"<a href='todo_el_mes.html' style='color:white; text-decoration:underline;'>{t_act}</a>" if t_act > 0 else "0"
 
@@ -177,8 +190,36 @@ def generar_reporte_v30_final():
                             <br><a href='../../index.html#mes-{n_m_act}' class='btn-volver'>VOLVER AL PANEL PRINCIPAL</a>
                         </div></body></html>""")
 
-        print(f"\n✅ Reportes actualizados. El archivo 'solo_mes.html' se generó en cada sucursal.")
-    except Exception as e: print(f"\n❌ ERROR: {e}")
+        print("\n" + "="*60)
+        print("✅ PROCESO FINALIZADO CON ÉXITO.")
+        print("="*60)
+
+    except Exception as e: 
+        print(f"\n❌ ERROR CRÍTICO: {e}")
+
+    # Lógica de cierre de 10 segundos
+    print("\n" + "-"*30)
+    print("El programa se cerrará en 10 segundos o pulsa ENTER...")
+    
+    stop_event = threading.Event()
+
+    def temporizador():
+        for i in range(10, 0, -1):
+            if stop_event.is_set():
+                return
+            time.sleep(1)
+        print("\nCerrando por tiempo agotado...")
+        os._exit(0)
+
+    t = threading.Thread(target=temporizador)
+    t.daemon = True
+    t.start()
+    
+    try:
+        input()
+    except EOFError:
+        pass
+    stop_event.set()
 
 if __name__ == "__main__":
     generar_reporte_v30_final()

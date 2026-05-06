@@ -261,7 +261,7 @@ async function bF(id,f,s,t){ if(confirm("¿Quitar foto?")){ await fetch('/borrar
 async function borrarR(id,f,s){ if(confirm("¿Borrar registro?")){ await fetch('/borrar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,fecha:f,sucursal:s})}); cargar(); } }
 
 function sendWA(r){
-    const t=`*REPORTE FISCALIZACIÓN*%0A%0A🏢 *SUCURSAL:* ${r.SUCURSAL}%0A📅 *FECHA:* ${r.FECHA}%0A🚛 *PROVEEDOR:* ${r.PROVEEDOR}%0A📄 *FACTURA:* ${r.FACTURA}%0A👤 *RESPONSABLE:* ${r.RESPONSABLE}%0A🔍 *TIPO FISC:* ${r['TIPO FISCALIZACIÓN']}%0A⚠️ *INCIDENCIA:* ${r.INCIDENCIA}%0A🚫 *TIPO ERROR:* ${r['TIPO DE ERROR']}%0A💰 *MONTO:* ${r['MONTO $']}$%0A📌 *CLASIFICACIÓN:* ${r['CLASIFICACIÓN MONTO']}%0A📝 *OBS:* ${r.OBSERVACIÓN}`;
+    const t=`REPORTE FISCALIZACIÓN%0A%0A SUCURSAL: ${r.SUCURSAL}%0A FECHA: ${r.FECHA}%0A PROVEEDOR: ${r.PROVEEDOR}%0A FACTURA: ${r.FACTURA}%0A RESPONSABLE: ${r.RESPONSABLE}%0A TIPO FISCALIZACION: ${r['TIPO FISCALIZACIÓN']}%0A INCIDENCIA: ${r.INCIDENCIA}%0A OBSERVACIONES: ${r.OBSERVACIÓN}`;
     window.open(`https://wa.me/584140511731?text=${t}`,'_blank');
 }
 

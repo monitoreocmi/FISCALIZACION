@@ -4,7 +4,8 @@ import sys
 import json
 from openpyxl import load_workbook
 import warnings
-import re
+import threading
+import time
 
 # Silenciar advertencias de validación de Excel
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -36,160 +37,154 @@ def obtener_indices_flexibles(headers):
     for i, h in enumerate(headers):
         h_up = str(h).upper() if h else ""
         if 'SUCURSAL' in h_up: indices['sucursal'] = i
-        if 'MONTO' in h_up: indices['monto'] = i
+        if 'MONTO $' in h_up: indices['monto'] = i
+        elif 'MONTO' in h_up and indices['monto'] == -1: indices['monto'] = i
         if 'FECHA' in h_up: indices['fecha'] = i
         if 'F COBRADA' in h_up: indices['foto'] = i
+    
     if indices['monto'] == -1: indices['monto'] = 9 
     return indices
 
 def generar_reporte_cobros_final():
     try:
         print("\n" + "="*60)
-        print(">>> SISTEMA LUXOR: GENERACIÓN DINÁMICA DE REPORTES <<<")
+        print(">>> SISTEMA LUXOR: PROCESANDO COLUMNA J (MONTO $) <<<")
         print("="*60)
         
         ruta_base = os.path.dirname(os.path.abspath(sys.argv[0]))
         ruta_cuadros = os.path.join(ruta_base, "cuadros")
+        
+        if not os.path.exists(ruta_cuadros):
+            print(f"❌ Error: No existe la carpeta 'cuadros' en {ruta_base}")
+            return
+
         archivos = [os.path.join(root, f) for root, dirs, files in os.walk(ruta_cuadros) 
                     for f in files if f.endswith(".xlsx") and not f.startswith("~$")]
 
+        print(f"📂 Archivos encontrados: {len(archivos)}")
         datos_finales = []
 
         for f in archivos:
-            print(f"Procesando: {os.path.basename(f)}...")
-            wb = load_workbook(f, data_only=True)
+            nombre_f = os.path.basename(f)
+            print(f"📖 Analizando: {nombre_f}")
+            wb = load_workbook(f, data_only=False)
             ws = wb.active
             headers_reales = [str(cell.value).strip() if cell.value else f"COL_{i+1}" for i, cell in enumerate(ws[1])]
             idx = obtener_indices_flexibles(headers_reales)
             
+            count_filas = 0
             for row in ws.iter_rows(min_row=2):
                 row_vals = [cell.value for cell in row]
                 if not any(v is not None for v in row_vals): continue
                 
+                fecha_val = pd.to_datetime(row_vals[idx['fecha']], errors='coerce') if idx['fecha'] != -1 else None
+                mes_num = fecha_val.month if fecha_val and not pd.isna(fecha_val) else 0
+                
+                estatus = "OTRO"
                 try:
                     target_cell = row[idx['monto']]
                     color = str(target_cell.fill.start_color.index).upper()
-                except: color = "00000000"
-
-                estatus = "OTRO"
-                if color in ['FF00B050', 'FF92D050', '00FF00', 'FF00FF00', 'FFC6EFCE', '13', 'FF548235']: estatus = "COBRADO"
-                elif color in ['FFFF0000', 'FFC00000', 'FFFFC7CE', '10', 'FFE06666']: estatus = "NO_PAGADO"
-                elif color in ['FFFFFF00', 'FFFFFFE1', 'FFFFEB9C', '17', 'FFFFD966']: estatus = "RECUPERADO"
-                elif color in ['FF0070C0', 'FF00B0F0', 'FFCCE5FF', '24', '30', 'FF3D85C6']: estatus = "EXCEDENTE"
-                
-                foto_raw = ""
-                if idx['foto'] != -1 and idx['foto'] < len(row_vals):
-                    val_foto = row_vals[idx['foto']]
-                    foto_raw = str(val_foto).strip() if val_foto is not None else ""
-
-                if estatus == "OTRO" and foto_raw not in ["", "None", "nan", "SIN FOTO"]:
-                    estatus = "COBRADO"
+                    
+                    if color in ['FF00B050', 'FF92D050', '00FF00', 'FF00FF00', 'FFC6EFCE', '13', 'FF548235']: 
+                        estatus = "COBRADO"
+                    elif color in ['FFFFFF00', 'FFFFFFE1', 'FFFFEB9C', '17', 'FFFFD966', 'FFFFC000']: 
+                        estatus = "RECUPERADO"
+                    elif color in ['FF0070C0', 'FF00B0F0', 'FFCCE5FF', '24', '30', 'FF3D85C6']: 
+                        estatus = "EXCEDENTE"
+                except: pass
 
                 if estatus != "OTRO":
-                    fecha_val = pd.to_datetime(row_vals[idx['fecha']], errors='coerce') if idx['fecha'] != -1 else None
-                    mes_nombre = MESES_ES.get(fecha_val.month, "VARIOS") if fecha_val and not pd.isna(fecha_val) else "VARIOS"
-                    periodo_val = fecha_val.to_period('M') if fecha_val and not pd.isna(fecha_val) else pd.Period('2026-01', freq='M')
-
+                    mes_nombre = MESES_ES.get(mes_num, "VARIOS")
                     datos_finales.append({
                         'SUCURSAL': str(row_vals[idx['sucursal']]).strip().upper() if idx['sucursal'] != -1 else "GENERAL",
-                        'MES': mes_nombre, 'PERIODO': periodo_val,
+                        'MES': mes_nombre, 
+                        'PERIODO': fecha_val.to_period('M') if fecha_val and not pd.isna(fecha_val) else pd.Period('2026-01', freq='M'),
                         'MONTO_CALC': limpiar_monto(row_vals[idx['monto']]),
-                        'FOTO_BASE': foto_raw,
+                        'FOTO_BASE': str(row_vals[idx['foto']]).strip() if idx['foto'] != -1 and row_vals[idx['foto']] else "",
                         'ESTATUS': estatus, 'FILA': row_vals, 'HEADERS': headers_reales, 'IDX': idx
                     })
+                    count_filas += 1
             wb.close()
+            print(f"   ✅ {count_filas} registros extraídos.")
 
-        if not datos_finales: return
+        if not datos_finales:
+            print("⚠️ No se encontraron filas coloreadas.")
+            return
+
         df = pd.DataFrame(datos_finales)
+        print(f"\n📊 Generando JSON y reportes HTML para {len(df)} registros totales...")
 
-        # --- GENERACIÓN DE CSS CON MODAL ---
-        estilo_css = """
-        <style>
-            body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; }
-            .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 4px solid #F9D908; }
-            .logo-header { height: 50px; }
-            h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; flex-grow: 1; }
-            .resumen-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
-            .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; transition: 0.3s; }
-            .card-resumen .monto { font-size: 20px; font-weight: 900; color: #002060; margin: 10px 0; }
-            .cobrado { border-color: #27ae60; } .recuperado { border-color: #f1c40f; } .no-pagado { border-color: #ed1c24; } .excedente { border-color: #0070c0; }
-            .blue-box-container { background: #002060; padding: 15px; border-radius: 12px; width: 98%; margin: 10px auto; border: 2px solid #F9D908; color: white; box-sizing: border-box; }
-            .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 15px; }
-            table { width: 100%; border-collapse: collapse; min-width: 1000px; }
-            th { background: #001a4d; color: #F9D908; padding: 8px; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #F9D908; white-space: nowrap; }
-            td { padding: 6px; border-bottom: 1px solid #eee; font-size: 10px; font-weight: bold; text-align: left; }
-            .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; display: inline-block; margin: 5px; font-size: 11px; }
-            .foto-link { color: #002060; text-decoration: underline; font-weight: bold; cursor: pointer; }
-            
-            /* MODAL CSS */
-            .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); }
-            .modal-content { margin: auto; display: block; max-width: 90%; max-height: 90%; border: 3px solid #F9D908; position: relative; top: 50%; transform: translateY(-50%); }
-            .close { position: absolute; top: 15px; right: 35px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; }
-        </style>
-        """
-
-        script_modal = """
-        <div id="myModal" class="modal" onclick="closeModal(event)">
-            <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
-            <img class="modal-content" id="img01">
-        </div>
-        <script>
-            function openModal(src) {
-                document.getElementById('myModal').style.display = "block";
-                document.getElementById('img01').src = src;
+        # TOTALES JSON
+        t_glob = {}
+        for m_n in df['MES'].unique():
+            df_m = df[df['MES'] == m_n]
+            t_glob[str(m_n).upper()] = {
+                "TOTAL_COBRADO": float(df_m[df_m['ESTATUS'] == 'COBRADO']['MONTO_CALC'].sum()),
+                "TOTAL_PERDIDA_PATRIMONIO": float(df_m[df_m['ESTATUS'] == 'RECUPERADO']['MONTO_CALC'].sum()),
+                "TOTAL_EXCEDENTE": float(df_m[df_m['ESTATUS'] == 'EXCEDENTE']['MONTO_CALC'].sum())
             }
-            function closeModal(event) {
-                if (event.target.id === 'myModal') {
-                    document.getElementById('myModal').style.display = "none";
-                }
-            }
-        </script>
-        """
+        
+        with open(os.path.join(ruta_base, "TOTALES_GLOBALES_COBROS.json"), "w", encoding="utf-8") as f_json:
+            json.dump(t_glob, f_json, indent=4)
 
-        for periodo in sorted(df['PERIODO'].unique()):
+        # HTML GENERATION
+        estilo_css = """<style>body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; } .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 4px solid #F9D908; } .logo-header { height: 50px; } h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; flex-grow: 1; } .resumen-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; } .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; transition: 0.3s; } .card-resumen .monto { font-size: 20px; font-weight: 900; color: #002060; margin: 10px 0; } .cobrado { border-color: #27ae60; } .recuperado { border-color: #f1c40f; } .excedente { border-color: #0070c0; } .blue-box-container { background: #002060; padding: 15px; border-radius: 12px; width: 98%; margin: 10px auto; border: 2px solid #F9D908; color: white; box-sizing: border-box; } .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 15px; } table { width: 100%; border-collapse: collapse; min-width: 1000px; } th { background: #001a4d; color: #F9D908; padding: 8px; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #F9D908; white-space: nowrap; } td { padding: 6px; border-bottom: 1px solid #eee; font-size: 10px; font-weight: bold; text-align: left; } .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; display: inline-block; margin: 5px; font-size: 11px; } .foto-link { color: #002060; text-decoration: underline; font-weight: bold; cursor: pointer; }</style>"""
+        script_modal = """<div id="myModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.9);" onclick="this.style.display='none'"><span style="position:absolute; top:15px; right:35px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;">&times;</span><img style="margin:auto; display:block; max-width:90%; max-height:90%; border:3px solid #F9D908; position:relative; top:50%; transform:translateY(-50%);" id="img01"></div><script>function openModal(src) { document.getElementById('myModal').style.display = "block"; document.getElementById('img01').src = src; }</script>"""
+
+        for periodo in df['PERIODO'].unique():
             df_p = df[df['PERIODO'] == periodo]
             n_m = str(df_p['MES'].iloc[0])
-            for suc in sorted(df_p['SUCURSAL'].unique()):
-                # Normalización para asegurar que 'VICTORIA' busque correctamente
-                suc_folder = suc.strip().upper()
-                p_suc = os.path.join(ruta_base, n_m, suc_folder)
-                os.makedirs(p_suc, exist_ok=True)
-                
+            print(f"🔨 Generando archivos para {n_m}...")
+            for suc in df_p['SUCURSAL'].unique():
+                suc_f = str(suc).strip().upper()
+                r_suc = os.path.join(ruta_base, n_m, suc_f)
+                os.makedirs(r_suc, exist_ok=True)
                 df_s = df_p[df_p['SUCURSAL'] == suc]
-                idx_actual = df_s['IDX'].iloc[0]
+                idx_a = df_s['IDX'].iloc[0]
 
-                for est_key, file_name, titulo in [('COBRADO', 'cobrado.html', 'DETALLE COBRADO'), ('RECUPERADO', 'recuperado.html', 'PÉRDIDA MITIGADA'), ('NO_PAGADO', 'no_pagado.html', 'DETALLE NO PAGADO'), ('EXCEDENTE', 'excedente.html', 'DETALLE EXCEDENTES'), ('TODO', 'todo_detallado.html', 'DETALLE COMPLETO')]:
-                    df_view = df_s if est_key == 'TODO' else df_s[df_s['ESTATUS'] == est_key]
-                    filas_html = ""
-                    for _, r in df_view.iterrows():
+                for est_k, f_n, tit in [('COBRADO', 'cobrado.html', 'DETALLE COBRADO'), ('RECUPERADO', 'recuperado.html', 'PÉRDIDA MITIGADA'), ('EXCEDENTE', 'excedente.html', 'DETALLE EXCEDENTES')]:
+                    df_v = df_s[df_s['ESTATUS'] == est_k]
+                    filas = ""
+                    for _, r in df_v.iterrows():
                         tds = ""
-                        for i, val in enumerate(r['FILA']):
-                            val_str = str(val).strip() if val is not None else ""
-                            if i == idx_actual['monto']:
-                                tds += f"<td>${r['MONTO_CALC']:,.2f}</td>"
-                            elif i == idx_actual['foto'] and val_str not in ["", "None", "nan", "SIN FOTO"]:
-                                nombre_foto = val_str if val_str.lower().endswith(('.jpeg', '.jpg', '.png')) else val_str + ".jpeg"
-                                # Ruta corregida para que VICTORIA y otras carguen correctamente
-                                ruta_final_foto = f"../../FACTURAS/{n_m}/{suc_folder}/{nombre_foto}"
-                                tds += f"<td><span class='foto-link' onclick='openModal(\"{ruta_final_foto}\")'>{val_str}</span></td>"
-                            else: 
-                                tds += f"<td>{val_str}</td>"
-                        filas_html += f"<tr>{tds}</tr>"
-                    
-                    with open(os.path.join(p_suc, file_name), "w", encoding="utf-8") as f:
-                        headers_html = "".join([f"<th>{h}</th>" for h in r['HEADERS']])
-                        f.write(f"<html><head><meta charset='UTF-8'>{estilo_css}</head><body><div class='header-logos'><h1>{titulo}</h1></div><div class='blue-box-container'><div class='table-responsive'><table><thead><tr>{headers_html}</tr></thead><tbody>{filas_html}</tbody></table></div><a href='cobros_detalles.html' class='btn'>VOLVER</a></div>{script_modal}</body></html>")
+                        for i, v in enumerate(r['FILA']):
+                            v_s = str(v).strip() if v is not None else ""
+                            if i == idx_a['monto']: tds += f"<td>${r['MONTO_CALC']:,.2f}</td>"
+                            elif i == idx_a['foto'] and v_s not in ["", "None", "nan", "SIN FOTO"]:
+                                nom_f = v_s if v_s.lower().endswith(('.jpeg', '.jpg', '.png')) else v_s + ".jpeg"
+                                r_foto = f"../../FACTURAS/{n_m}/{suc_f}/{nom_f}"
+                                tds += f"<td><span class='foto-link' onclick='openModal(\"{r_foto}\")'>{v_s}</span></td>"
+                            else: tds += f"<td>{v_s}</td>"
+                        filas += f"<tr>{tds}</tr>"
 
-                # Generación de cobros_detalles.html (Sin cambios en lógica, solo enlaces)
-                with open(os.path.join(p_suc, "cobros_detalles.html"), "w", encoding="utf-8") as f:
-                    v = [df_s[df_s['ESTATUS']=='COBRADO']['MONTO_CALC'].sum(), df_s[df_s['ESTATUS']=='RECUPERADO']['MONTO_CALC'].sum(), df_s[df_s['ESTATUS']=='EXCEDENTE']['MONTO_CALC'].sum(), df_s[df_s['ESTATUS']=='NO_PAGADO']['MONTO_CALC'].sum()]
-                    f.write(f"<html><head><meta charset='UTF-8'>{estilo_css}</head><body><div class='header-logos'><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'><h1>SISTEMA LUXOR</h1><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'></div><h2>{suc_folder} | {n_m}</h2><div class='resumen-grid'>")
-                    for l, m, cl, url in zip(['Cobrado', 'Pérdida mitigada', 'Excedentes', 'No Pagado'], v, ['cobrado', 'recuperado', 'excedente', 'no-pagado'], ['cobrado.html', 'recuperado.html', 'excedente.html', 'no_pagado.html']):
-                        f.write(f"<a href='{url}' class='card-resumen {cl}'><h3>{l}</h3><div class='monto'>${m:,.2f}</div></a>")
-                    f.write(f"</div><a href='todo_detallado.html' class='btn'>VER TODO</a><a href='../../index.html?tab=cobs#mes-{n_m}' class='btn'>INICIO</a></body></html>")
+                    h_h = "".join([f"<th>{h}</th>" for h in df_s.iloc[0]['HEADERS']])
+                    with open(os.path.join(r_suc, f_n), "w", encoding="utf-8") as f_out:
+                        f_out.write(f"<html><head><meta charset='UTF-8'>{estilo_css}</head><body><div class='header-logos'><h1>{tit}</h1></div><div class='blue-box-container'><div class='table-responsive'><table><thead><tr>{h_h}</tr></thead><tbody>{filas}</tbody></table></div><a href='cobros_detalles.html' class='btn'>VOLVER</a></div>{script_modal}</body></html>")
 
-        print("\n✅ Reportes actualizados. Fotos en VICTORIA corregidas y sistema de modal implementado.")
-    except Exception as e: print(f"❌ Error: {e}")
+                s_c = df_s[df_s['ESTATUS']=='COBRADO']['MONTO_CALC'].sum()
+                s_r = df_s[df_s['ESTATUS']=='RECUPERADO']['MONTO_CALC'].sum()
+                s_e = df_s[df_s['ESTATUS']=='EXCEDENTE']['MONTO_CALC'].sum()
+                
+                with open(os.path.join(r_suc, "cobros_detalles.html"), "w", encoding="utf-8") as f_out:
+                    f_out.write(f"<html><head><meta charset='UTF-8'>{estilo_css}</head><body><div class='header-logos'><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'><h1>SISTEMA LUXOR</h1><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'></div><h2>{suc_f} | {n_m}</h2><div class='resumen-grid'>")
+                    f_out.write(f"<a href='cobrado.html' class='card-resumen cobrado'><h3>Cobrado</h3><div class='monto'>${s_c:,.2f}</div></a>")
+                    f_out.write(f"<a href='recuperado.html' class='card-resumen recuperado'><h3>Pérdida mitigada</h3><div class='monto'>${s_r:,.2f}</div></a>")
+                    f_out.write(f"<a href='excedente.html' class='card-resumen excedente'><h3>Excedentes</h3><div class='monto'>${s_e:,.2f}</div></a>")
+                    f_out.write(f"</div><a href='../../index.html?tab=cobs#mes-{n_m}' class='btn'>INICIO</a></body></html>")
+
+        print("\n✅ PROCESO COMPLETADO EXITOSAMENTE.")
+
+    except Exception as e:
+        print(f"❌ Error durante la ejecución: {e}")
+
+    print("\nPresiona ENTER para salir (o espera 10 segundos)...")
+    def auto_close():
+        time.sleep(10)
+        os._exit(0)
+
+    threading.Thread(target=auto_close, daemon=True).start()
+    try: input()
+    except: pass
 
 if __name__ == "__main__":
     generar_reporte_cobros_final()

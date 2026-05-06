@@ -1,7 +1,10 @@
 import os
 import sys
 import json
+import threading
+import time
 
+# Forzar UTF-8 para evitar errores de caracteres
 if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
 
@@ -16,14 +19,23 @@ def generar_panel_luxor_centralizado():
         print("="*60)
         
         ruta_raiz = os.path.dirname(os.path.abspath(sys.argv[0]))
-        
+        print(f"📂 Directorio: {ruta_raiz}")
+
         def cargar_json(nombre):
             p = os.path.join(ruta_raiz, nombre)
             if os.path.exists(p):
                 with open(p, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            return [] if "sucursales" in nombre or "graves" in nombre else {}
+                    try:
+                        data = json.load(f)
+                        print(f"   ✅ {nombre} cargado.")
+                        return data
+                    except:
+                        print(f"   ⚠️ Error en formato de {nombre}.")
+                        return {} if "totales" in nombre or "status" in nombre else []
+            print(f"   ❌ {nombre} no encontrado.")
+            return {} if "totales" in nombre or "status" in nombre else []
 
+        # Carga de datos
         data_totales = cargar_json("incidencias_totales.json")
         data_status = cargar_json("sucursales_status.json")
         data_graves = cargar_json("incidencias_graves.json")
@@ -37,59 +49,68 @@ def generar_panel_luxor_centralizado():
             print("\n❌ Error: No hay carpetas de meses.")
             return
 
+        print(f"\n📊 Procesando {len(meses_carpetas)} meses...")
         html_meses_data = ""
         opciones_dropdown = ""
 
+        # Lógica de Cobros
         cobros_db = []
         c_raw = data_suc_cobros_raw if isinstance(data_suc_cobros_raw, (dict, list)) else []
         if isinstance(c_raw, dict):
             for k, v in c_raw.items():
-                cobros_db.append({"sucursal": k, "c": v.get("COBRADO", 0), "p": v.get("PERDIDA_PATRIMONIO", 0), "e": v.get("EXCEDENTE", 0)})
+                if isinstance(v, dict):
+                    cobros_db.append({"sucursal": k, "c": v.get("COBRADO", 0), "p": v.get("PERDIDA_PATRIMONIO", 0), "e": v.get("EXCEDENTE", 0)})
         else:
             for item in c_raw:
-                cobros_db.append({"sucursal": item.get("sucursal", ""), "c": item.get("COBRADO", 0), "p": item.get("PERDIDA_PATRIMONIO", 0), "e": item.get("EXCEDENTE", 0)})
+                if isinstance(item, dict):
+                    cobros_db.append({"sucursal": item.get("sucursal", ""), "c": item.get("COBRADO", 0), "p": item.get("PERDIDA_PATRIMONIO", 0), "e": item.get("EXCEDENTE", 0)})
 
         for m in meses_carpetas:
             m_key = m.upper()
+            print(f"   > Generando HTML para: {m_key}")
             opciones_dropdown += f'<option value="mes-{m}" {"selected" if m == meses_carpetas[-1] else ""}>{m}</option>'
             ruta_mes = os.path.join(ruta_raiz, m)
-            
             sucursales_fisicas = sorted([s for s in os.listdir(ruta_mes) if os.path.isdir(os.path.join(ruta_mes, s)) and s.upper() != "CENTRAL"])
 
             def limpiar(t): return str(t).split("(")[0].strip().upper()
 
             def filtrar_c(lista, es_dict=False):
-                if es_dict: return {k: v for k, v in lista.items() if limpiar(k) != "CENTRAL"}
-                return [i for i in lista if limpiar(i.get('n', '')) != "CENTRAL"]
+                if es_dict and isinstance(lista, dict):
+                    return {k: v for k, v in lista.items() if limpiar(k) != "CENTRAL"}
+                if isinstance(lista, list):
+                    return [i for i in lista if limpiar(i.get('n', '')) != "CENTRAL"]
+                return {} if es_dict else []
 
-            list_totales = sorted([{'n': limpiar(k), 'v': v} for k, v in filtrar_c(data_totales, True).items() if f"({m_key})" in str(k).upper()], key=lambda x: x['v'], reverse=True)
-            list_graves = sorted([{'n': limpiar(i['n']), 'v': i['v']} for i in filtrar_c(data_graves) if f"({m_key})" in str(i['n']).upper()], key=lambda x: x['v'], reverse=True)
-            list_aprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in filtrar_c(data_status.get("aprobadas", [])) if f"({m_key})" in str(i['n']).upper()]
-            list_reprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in filtrar_c(data_status.get("reprobadas", [])) if f"({m_key})" in str(i['n']).upper()]
+            # Filtrado de Incidencias
+            dict_filtrado = filtrar_c(data_totales, True)
+            list_totales = sorted([{'n': limpiar(k), 'v': v} for k, v in dict_filtrado.items() if f"({m_key})" in str(k).upper()], key=lambda x: x['v'], reverse=True)
+            list_graves = sorted([{'n': limpiar(i['n']), 'v': i['v']} for i in filtrar_c(data_graves) if isinstance(i, dict) and f"({m_key})" in str(i.get('n','')).upper()], key=lambda x: x['v'], reverse=True)
+            
+            st_aprob = data_status.get("aprobadas", []) if isinstance(data_status, dict) else []
+            list_aprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in filtrar_c(st_aprob) if isinstance(i, dict) and f"({m_key})" in str(i.get('n','')).upper()]
+            st_reprob = data_status.get("reprobadas", []) if isinstance(data_status, dict) else []
+            list_reprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in filtrar_c(st_reprob) if isinstance(i, dict) and f"({m_key})" in str(i.get('n','')).upper()]
 
+            # Datos Central
             c_key = f"CENTRAL ({m_key})"
-            list_totales_c = [{'n': 'CENTRAL', 'v': data_totales.get(c_key, 0)}]
-            list_graves_c = [{'n': 'CENTRAL', 'v': next((g.get('v', 0) for g in data_graves if str(g.get('n','')).upper() == c_key), 0)}]
+            list_totales_c = [{'n': 'CENTRAL', 'v': data_totales.get(c_key, 0) if isinstance(data_totales, dict) else 0}]
+            grv_c_val = next((g.get('v', 0) for g in data_graves if isinstance(g, dict) and str(g.get('n','')).upper() == c_key), 0) if isinstance(data_graves, list) else 0
+            list_graves_c = [{'n': 'CENTRAL', 'v': grv_c_val}]
 
             n_aprobadas = [i['n'] for i in list_aprob]
             n_reprobadas = [i['n'] for i in list_reprob]
-
-            rank_fisc, rank_cobs = [], []
-            rank_fisc_c, rank_cobs_c = [], []
+            rank_fisc, rank_cobs, rank_fisc_c, rank_cobs_c = [], [], [], []
 
             for s in sorted([x for x in os.listdir(ruta_mes) if os.path.isdir(os.path.join(ruta_mes, x))]):
                 s_key = f"{s.strip().upper()} ({m_key})"
-                inc_val = data_totales.get(s_key, 0)
-                grv_val = next((g.get('v', 0) for g in data_graves if str(g.get('n','')).upper() == s_key), 0)
+                inc_val = data_totales.get(s_key, 0) if isinstance(data_totales, dict) else 0
+                grv_val = next((g.get('v', 0) for g in data_graves if isinstance(g, dict) and str(g.get('n','')).upper() == s_key), 0) if isinstance(data_graves, list) else 0
                 c_val, p_val, e_val = 0, 0, 0
                 for cb in cobros_db:
                     if str(cb.get('sucursal','')).upper() == s_key: 
                         c_val, p_val, e_val = cb.get('c',0), cb.get('p',0), cb.get('e', 0)
                         break
-                
-                item_f = {'n': s, 'v': inc_val + (grv_val * 10)}
-                item_c = {'n': s, 'c': c_val, 'p': p_val, 'e': e_val, 't': c_val + p_val + e_val}
-                
+                item_f, item_c = {'n': s, 'v': inc_val + (grv_val * 10)}, {'n': s, 'c': c_val, 'p': p_val, 'e': e_val, 't': c_val + p_val + e_val}
                 if s.upper() == "CENTRAL":
                     rank_fisc_c.append(item_f); rank_cobs_c.append(item_c)
                 else:
@@ -107,17 +128,16 @@ def generar_panel_luxor_centralizado():
                     html += f"<div class='audit-row {css}'><span>{i['n']}</span><b>{val}</b></div>"
                 return html or '<div class="audit-row">Sin datos</div>'
 
-            c_glob = data_cobros_glob.get(m_key, {"TOTAL_COBRADO": 0, "TOTAL_PERDIDA_PATRIMONIO": 0, "TOTAL_EXCEDENTE": 0, "COLOR_COBRADO": "NEGRO"})
+            c_glob = data_cobros_glob.get(m_key, {}) if isinstance(data_cobros_glob, dict) else {}
             tc, tp, te = c_glob.get('TOTAL_COBRADO', 0), c_glob.get('TOTAL_PERDIDA_PATRIMONIO', 0), c_glob.get('TOTAL_EXCEDENTE', 0)
             
             def crear_bloque(is_c):
-                p = "c-" if is_c else ""
-                sucs = ["CENTRAL"] if is_c else sucursales_fisicas
-                l_tot = list_totales_c if is_c else list_totales
-                l_grv = list_graves_c if is_c else list_graves
-                r_cobs = rank_cobs_c if is_c else rank_cobs
-                r_fisc = rank_fisc_c if is_c else rank_fisc
+                p, sucs = ("c-", ["CENTRAL"]) if is_c else ("", sucursales_fisicas)
+                l_tot, l_grv = (list_totales_c, list_graves_c) if is_c else (list_totales, list_graves)
+                r_cobs, r_fisc = (rank_cobs_c, rank_fisc_c) if is_c else (rank_cobs, rank_fisc)
                 
+                bloque_global = f'<div class="global-cobros-box" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;"><div class="global-item" style="background: white; padding: 12px; border-radius: 8px; text-align: center; border-bottom: 4px solid var(--verde);"><span>TOTAL COBRADO</span><br><b style="font-size: 18px; display: block;">${tc:,.2f}</b></div><div class="global-item" style="background: white; padding: 12px; border-radius: 8px; text-align: center; border-bottom: 4px solid var(--rojo);"><span>PÉRDIDA MITIGADA</span><br><b style="font-size: 18px; display: block;">${tp:,.2f}</b></div><div class="global-item" style="background: white; padding: 12px; border-radius: 8px; text-align: center; border-bottom: 4px solid var(--azul);"><span>TOTAL MENSUAL</span><br><b style="font-size: 18px; display: block;">${(tc + tp + te):,.2f}</b></div></div>'
+
                 return f"""
                 <div id="{p}mes-{m}" class="mes-container {'central-mode' if is_c else ''}">
                     <div id="{p}incs-{m}" class="tab-content active">
@@ -133,6 +153,7 @@ def generar_panel_luxor_centralizado():
                     <div id="{p}cobs-{m}" class="tab-content">
                         <h2 class="sub-title">REPORTES COBROS {"CENTRAL" if is_c else ""} - {m_key}</h2>
                         <div class="blue-box"><div class="grid">{''.join([f'<a href="{m}/{s}/cobros_detalles.html" class="card">{s}</a>' for s in sucs])}</div></div>
+                        {bloque_global}
                         <div class="audit-grid-full">
                             <div class="audit-card"><h3>CANTIDAD COBRADA</h3><div class="scroll-area">{gen_rows(sorted(r_cobs, key=lambda x: x['c'], reverse=True), "c", money=True)}</div></div>
                             <div class="audit-card"><h3>PÉRDIDA MITIGADA</h3><div class="scroll-area">{gen_rows(sorted(r_cobs, key=lambda x: x['p'], reverse=True), "p", money=True)}</div></div>
@@ -158,6 +179,7 @@ def generar_panel_luxor_centralizado():
 
             html_meses_data += crear_bloque(False) + crear_bloque(True)
 
+        # HTML e Interfaz de Usuario
         html_final = f"""<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
             :root {{ --azul: #0844a4; --amarillo: #F9D908; --verde: #27ae60; --rojo: #ed1c24; --fondo: #f4f7f6; }}
             body {{ font-family: 'Segoe UI', sans-serif; background: var(--fondo); margin: 0; padding: 0; }}
@@ -200,60 +222,67 @@ def generar_panel_luxor_centralizado():
             </div>
             <main class="main-content">{html_meses_data}</main>
             <script>
-                let isCentral = false;
-                function toggleCentral() {{
-                    isCentral = !isCentral;
-                    document.querySelector('h1').innerText = isCentral ? "SISTEMA LUXOR - CENTRAL" : "FISCALIZACIÓN LUXOR";
-                    cambiarMes();
-                }}
-                function cambiarMes() {{
-                    document.querySelectorAll(".mes-container").forEach(e => e.classList.remove('active'));
-                    let mes = document.getElementById("mes-selector").value;
-                    let id = (isCentral ? "c-" : "") + mes;
-                    if(document.getElementById(id)) document.getElementById(id).classList.add('active');
-                    actualizarPestañaInterna();
-                }}
-                function showGlobalTab(t) {{
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    document.getElementById('btn-' + t.substring(0,3)).classList.add('active');
-                    let mesActivo = document.querySelector('.mes-container.active');
-                    if(mesActivo) {{
-                        mesActivo.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                        let id = (isCentral ? "c-" : "") + t + "-" + document.getElementById("mes-selector").value.replace('mes-', '');
-                        if(document.getElementById(id)) document.getElementById(id).classList.add('active');
-                    }}
-                }}
-                function actualizarPestañaInterna() {{
-                    let t = 'incs';
-                    if(document.getElementById('btn-cob').classList.contains('active')) t = 'cobs';
-                    if(document.getElementById('btn-hon').classList.contains('active')) t = 'honor';
-                    if(document.getElementById('btn-peo').classList.contains('active')) t = 'peores';
-                    showGlobalTab(t);
-                }}
+                let isCentral = (localStorage.getItem('luxor_isCentral') === 'true');
                 
-                // LOGICA PARA MANTENER FILTRO AL VOLVER
-                window.onload = function() {{
-                    let hash = window.location.hash;
-                    if(hash && hash.startsWith('#mes-')) {{
-                        let mesId = hash.replace('#', '');
-                        let selector = document.getElementById("mes-selector");
-                        for(let i=0; i<selector.options.length; i++) {{
-                            if(selector.options[i].value === mesId) {{
-                                selector.selectedIndex = i;
-                                break;
-                            }}
-                        }}
+                function toggleCentral() {{ 
+                    isCentral = !isCentral; 
+                    localStorage.setItem('luxor_isCentral', isCentral);
+                    document.querySelector('h1').innerText = isCentral ? "SISTEMA LUXOR - CENTRAL" : "FISCALIZACIÓN LUXOR"; 
+                    cambiarMes(); 
+                }}
+
+                function cambiarMes() {{ 
+                    document.querySelectorAll(".mes-container").forEach(e => e.classList.remove('active')); 
+                    let mes = document.getElementById("mes-selector").value; 
+                    localStorage.setItem('luxor_mesActivo', mes);
+                    let id = (isCentral ? "c-" : "") + mes; 
+                    if(document.getElementById(id)) document.getElementById(id).classList.add('active'); 
+                    actualizarPestañaInterna(); 
+                }}
+
+                function showGlobalTab(t) {{ 
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
+                    localStorage.setItem('luxor_tabActiva', t);
+                    let btnId = 'btn-' + t.substring(0,3); 
+                    if(document.getElementById(btnId)) document.getElementById(btnId).classList.add('active'); 
+                    
+                    let mesActivo = document.querySelector('.mes-container.active'); 
+                    if(mesActivo) {{ 
+                        mesActivo.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
+                        let id = (isCentral ? "c-" : "") + t + "-" + document.getElementById("mes-selector").value.replace('mes-', ''); 
+                        if(document.getElementById(id)) document.getElementById(id).classList.add('active'); 
+                    }} 
+                }}
+
+                function actualizarPestañaInterna() {{ 
+                    let t = localStorage.getItem('luxor_tabActiva') || 'incs';
+                    showGlobalTab(t); 
+                }}
+
+                window.onload = function() {{ 
+                    if(isCentral) {{ document.querySelector('h1').innerText = "SISTEMA LUXOR - CENTRAL"; }}
+                    let mesGuardado = localStorage.getItem('luxor_mesActivo');
+                    if(mesGuardado && document.getElementById("mes-selector").querySelector('option[value="'+mesGuardado+'"]')) {{
+                        document.getElementById("mes-selector").value = mesGuardado;
                     }}
-                    cambiarMes();
+                    cambiarMes(); 
                 }};
             </script></body></html>"""
         
         with open(os.path.join(ruta_raiz, "index.html"), "w", encoding="utf-8") as f:
             f.write(html_final)
-        print("\n✅ PANEL ACTUALIZADO.")
-    except Exception as e: print(f"\n❌ ERROR: {e}")
+        print("\n✅ PANEL ACTUALIZADO CORRECTAMENTE.")
+
+    except Exception as e: 
+        print(f"\n❌ ERROR CRÍTICO: {e}")
+
+    print("\nPresiona ENTER para salir o espera 10 segundos...")
+    timer = threading.Timer(10.0, lambda: os._exit(0))
+    timer.start()
+    try:
+        input()
+    finally:
+        timer.cancel()
 
 if __name__ == "__main__": 
     generar_panel_luxor_centralizado()
-    print("\n" + "="*60)
-    input("Presiona ENTER para salir...")

@@ -3,6 +3,7 @@ import os
 import json
 import sys
 import warnings
+import threading  # Agregado para el temporizador
 
 # Silenciar advertencias de validación de Excel
 warnings.filterwarnings("ignore")
@@ -22,7 +23,6 @@ def procesar_luxor_columna_h():
         print(">>> SISTEMA LUXOR: DETECTOR AUTO DE 'TIPO D' Y 'TIPO E' <<<")
         print("="*60)
         
-        # BÚSQUEDA AUTOMÁTICA EN CARPETA 'CUADROS' Y SUBCARPETAS
         ruta_script = os.path.dirname(os.path.abspath(sys.argv[0]))
         ruta_cuadros = os.path.join(ruta_script, "cuadros")
 
@@ -30,7 +30,6 @@ def procesar_luxor_columna_h():
             print(f"❌ ERROR: No se encuentra la carpeta 'cuadros' en:\n{ruta_cuadros}")
             return
 
-        # RECOPILLAR ARCHIVOS DE FORMA RECURSIVA (MESES Y SUCURSALES)
         archivos = []
         for root, dirs, files in os.walk(ruta_cuadros):
             for file in files:
@@ -83,32 +82,40 @@ def procesar_luxor_columna_h():
 
         if not lista_acumulada:
             print("\n❌ No se encontraron incidencias 'TIPO D' o 'TIPO E'.")
-            return
+        else:
+            df_final = pd.DataFrame(lista_acumulada)
+            resumen = df_final.groupby(['SUCURSAL', 'MES', 'TIPO']).size().unstack(fill_value=0)
+            
+            for letra in ['D', 'E']:
+                if letra not in resumen: resumen[letra] = 0
+            
+            resumen['TOTAL'] = resumen['D'] + resumen['E']
+            resumen = resumen.sort_values(by='TOTAL', ascending=False).reset_index()
 
-        df_final = pd.DataFrame(lista_acumulada)
-        resumen = df_final.groupby(['SUCURSAL', 'MES', 'TIPO']).size().unstack(fill_value=0)
-        
-        for letra in ['D', 'E']:
-            if letra not in resumen: resumen[letra] = 0
-        
-        resumen['TOTAL'] = resumen['D'] + resumen['E']
-        resumen = resumen.sort_values(by='TOTAL', ascending=False).reset_index()
+            resultado_json = [{
+                "n": f"{r['SUCURSAL']} ({r['MES']})",
+                "v": int(r['TOTAL']),
+                "detalle": f"D: {int(r['D'])} | E: {int(r['E'])}"
+            } for _, r in resumen.iterrows()]
 
-        resultado_json = [{
-            "n": f"{r['SUCURSAL']} ({r['MES']})",
-            "v": int(r['TOTAL']),
-            "detalle": f"D: {int(r['D'])} | E: {int(r['E'])}"
-        } for _, r in resumen.iterrows()]
+            with open(os.path.join(ruta_script, "incidencias_graves.json"), "w", encoding="utf-8") as f:
+                json.dump(resultado_json, f, indent=4, ensure_ascii=False)
 
-        with open(os.path.join(ruta_script, "incidencias_graves.json"), "w", encoding="utf-8") as f:
-            json.dump(resultado_json, f, indent=4, ensure_ascii=False)
-
-        print(f"\n✅ ¡CONSEGUIDO! Se detectaron {len(lista_acumulada)} incidencias.")
+            print(f"\n✅ ¡CONSEGUIDO! Se detectaron {len(lista_acumulada)} incidencias.")
 
     except Exception as e:
         print(f"\n❌ ERROR GENERAL: {e}")
+
+    # LÓGICA DE CIERRE AUTOMÁTICO EN 10 SEGUNDOS
+    print("\n" + "-"*30)
+    print("Presiona ENTER para salir (o espera 10 segundos)...")
     
-    # EL SCRIPT SE CIERRA SOLO AL LLEGAR AL FINAL (SIN INPUTS)
+    timer = threading.Timer(10.0, lambda: os._exit(0))
+    timer.start()
+    try:
+        input()
+    finally:
+        timer.cancel()
 
 if __name__ == "__main__":
     procesar_luxor_columna_h()

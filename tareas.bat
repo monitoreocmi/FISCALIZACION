@@ -20,13 +20,6 @@ python 6.py
 echo Ejecutando script 7...
 python 7.py
 
-echo === Scripts finalizados. Subiendo a GitHub... ===
-
-:: Comandos de Git para actualizar la web
-git add .
-git commit -m "Auto-update Luxor: %date% %time%"
-git push origin main
-
 echo === Proceso completado con exito ===
 :: Opcional: timeout para ver si hubo errores antes de que se cierre la ventana
 timeout /t 10
