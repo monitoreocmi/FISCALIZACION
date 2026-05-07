@@ -14,6 +14,13 @@
         "TOTAL_GESTIONADO": 687.94
     },
     {
+        "sucursal": "BOSQUE (MAYO)",
+        "COBRADO": 93.05,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 93.05
+    },
+    {
         "sucursal": "BARQUISIMETO (ABRIL)",
         "COBRADO": 79.6,
         "PERDIDA_PATRIMONIO": 5.51,
@@ -98,6 +105,13 @@
         "TOTAL_GESTIONADO": 164.13
     },
     {
+        "sucursal": "CIRCULO MILITAR (MAYO)",
+        "COBRADO": 14.97,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 14.97
+    },
+    {
         "sucursal": "VICTORIA (ABRIL)",
         "COBRADO": 11.4,
         "PERDIDA_PATRIMONIO": 28.8,
@@ -161,11 +175,18 @@
         "TOTAL_GESTIONADO": 3.14
     },
     {
-        "sucursal": "CIRCULO MILITAR (MAYO)",
+        "sucursal": "CIRCULO (MAYO)",
         "COBRADO": 2.7,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 2.7
+    },
+    {
+        "sucursal": "BARQUISIMETO (MAYO)",
+        "COBRADO": 2.12,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 2.12
     },
     {
         "sucursal": "SANTA RITA (ABRIL)",
@@ -210,18 +231,18 @@
         "TOTAL_GESTIONADO": 3.71
     },
     {
+        "sucursal": "NAGUANAGUA (MAYO)",
+        "COBRADO": 1.14,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 1.14
+    },
+    {
         "sucursal": "CASTAÑO (MARZO)",
         "COBRADO": 0.88,
         "PERDIDA_PATRIMONIO": 939.49,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 940.37
-    },
-    {
-        "sucursal": "BOSQUE (MAYO)",
-        "COBRADO": 0.76,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 0.76
     },
     {
         "sucursal": "IPSFA (MARZO)",
@@ -280,25 +301,11 @@
         "TOTAL_GESTIONADO": 0.0
     },
     {
-        "sucursal": "BARQUISIMETO (MAYO)",
-        "COBRADO": 0.0,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 0.0
-    },
-    {
         "sucursal": "IPSFA (MAYO)",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 0.0
-    },
-    {
-        "sucursal": "NAGUANAGUA (MAYO)",
-        "COBRADO": 0.0,
-        "PERDIDA_PATRIMONIO": 1.14,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 1.14
     },
     {
         "sucursal": "SAN DIEGO (MAYO)",
