@@ -20,11 +20,10 @@
             .audit-card { background: white; border-radius: 8px; padding: 12px; border-top: 4px solid var(--azul); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
             .audit-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; font-size: 11px; font-weight: bold; border-left: 4px solid transparent; }
             
-            /* ESTADOS DE VISIBILIDAD */
-            .sucursal-central { display: none !important; } /* Oculta Central por defecto */
-            .modo-central .sucursal-comun { display: none !important; } /* Oculta comunes en modo central */
-            .modo-central .sucursal-central { display: flex !important; } /* Muestra Central en modo central */
-            a.sucursal-central { display: block !important; } /* Ajuste para enlaces */
+            .sucursal-central { display: none !important; } 
+            .modo-central .sucursal-comun { display: none !important; } 
+            .modo-central .sucursal-central { display: flex !important; } 
+            a.sucursal-central { display: block !important; } 
 
             .row-blue { background: #e3f2fd; color: #0d47a1; border-left-color: var(--azul); }
             .status-ok { color: var(--verde); background: #e8f5e9; border-left-color: var(--verde); }
@@ -101,7 +100,7 @@
                         <div class="audit-card"><h3>INCIDENCIAS TOTALES</h3><div class="scroll-area"><div class='audit-row row-blue sucursal-central'><span>CENTRAL</span><b>64</b></div><div class='audit-row row-blue sucursal-comun'><span>CIRCULO MILITAR</span><b>31</b></div><div class='audit-row row-blue sucursal-comun'><span>ACACIAS</span><b>29</b></div><div class='audit-row row-blue sucursal-comun'><span>CASTAÑO</span><b>26</b></div><div class='audit-row row-blue sucursal-comun'><span>VILLAS DE ARAGUA</span><b>23</b></div><div class='audit-row row-blue sucursal-comun'><span>BARQUISIMETO</span><b>22</b></div><div class='audit-row row-blue sucursal-comun'><span>SAN DIEGO</span><b>22</b></div><div class='audit-row row-blue sucursal-comun'><span>MORA</span><b>21</b></div><div class='audit-row row-blue sucursal-comun'><span>NAGUANAGUA</span><b>21</b></div><div class='audit-row row-blue sucursal-comun'><span>TUCACAS</span><b>19</b></div><div class='audit-row row-blue sucursal-comun'><span>SANTA RITA</span><b>16</b></div><div class='audit-row row-blue sucursal-comun'><span>VICTORIA</span><b>15</b></div><div class='audit-row row-blue sucursal-comun'><span>BOSQUE</span><b>14</b></div><div class='audit-row row-blue sucursal-comun'><span>GUACARA</span><b>10</b></div><div class='audit-row row-blue sucursal-comun'><span>IPSFA</span><b>9</b></div><div class='audit-row row-blue sucursal-comun'><span>SAN JUAN</span><b>2</b></div></div></div>
                         <div class="audit-card"><h3>SUCURSALES APROBADAS</h3><div class="scroll-area"><div class='audit-row status-ok sucursal-comun'><span>CASTAÑO</span><b>90</b></div><div class='audit-row status-ok sucursal-central'><span>CENTRAL</span><b>90</b></div><div class='audit-row status-ok sucursal-comun'><span>GUACARA</span><b>80</b></div><div class='audit-row status-ok sucursal-comun'><span>IPSFA</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>SAN DIEGO</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>SAN JUAN</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>SANTA RITA</span><b>85</b></div></div></div>
                         <div class="audit-card"><h3>SUCURSALES REPROBADAS</h3><div class="scroll-area"><div class='audit-row status-fail sucursal-comun'><span>ACACIAS</span><b>50</b></div><div class='audit-row status-fail sucursal-comun'><span>BARQUISIMETO</span><b>55</b></div><div class='audit-row status-fail sucursal-comun'><span>BOSQUE</span><b>45</b></div><div class='audit-row status-fail sucursal-comun'><span>CIRCULO MILITAR</span><b>50</b></div><div class='audit-row status-fail sucursal-comun'><span>MORA</span><b>30</b></div><div class='audit-row status-fail sucursal-comun'><span>NAGUANAGUA</span><b>50</b></div><div class='audit-row status-fail sucursal-comun'><span>TUCACAS</span><b>45</b></div><div class='audit-row status-fail sucursal-comun'><span>VICTORIA</span><b>65</b></div><div class='audit-row status-fail sucursal-comun'><span>VILLAS DE ARAGUA</span><b>35</b></div></div></div>
-                        <div class="audit-card" style="border-top-color:var(--rojo)"><h3>MAYOR INCIDENCIAS GRAVES</h3><div class="scroll-area"><div class='audit-row status-fail sucursal-comun'><span>VICTORIA</span><b>2</b></div><div class='audit-row status-fail sucursal-comun'><span>MORA</span><b>2</b></div><div class='audit-row status-fail sucursal-comun'><span>BOSQUE</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>NAGUANAGUA</span><b>1</b></div></div></div>
+                        <div class="audit-card" style="border-top-color:var(--rojo)"><h3>MAYOR INCIDENCIAS GRAVES</h3><div class="scroll-area"><div class='audit-row status-fail sucursal-comun'><span>MORA</span><b>2</b></div><div class='audit-row status-fail sucursal-comun'><span>VICTORIA</span><b>2</b></div><div class='audit-row status-fail sucursal-comun'><span>BOSQUE</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>NAGUANAGUA</span><b>1</b></div></div></div>
                     </div>
                 </div>
                 <div id="cobs-ABRIL" class="tab-content">
@@ -138,10 +137,10 @@
                     <h2 class="sub-title">REPORTES DE INCIDENCIAS - MAYO</h2>
                     <div class="blue-box"><div class="grid"><a href="MAYO/ACACIAS/reporte.html" class="card card-inc sucursal-comun">ACACIAS</a><a href="MAYO/BARQUISIMETO/reporte.html" class="card card-inc sucursal-comun">BARQUISIMETO</a><a href="MAYO/BOSQUE/reporte.html" class="card card-inc sucursal-comun">BOSQUE</a><a href="MAYO/CASTAÑO/reporte.html" class="card card-inc sucursal-comun">CASTAÑO</a><a href="MAYO/CIRCULO/reporte.html" class="card card-inc sucursal-comun">CIRCULO</a><a href="MAYO/CIRCULO MILITAR/reporte.html" class="card card-inc sucursal-comun">CIRCULO MILITAR</a><a href="MAYO/GUACARA/reporte.html" class="card card-inc sucursal-comun">GUACARA</a><a href="MAYO/IPSFA/reporte.html" class="card card-inc sucursal-comun">IPSFA</a><a href="MAYO/MORA/reporte.html" class="card card-inc sucursal-comun">MORA</a><a href="MAYO/NAGUANAGUA/reporte.html" class="card card-inc sucursal-comun">NAGUANAGUA</a><a href="MAYO/SAN DIEGO/reporte.html" class="card card-inc sucursal-comun">SAN DIEGO</a><a href="MAYO/SANTA RITA/reporte.html" class="card card-inc sucursal-comun">SANTA RITA</a><a href="MAYO/TUCACAS/reporte.html" class="card card-inc sucursal-comun">TUCACAS</a><a href="MAYO/VICTORIA/reporte.html" class="card card-inc sucursal-comun">VICTORIA</a><a href="MAYO/VILLAS DE ARAGUA/reporte.html" class="card card-inc sucursal-comun">VILLAS DE ARAGUA</a></div></div>
                     <div class="audit-grid-full">
-                        <div class="audit-card"><h3>INCIDENCIAS TOTALES</h3><div class="scroll-area"><div class='audit-row row-blue sucursal-comun'><span>TUCACAS</span><b>14</b></div><div class='audit-row row-blue sucursal-comun'><span>ACACIAS</span><b>10</b></div><div class='audit-row row-blue sucursal-comun'><span>BARQUISIMETO</span><b>9</b></div><div class='audit-row row-blue sucursal-comun'><span>BOSQUE</span><b>7</b></div><div class='audit-row row-blue sucursal-comun'><span>NAGUANAGUA</span><b>7</b></div><div class='audit-row row-blue sucursal-comun'><span>VICTORIA</span><b>6</b></div><div class='audit-row row-blue sucursal-comun'><span>CASTAÑO</span><b>5</b></div><div class='audit-row row-blue sucursal-comun'><span>IPSFA</span><b>5</b></div><div class='audit-row row-blue sucursal-comun'><span>CIRCULO MILITAR</span><b>4</b></div><div class='audit-row row-blue sucursal-comun'><span>MORA</span><b>4</b></div><div class='audit-row row-blue sucursal-comun'><span>GUACARA</span><b>3</b></div><div class='audit-row row-blue sucursal-comun'><span>SAN DIEGO</span><b>3</b></div><div class='audit-row row-blue sucursal-comun'><span>VILLAS DE ARAGUA</span><b>3</b></div><div class='audit-row row-blue sucursal-comun'><span>SANTA RITA</span><b>2</b></div><div class='audit-row row-blue sucursal-comun'><span>CIRCULO</span><b>1</b></div></div></div>
+                        <div class="audit-card"><h3>INCIDENCIAS TOTALES</h3><div class="scroll-area"><div class='audit-row row-blue sucursal-comun'><span>TUCACAS</span><b>14</b></div><div class='audit-row row-blue sucursal-comun'><span>ACACIAS</span><b>10</b></div><div class='audit-row row-blue sucursal-comun'><span>BARQUISIMETO</span><b>9</b></div><div class='audit-row row-blue sucursal-comun'><span>BOSQUE</span><b>7</b></div><div class='audit-row row-blue sucursal-comun'><span>NAGUANAGUA</span><b>7</b></div><div class='audit-row row-blue sucursal-comun'><span>IPSFA</span><b>6</b></div><div class='audit-row row-blue sucursal-comun'><span>VICTORIA</span><b>6</b></div><div class='audit-row row-blue sucursal-comun'><span>CASTAÑO</span><b>5</b></div><div class='audit-row row-blue sucursal-comun'><span>CIRCULO MILITAR</span><b>4</b></div><div class='audit-row row-blue sucursal-comun'><span>MORA</span><b>4</b></div><div class='audit-row row-blue sucursal-comun'><span>GUACARA</span><b>3</b></div><div class='audit-row row-blue sucursal-comun'><span>SAN DIEGO</span><b>3</b></div><div class='audit-row row-blue sucursal-comun'><span>VILLAS DE ARAGUA</span><b>3</b></div><div class='audit-row row-blue sucursal-comun'><span>SANTA RITA</span><b>2</b></div><div class='audit-row row-blue sucursal-comun'><span>CIRCULO</span><b>1</b></div></div></div>
                         <div class="audit-card"><h3>SUCURSALES APROBADAS</h3><div class="scroll-area"><div class='audit-row status-ok sucursal-comun'><span>ACACIAS</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>BARQUISIMETO</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>BOSQUE</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>CASTAÑO</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>CIRCULO</span><b>75</b></div><div class='audit-row status-ok sucursal-comun'><span>CIRCULO MILITAR</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>GUACARA</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>IPSFA</span><b>80</b></div><div class='audit-row status-ok sucursal-comun'><span>MORA</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>SAN DIEGO</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>TUCACAS</span><b>85</b></div><div class='audit-row status-ok sucursal-comun'><span>VICTORIA</span><b>85</b></div><div class='audit-row status-ok sucursal-comun'><span>VILLAS DE ARAGUA</span><b>100</b></div></div></div>
                         <div class="audit-card"><h3>SUCURSALES REPROBADAS</h3><div class="scroll-area"><div class='audit-row status-fail sucursal-comun'><span>NAGUANAGUA</span><b>70</b></div><div class='audit-row status-fail sucursal-comun'><span>SANTA RITA</span><b>70</b></div></div></div>
-                        <div class="audit-card" style="border-top-color:var(--rojo)"><h3>MAYOR INCIDENCIAS GRAVES</h3><div class="scroll-area"><div class='audit-row status-fail sucursal-comun'><span>TUCACAS</span><b>9</b></div><div class='audit-row status-fail sucursal-comun'><span>VICTORIA</span><b>2</b></div><div class='audit-row status-fail sucursal-comun'><span>BARQUISIMETO</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>BOSQUE</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>GUACARA</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>CASTAÑO</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>CIRCULO</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>SANTA RITA</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>NAGUANAGUA</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>VILLAS DE ARAGUA</span><b>1</b></div></div></div>
+                        <div class="audit-card" style="border-top-color:var(--rojo)"><h3>MAYOR INCIDENCIAS GRAVES</h3><div class="scroll-area"><div class='audit-row status-fail sucursal-comun'><span>TUCACAS</span><b>9</b></div><div class='audit-row status-fail sucursal-comun'><span>VICTORIA</span><b>2</b></div><div class='audit-row status-fail sucursal-comun'><span>BOSQUE</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>BARQUISIMETO</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>CASTAÑO</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>IPSFA</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>CIRCULO</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>GUACARA</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>SANTA RITA</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>NAGUANAGUA</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>VILLAS DE ARAGUA</span><b>1</b></div></div></div>
                     </div>
                 </div>
                 <div id="cobs-MAYO" class="tab-content">
@@ -174,32 +173,44 @@
                 </div>
             </div></main>
             <script>
+                // Almacenamos la pestaña en localStorage para que sea persistente al volver
                 function toggleCentral() {
                     const body = document.body;
                     body.classList.toggle('modo-central');
                 }
+                
                 function cambiarMes() {
                     document.querySelectorAll(".mes-container").forEach(e => e.classList.remove('active'));
                     let sel = document.getElementById("mes-selector").value;
                     if(sel) document.getElementById(sel).classList.add('active');
+                    
                     actualizarPestañaInterna();
                 }
+
                 function showGlobalTab(t) {
+                    localStorage.setItem('pestañaActiva', t); // Guardar en el navegador
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    document.getElementById('btn-' + t.substring(0,3)).classList.add('active');
+                    
+                    let btnId = 'btn-' + t.substring(0,3);
+                    let btn = document.getElementById(btnId);
+                    if(btn) btn.classList.add('active');
+                    
                     let mes = document.querySelector('.mes-container.active');
                     if(mes) {
                         mes.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                        let target = document.getElementById(t + "-" + mes.id.replace('mes-', ''));
+                        let targetId = t + "-" + mes.id.replace('mes-', '');
+                        let target = document.getElementById(targetId);
                         if(target) target.classList.add('active');
                     }
                 }
+
                 function actualizarPestañaInterna() {
-                    let t = 'incs';
-                    if(document.getElementById('btn-cob').classList.contains('active')) t = 'cobs';
-                    if(document.getElementById('btn-hon').classList.contains('active')) t = 'honor';
-                    if(document.getElementById('btn-peo').classList.contains('active')) t = 'peores';
+                    // Recuperar la última pestaña o usar 'incs' por defecto
+                    let t = localStorage.getItem('pestañaActiva') || 'incs';
                     showGlobalTab(t);
                 }
-                window.onload = cambiarMes;
+
+                window.onload = function() {
+                    cambiarMes();
+                };
             </script></body></html>

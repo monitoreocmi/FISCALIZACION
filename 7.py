@@ -180,11 +180,10 @@ def generar_panel_luxor_centralizado():
             .audit-card {{ background: white; border-radius: 8px; padding: 12px; border-top: 4px solid var(--azul); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }}
             .audit-row {{ display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; font-size: 11px; font-weight: bold; border-left: 4px solid transparent; }}
             
-            /* ESTADOS DE VISIBILIDAD */
-            .sucursal-central {{ display: none !important; }} /* Oculta Central por defecto */
-            .modo-central .sucursal-comun {{ display: none !important; }} /* Oculta comunes en modo central */
-            .modo-central .sucursal-central {{ display: flex !important; }} /* Muestra Central en modo central */
-            a.sucursal-central {{ display: block !important; }} /* Ajuste para enlaces */
+            .sucursal-central {{ display: none !important; }} 
+            .modo-central .sucursal-comun {{ display: none !important; }} 
+            .modo-central .sucursal-central {{ display: flex !important; }} 
+            a.sucursal-central {{ display: block !important; }} 
 
             .row-blue {{ background: #e3f2fd; color: #0d47a1; border-left-color: var(--azul); }}
             .status-ok {{ color: var(--verde); background: #e8f5e9; border-left-color: var(--verde); }}
@@ -214,34 +213,46 @@ def generar_panel_luxor_centralizado():
             </div>
             <main class="main-content" id="main-panel">{html_meses_data}</main>
             <script>
+                // Almacenamos la pestaña en localStorage para que sea persistente al volver
                 function toggleCentral() {{
                     const body = document.body;
                     body.classList.toggle('modo-central');
                 }}
+                
                 function cambiarMes() {{
                     document.querySelectorAll(".mes-container").forEach(e => e.classList.remove('active'));
                     let sel = document.getElementById("mes-selector").value;
                     if(sel) document.getElementById(sel).classList.add('active');
+                    
                     actualizarPestañaInterna();
                 }}
+
                 function showGlobalTab(t) {{
+                    localStorage.setItem('pestañaActiva', t); // Guardar en el navegador
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    document.getElementById('btn-' + t.substring(0,3)).classList.add('active');
+                    
+                    let btnId = 'btn-' + t.substring(0,3);
+                    let btn = document.getElementById(btnId);
+                    if(btn) btn.classList.add('active');
+                    
                     let mes = document.querySelector('.mes-container.active');
                     if(mes) {{
                         mes.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                        let target = document.getElementById(t + "-" + mes.id.replace('mes-', ''));
+                        let targetId = t + "-" + mes.id.replace('mes-', '');
+                        let target = document.getElementById(targetId);
                         if(target) target.classList.add('active');
                     }}
                 }}
+
                 function actualizarPestañaInterna() {{
-                    let t = 'incs';
-                    if(document.getElementById('btn-cob').classList.contains('active')) t = 'cobs';
-                    if(document.getElementById('btn-hon').classList.contains('active')) t = 'honor';
-                    if(document.getElementById('btn-peo').classList.contains('active')) t = 'peores';
+                    // Recuperar la última pestaña o usar 'incs' por defecto
+                    let t = localStorage.getItem('pestañaActiva') || 'incs';
                     showGlobalTab(t);
                 }}
-                window.onload = cambiarMes;
+
+                window.onload = function() {{
+                    cambiarMes();
+                }};
             </script></body></html>"""
         
         with open(os.path.join(ruta_raiz, "index.html"), "w", encoding="utf-8") as f:

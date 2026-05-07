@@ -25,17 +25,17 @@
         "detalle": "D: 0 | E: 2"
     },
     {
-        "n": "VICTORIA (ABRIL)",
-        "v": 2,
-        "detalle": "D: 0 | E: 2"
-    },
-    {
         "n": "MORA (ABRIL)",
         "v": 2,
         "detalle": "D: 2 | E: 0"
     },
     {
-        "n": "BARQUISIMETO (MAYO)",
+        "n": "VICTORIA (ABRIL)",
+        "v": 2,
+        "detalle": "D: 0 | E: 2"
+    },
+    {
+        "n": "BOSQUE (MAYO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
@@ -45,17 +45,7 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "BOSQUE (MAYO)",
-        "v": 1,
-        "detalle": "D: 1 | E: 0"
-    },
-    {
-        "n": "LA MORA (MARZO)",
-        "v": 1,
-        "detalle": "D: 1 | E: 0"
-    },
-    {
-        "n": "GUACARA (MAYO)",
+        "n": "BARQUISIMETO (MAYO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
@@ -65,7 +55,22 @@
         "detalle": "D: 1 | E: 0"
     },
     {
+        "n": "LA MORA (MARZO)",
+        "v": 1,
+        "detalle": "D: 1 | E: 0"
+    },
+    {
+        "n": "IPSFA (MAYO)",
+        "v": 1,
+        "detalle": "D: 1 | E: 0"
+    },
+    {
         "n": "CIRCULO (MAYO)",
+        "v": 1,
+        "detalle": "D: 1 | E: 0"
+    },
+    {
+        "n": "GUACARA (MAYO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
