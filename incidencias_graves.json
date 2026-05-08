@@ -35,9 +35,9 @@
         "detalle": "D: 2 | E: 0"
     },
     {
-        "n": "BARQUISIMETO (MAYO)",
-        "v": 1,
-        "detalle": "D: 1 | E: 0"
+        "n": "VILLAS DE ARAGUA (MAYO)",
+        "v": 2,
+        "detalle": "D: 2 | E: 0"
     },
     {
         "n": "BOSQUE (ABRIL)",
@@ -45,7 +45,7 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "BOSQUE (MAYO)",
+        "n": "BARQUISIMETO (MAYO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
@@ -70,12 +70,12 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "SANTA RITA (MAYO)",
+        "n": "BOSQUE (MAYO)",
         "v": 1,
-        "detalle": "D: 0 | E: 1"
+        "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "NAGUANAGUA (MAYO)",
+        "n": "SANTA RITA (MAYO)",
         "v": 1,
         "detalle": "D: 0 | E: 1"
     },
@@ -85,8 +85,8 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "VILLAS DE ARAGUA (MAYO)",
+        "n": "NAGUANAGUA (MAYO)",
         "v": 1,
-        "detalle": "D: 1 | E: 0"
+        "detalle": "D: 0 | E: 1"
     }
 ]

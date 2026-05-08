@@ -91,6 +91,13 @@
         "TOTAL_GESTIONADO": 17.96
     },
     {
+        "sucursal": "GUACARA (MAYO)",
+        "COBRADO": 15.26,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 15.26
+    },
+    {
         "sucursal": "CIRCULO MILITAR (ABRIL)",
         "COBRADO": 15.24,
         "PERDIDA_PATRIMONIO": 655.35,
@@ -117,6 +124,13 @@
         "PERDIDA_PATRIMONIO": 28.8,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 40.2
+    },
+    {
+        "sucursal": "VILLAS DE ARAGUA (MAYO)",
+        "COBRADO": 11.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 11.0
     },
     {
         "sucursal": "CIRCULO MILITAR (MARZO)",
@@ -168,13 +182,6 @@
         "TOTAL_GESTIONADO": 1341.8
     },
     {
-        "sucursal": "VILLAS DE ARAGUA (MAYO)",
-        "COBRADO": 3.14,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 3.14
-    },
-    {
         "sucursal": "CIRCULO (MAYO)",
         "COBRADO": 2.7,
         "PERDIDA_PATRIMONIO": 0.0,
@@ -194,13 +201,6 @@
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 2.0
-    },
-    {
-        "sucursal": "GUACARA (MAYO)",
-        "COBRADO": 1.69,
-        "PERDIDA_PATRIMONIO": 13.57,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 15.26
     },
     {
         "sucursal": "NAGUANAGUA (MARZO)",
