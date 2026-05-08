@@ -1,0 +1,4 @@
+=== DIAGNÓSTICO DE DATOS LUXOR ===
+Fecha: nt.times_result(user=0.84375, system=1.109375, children_user=0.0, children_system=0.0, elapsed=0.0)
+----------------------------------
+Sistema Luxor

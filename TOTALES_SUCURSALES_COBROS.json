@@ -7,18 +7,18 @@
         "TOTAL_GESTIONADO": 992.47
     },
     {
+        "sucursal": "BOSQUE (MAYO)",
+        "COBRADO": 279.35,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 279.35
+    },
+    {
         "sucursal": "CENTRAL (ABRIL)",
         "COBRADO": 127.68,
         "PERDIDA_PATRIMONIO": 404.26,
         "EXCEDENTE": 156.0,
         "TOTAL_GESTIONADO": 687.94
-    },
-    {
-        "sucursal": "BOSQUE (MAYO)",
-        "COBRADO": 93.05,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 93.05
     },
     {
         "sucursal": "BARQUISIMETO (ABRIL)",
