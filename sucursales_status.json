@@ -45,8 +45,8 @@
             "v": 100
         },
         {
-            "n": "CIRCULO (MAYO)",
-            "v": 75
+            "n": "CENTRAL (MAYO)",
+            "v": 100
         },
         {
             "n": "CIRCULO MILITAR (MAYO)",
@@ -69,11 +69,11 @@
             "v": 100
         },
         {
-            "n": "TUCACAS (MAYO)",
-            "v": 85
+            "n": "SAN JUAN (MAYO)",
+            "v": 100
         },
         {
-            "n": "VICTORIA (MAYO)",
+            "n": "TUCACAS (MAYO)",
             "v": 85
         },
         {
@@ -100,7 +100,7 @@
         },
         {
             "n": "MORA (ABRIL)",
-            "v": 30
+            "v": 50
         },
         {
             "n": "NAGUANAGUA (ABRIL)",
@@ -151,7 +151,7 @@
             "v": 0
         },
         {
-            "n": "LA MORA (MARZO)",
+            "n": "MORA (MARZO)",
             "v": 30
         },
         {
@@ -189,6 +189,10 @@
         {
             "n": "SANTA RITA (MAYO)",
             "v": 70
+        },
+        {
+            "n": "VICTORIA (MAYO)",
+            "v": 55
         }
     ]
 }

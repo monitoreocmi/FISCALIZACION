@@ -10,6 +10,11 @@
         "detalle": "D: 1 | E: 4"
     },
     {
+        "n": "VICTORIA (MAYO)",
+        "v": 5,
+        "detalle": "D: 0 | E: 5"
+    },
+    {
         "n": "IPSFA (MARZO)",
         "v": 4,
         "detalle": "D: 3 | E: 1"
@@ -18,11 +23,6 @@
         "n": "SANTA RITA (MARZO)",
         "v": 3,
         "detalle": "D: 3 | E: 0"
-    },
-    {
-        "n": "VICTORIA (MAYO)",
-        "v": 2,
-        "detalle": "D: 0 | E: 2"
     },
     {
         "n": "VICTORIA (ABRIL)",
@@ -50,7 +50,7 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "LA MORA (MARZO)",
+        "n": "MORA (MARZO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },

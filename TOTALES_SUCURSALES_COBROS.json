@@ -266,7 +266,7 @@
         "TOTAL_GESTIONADO": 4.19
     },
     {
-        "sucursal": "LA MORA (MARZO)",
+        "sucursal": "MORA (MARZO)",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 163.49,
         "EXCEDENTE": 0.0,
@@ -301,6 +301,13 @@
         "TOTAL_GESTIONADO": 0.0
     },
     {
+        "sucursal": "CENTRAL (MAYO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
         "sucursal": "IPSFA (MAYO)",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
@@ -313,6 +320,13 @@
         "PERDIDA_PATRIMONIO": 3.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 3.0
+    },
+    {
+        "sucursal": "SAN JUAN (MAYO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 0.0
     },
     {
         "sucursal": "SANTA RITA (MAYO)",

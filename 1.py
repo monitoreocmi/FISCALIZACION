@@ -19,9 +19,18 @@ MESES_ES = {
 }
 
 RUTA_LOGO = "../../RECURSOS/logo.png"
+ARCHIVO_SUCURSALES = "sucursales.txt"
 
 def limpiar_nombre_archivo(nombre):
     return re.sub(r'[^\w\s-]', '', str(nombre)).strip().replace(' ', '_')
+
+def obtener_sucursales_txt(ruta_base):
+    ruta_txt = os.path.join(ruta_base, ARCHIVO_SUCURSALES)
+    if not os.path.exists(ruta_txt):
+        with open(ruta_txt, "w", encoding="utf-8") as f:
+            f.write("CENTRAL")
+    with open(ruta_txt, "r", encoding="utf-8") as f:
+        return [line.strip().upper() for line in f if line.strip()]
 
 CSS_UNIFICADO = f"""
 <style>
@@ -43,14 +52,16 @@ CSS_UNIFICADO = f"""
 def generar_reporte_v30_final():
     try:
         print("\n" + "="*60)
-        print(">>> INICIANDO GENERACIÓN DE REPORTES V3.0 <<<")
+        print(">>> INICIANDO GENERACIÓN DE REPORTES V3.0 (MAESTRO TXT) <<<")
         print("="*60)
         
         ruta_base = os.path.dirname(os.path.abspath(sys.argv[0]))
+        sucursales_txt = obtener_sucursales_txt(ruta_base)
         ruta_cuadros = os.path.join(ruta_base, "cuadros")
         archivos = [os.path.join(root, f) for root, dirs, files in os.walk(ruta_cuadros) for f in files if f.endswith(('.xlsx', '.xls')) and not f.startswith('~$')]
 
-        print(f"📁 Archivos encontrados: {len(archivos)}")
+        print(f"📍 Sucursales en lista maestra: {len(sucursales_txt)}")
+        print(f"📁 Archivos Excel encontrados: {len(archivos)}")
 
         lista_df = []
         for f in archivos:
@@ -72,9 +83,14 @@ def generar_reporte_v30_final():
                 lista_df.append(df_t)
             except: continue
         
-        df_master = pd.concat(lista_df, ignore_index=True).dropna(subset=['FECHA', 'SUCURSAL'])
-        df_master['PERIODO'] = df_master['FECHA'].dt.to_period('M')
-        
+        if lista_df:
+            df_master = pd.concat(lista_df, ignore_index=True).dropna(subset=['FECHA', 'SUCURSAL'])
+            df_master['PERIODO'] = df_master['FECHA'].dt.to_period('M')
+            periodos = sorted(df_master['PERIODO'].unique())
+        else:
+            print("⚠️ No hay datos para procesar.")
+            return
+
         columnas_reporte = ['RESPONSABLE', 'PROVEEDOR', 'FECHA', 'FACTURA', 'INCIDENCIA', 'TIPO FISCALIZACIÓN', 'OBSERVACIÓN']
         grupos_defs = [
             {"tipo": "A", "porc": 10, "color": "#f4faf0", "items": ["NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO", "FALTA SELLO, FIRMA O CÉDULA", "DOCUMENTO NO LEGIBLE"]},
@@ -84,7 +100,7 @@ def generar_reporte_v30_final():
             {"tipo": "E", "porc": 30, "color": "#fff0f0", "items": ["RECEPCIÓN SIN AUTORIZACIÓN DE CMF", "NO SE COMPLETA EL PROCESO DE FISCALIZACION Y SE ELIMINA"]}
         ]
 
-        for p_act in sorted(df_master['PERIODO'].unique()):
+        for p_act in periodos:
             n_m_act = MESES_ES[p_act.month]
             print(f"\n📅 PROCESANDO MES: {n_m_act}")
             print("-" * 30)
@@ -93,23 +109,25 @@ def generar_reporte_v30_final():
             n_m_ant = MESES_ES[p_ant.month] if p_ant.month in MESES_ES else "ANT."
             df_m_act = df_master[df_master['PERIODO'] == p_act]
 
-            for suc in sorted(df_m_act['SUCURSAL'].dropna().unique()):
-                n_s = str(suc).strip().upper()
+            for n_s in sucursales_txt:
                 print(f"   🏢 Sucursal: {n_s}")
-                
-                df_suc_act = df_m_act[df_m_act['SUCURSAL'] == suc]
+                df_suc_act = df_m_act[df_m_act['SUCURSAL'].astype(str).str.upper() == n_s]
                 p_f = os.path.join(ruta_base, n_m_act, n_s); os.makedirs(p_f, exist_ok=True)
                 
                 filas_html_txt = ""
 
-                # GENERAR TODO_EL_MES.HTML
+                # ARCHIVO: TODO_EL_MES.HTML
                 if not df_suc_act.empty:
                     df_det_mes = df_suc_act.copy()
                     df_det_mes['FECHA'] = pd.to_datetime(df_det_mes['FECHA']).dt.strftime('%Y-%m-%d')
                     cols_p = [c for c in columnas_reporte if c in df_det_mes.columns]
                     cuerpo_mes = "".join([f"<tr>{''.join([f'<td>{v}</td>' for v in r])}</tr>" for r in df_det_mes[cols_p].fillna('-').values])
-                    html_mes_completo = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TOTAL INCIDENCIAS {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_p])}</tr></thead><tbody>{cuerpo_mes}</tbody></table><a onclick='window.history.back()' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
-                    with open(os.path.join(p_f, "todo_el_mes.html"), "w", encoding="utf-8") as f: f.write(html_mes_completo)
+                else:
+                    cuerpo_mes = "<tr><td colspan='7'>Sin incidencias registradas</td></tr>"
+                    cols_p = columnas_reporte
+                
+                html_mes_completo = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TOTAL INCIDENCIAS {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_p])}</tr></thead><tbody>{cuerpo_mes}</tbody></table><a onclick='window.history.back()' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
+                with open(os.path.join(p_f, "todo_el_mes.html"), "w", encoding="utf-8") as f: f.write(html_mes_completo)
 
                 # RANKING PERSONAS
                 ranking_html = ""
@@ -118,7 +136,6 @@ def generar_reporte_v30_final():
                     for nombre, total in top_inc.items():
                         archivo_persona = f"INCIDENCIAS_{limpiar_nombre_archivo(nombre)}.html"
                         ranking_html += f"<tr><td style='text-align:left;'>{nombre}</td><td><a href='{archivo_persona}' class='link-incidencias'>{total} INCIDENCIAS</a></td></tr>"
-                        
                         df_persona = df_suc_act[df_suc_act['RESPONSABLE'] == nombre]
                         df_persona['FECHA'] = pd.to_datetime(df_persona['FECHA']).dt.strftime('%Y-%m-%d')
                         cols_p = [c for c in columnas_reporte if c in df_persona.columns]
@@ -126,6 +143,7 @@ def generar_reporte_v30_final():
                         html_pers = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>INCIDENCIAS: {nombre}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in cols_p])}</tr></thead><tbody>{cuerpo_p}</tbody></table><a onclick='window.history.back()' class='btn-volver'>VOLVER AL REPORTE</a></div></body></html>"
                         with open(os.path.join(p_f, archivo_persona), "w", encoding="utf-8") as f: f.write(html_pers)
 
+                # PROCESAR GRUPOS
                 suma_impacto, t_act, t_ant = 0, 0, 0
                 for grupo in grupos_defs:
                     g_act_grupo, g_ant_grupo = 0, 0
@@ -134,10 +152,8 @@ def generar_reporte_v30_final():
                         busq = inc.upper().replace('.', '')
                         nombre_file = f"{limpiar_nombre_archivo(inc)}.html"
                         
-                        df_det_act = df_suc_act[df_suc_act['INC_LIMPIA'] == busq].copy().drop_duplicates()
-                        c_act = len(df_det_act)
-                        df_det_ant = df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ant) & (df_master['INC_LIMPIA']==busq)].copy().drop_duplicates()
-                        c_ant = len(df_det_ant)
+                        c_act = len(df_suc_act[df_suc_act['INC_LIMPIA'] == busq]) if not df_suc_act.empty else 0
+                        c_ant = len(df_master[(df_master['SUCURSAL'].astype(str).str.upper()==n_s) & (df_master['PERIODO']==p_ant) & (df_master['INC_LIMPIA']==busq)])
                         
                         g_act_grupo += c_act; g_ant_grupo += c_ant; t_act += c_act; t_ant += c_ant
                         v_ant = "0" if c_ant == 0 else f"<a href='../../{n_m_ant}/{n_s}/{nombre_file}' class='link-incidencias'>{c_ant}</a>"
@@ -147,6 +163,7 @@ def generar_reporte_v30_final():
                         temp_filas.append(f"<tr style='background-color:{grupo['color']}; {estilo_separador}'><td style='text-align:left;'>{inc}.</td><td>{grupo['tipo']}</td><td>{v_ant}</td><td>{v_act}</td>")
                         
                         if c_act > 0:
+                            df_det_act = df_suc_act[df_suc_act['INC_LIMPIA'] == busq].copy()
                             df_det_act['FECHA'] = pd.to_datetime(df_det_act['FECHA']).dt.strftime('%Y-%m-%d')
                             cols_p = [c for c in columnas_reporte if c in df_det_act.columns]
                             cuerpo = "".join([f"<tr>{''.join([f'<td>{v}</td>' for v in r])}</tr>" for r in df_det_act[cols_p].fillna('-').values])
@@ -160,7 +177,7 @@ def generar_reporte_v30_final():
 
                 nota_f = max(0, 100 - suma_impacto)
                 
-                # GENERAR SOLO_MES.HTML
+                # ARCHIVO: SOLO_MES.HTML
                 color_eval = "#ed1c24" if nota_f < 75 else "#27ae60"
                 html_solo_mes = f"""<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body>
                     <div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>RESUMEN {n_s} - {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div>
@@ -171,7 +188,7 @@ def generar_reporte_v30_final():
                     </div></body></html>"""
                 with open(os.path.join(p_f, "solo_mes.html"), "w", encoding="utf-8") as f: f.write(html_solo_mes)
 
-                # GENERAR REPORTE.HTML
+                # ARCHIVO: REPORTE.HTML
                 link_t_ant = f"<a href='../../{n_m_ant}/{n_s}/todo_el_mes.html' style='color:white; text-decoration:underline;'>{t_ant}</a>" if t_ant > 0 else "0"
                 link_t_act = f"<a href='todo_el_mes.html' style='color:white; text-decoration:underline;'>{t_act}</a>" if t_act > 0 else "0"
 
@@ -197,28 +214,17 @@ def generar_reporte_v30_final():
     except Exception as e: 
         print(f"\n❌ ERROR CRÍTICO: {e}")
 
-    # Lógica de cierre de 10 segundos
     print("\n" + "-"*30)
     print("El programa se cerrará en 10 segundos o pulsa ENTER...")
-    
     stop_event = threading.Event()
-
     def temporizador():
         for i in range(10, 0, -1):
-            if stop_event.is_set():
-                return
+            if stop_event.is_set(): return
             time.sleep(1)
-        print("\nCerrando por tiempo agotado...")
         os._exit(0)
-
-    t = threading.Thread(target=temporizador)
-    t.daemon = True
-    t.start()
-    
-    try:
-        input()
-    except EOFError:
-        pass
+    t = threading.Thread(target=temporizador); t.daemon = True; t.start()
+    try: input()
+    except: pass
     stop_event.set()
 
 if __name__ == "__main__":
