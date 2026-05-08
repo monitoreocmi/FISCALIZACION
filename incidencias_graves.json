@@ -30,19 +30,19 @@
         "detalle": "D: 0 | E: 2"
     },
     {
-        "n": "MORA (ABRIL)",
-        "v": 2,
-        "detalle": "D: 2 | E: 0"
-    },
-    {
         "n": "VILLAS DE ARAGUA (MAYO)",
         "v": 2,
         "detalle": "D: 2 | E: 0"
     },
     {
-        "n": "BOSQUE (ABRIL)",
-        "v": 1,
-        "detalle": "D: 1 | E: 0"
+        "n": "MORA (ABRIL)",
+        "v": 2,
+        "detalle": "D: 2 | E: 0"
+    },
+    {
+        "n": "GUACARA (MAYO)",
+        "v": 2,
+        "detalle": "D: 2 | E: 0"
     },
     {
         "n": "BARQUISIMETO (MAYO)",
@@ -50,12 +50,12 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "MORA (MARZO)",
+        "n": "BOSQUE (ABRIL)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "GUACARA (MAYO)",
+        "n": "BOSQUE (MAYO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
@@ -70,7 +70,7 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "BOSQUE (MAYO)",
+        "n": "MORA (MARZO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
     },
