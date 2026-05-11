@@ -25,12 +25,22 @@
         "detalle": "D: 3 | E: 0"
     },
     {
+        "n": "SANTA RITA (MAYO)",
+        "v": 3,
+        "detalle": "D: 1 | E: 2"
+    },
+    {
         "n": "VICTORIA (ABRIL)",
         "v": 2,
         "detalle": "D: 0 | E: 2"
     },
     {
-        "n": "VILLAS DE ARAGUA (MAYO)",
+        "n": "NAGUANAGUA (MAYO)",
+        "v": 2,
+        "detalle": "D: 1 | E: 1"
+    },
+    {
+        "n": "GUACARA (MAYO)",
         "v": 2,
         "detalle": "D: 2 | E: 0"
     },
@@ -40,7 +50,7 @@
         "detalle": "D: 2 | E: 0"
     },
     {
-        "n": "GUACARA (MAYO)",
+        "n": "VILLAS DE ARAGUA (MAYO)",
         "v": 2,
         "detalle": "D: 2 | E: 0"
     },
@@ -55,16 +65,6 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "BOSQUE (MAYO)",
-        "v": 1,
-        "detalle": "D: 1 | E: 0"
-    },
-    {
-        "n": "CASTAÑO (MAYO)",
-        "v": 1,
-        "detalle": "D: 1 | E: 0"
-    },
-    {
         "n": "CIRCULO (MAYO)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
@@ -75,18 +75,18 @@
         "detalle": "D: 1 | E: 0"
     },
     {
-        "n": "SANTA RITA (MAYO)",
+        "n": "BOSQUE (MAYO)",
         "v": 1,
-        "detalle": "D: 0 | E: 1"
+        "detalle": "D: 1 | E: 0"
+    },
+    {
+        "n": "CASTAÑO (MAYO)",
+        "v": 1,
+        "detalle": "D: 1 | E: 0"
     },
     {
         "n": "NAGUANAGUA (ABRIL)",
         "v": 1,
         "detalle": "D: 1 | E: 0"
-    },
-    {
-        "n": "NAGUANAGUA (MAYO)",
-        "v": 1,
-        "detalle": "D: 0 | E: 1"
     }
 ]

@@ -91,6 +91,13 @@
         "TOTAL_GESTIONADO": 17.96
     },
     {
+        "sucursal": "NAGUANAGUA (MAYO)",
+        "COBRADO": 16.69,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 16.69
+    },
+    {
         "sucursal": "GUACARA (MAYO)",
         "COBRADO": 16.63,
         "PERDIDA_PATRIMONIO": 0.0,
@@ -229,13 +236,6 @@
         "PERDIDA_PATRIMONIO": 2.57,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 3.71
-    },
-    {
-        "sucursal": "NAGUANAGUA (MAYO)",
-        "COBRADO": 1.14,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 1.14
     },
     {
         "sucursal": "CASTAÑO (MARZO)",

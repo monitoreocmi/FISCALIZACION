@@ -53,10 +53,6 @@
             "v": 100
         },
         {
-            "n": "GUACARA (MAYO)",
-            "v": 75
-        },
-        {
             "n": "IPSFA (MAYO)",
             "v": 80
         },
@@ -183,12 +179,16 @@
             "v": 55
         },
         {
+            "n": "GUACARA (MAYO)",
+            "v": 65
+        },
+        {
             "n": "NAGUANAGUA (MAYO)",
             "v": 60
         },
         {
             "n": "SANTA RITA (MAYO)",
-            "v": 70
+            "v": 45
         },
         {
             "n": "VICTORIA (MAYO)",
