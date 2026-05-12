@@ -145,15 +145,15 @@ def generar_panel_luxor_centralizado():
                 <div id="honor-{m}" class="tab-content">
                     <h2 class="sub-title" style="background:var(--verde); border-left-color:white;">EXCELENTE RENDIMIENTO - {m_key}</h2>
                     <div class="audit-grid-full grid-half">
-                        <div class="audit-card podio-high"><h3>MEJOR FISCALIZACIÓN</h3>{gen_rows_simple(top_f, "status-ok-green")}</div>
-                        <div class="audit-card podio-high"><h3>MEJOR COBROS</h3>{gen_rows_simple(top_c, "status-ok-green")}</div>
+                        <div class="audit-card podio-high"><h3>MEJOR SUCURSALES EN FISCALIZACIÓN</h3>{gen_rows_simple(top_f, "status-ok-green")}</div>
+                        <div class="audit-card podio-high"><h3>MEJOR SUCURSALES EN COBROS Y MITIGACION</h3>{gen_rows_simple(top_c, "status-ok-green")}</div>
                     </div>
                 </div>
                 <div id="peores-{m}" class="tab-content">
                     <h2 class="sub-title" style="background:var(--rojo); border-left-color:black;">RENDIMIENTO CRÍTICO - {m_key}</h2>
                     <div class="audit-grid-full grid-half">
-                        <div class="audit-card podio-low"><h3>PEOR FISCALIZACIÓN</h3>{gen_rows_simple(bad_f, "status-fail-red")}</div>
-                        <div class="audit-card podio-low"><h3>PEOR COBROS</h3>{gen_rows_simple(bad_c, "status-fail-red")}</div>
+                        <div class="audit-card podio-low"><h3>PEOR SUCURSALES EN FISCALIZACIÓN</h3>{gen_rows_simple(bad_f, "status-fail-red")}</div>
+                        <div class="audit-card podio-low"><h3>PEOR SUCURSALES EN COBROS Y MITIGACION</h3>{gen_rows_simple(bad_c, "status-fail-red")}</div>
                     </div>
                 </div>
             </div>"""
