@@ -7,13 +7,6 @@
         "TOTAL_GESTIONADO": 992.47
     },
     {
-        "sucursal": "BOSQUE (MAYO)",
-        "COBRADO": 279.35,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 279.35
-    },
-    {
         "sucursal": "CENTRAL (ABRIL)",
         "COBRADO": 127.68,
         "PERDIDA_PATRIMONIO": 404.26,
@@ -92,17 +85,10 @@
     },
     {
         "sucursal": "NAGUANAGUA (MAYO)",
-        "COBRADO": 16.69,
-        "PERDIDA_PATRIMONIO": 0.0,
+        "COBRADO": 15.55,
+        "PERDIDA_PATRIMONIO": 1.14,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 16.69
-    },
-    {
-        "sucursal": "GUACARA (MAYO)",
-        "COBRADO": 16.63,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 16.63
     },
     {
         "sucursal": "CIRCULO MILITAR (ABRIL)",
@@ -189,18 +175,18 @@
         "TOTAL_GESTIONADO": 1341.8
     },
     {
+        "sucursal": "GUACARA (MAYO)",
+        "COBRADO": 3.06,
+        "PERDIDA_PATRIMONIO": 13.57,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 16.63
+    },
+    {
         "sucursal": "CIRCULO (MAYO)",
         "COBRADO": 2.7,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 2.7
-    },
-    {
-        "sucursal": "BARQUISIMETO (MAYO)",
-        "COBRADO": 2.12,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 2.12
     },
     {
         "sucursal": "SANTA RITA (ABRIL)",
@@ -219,9 +205,9 @@
     {
         "sucursal": "TUCACAS (MAYO)",
         "COBRADO": 1.31,
-        "PERDIDA_PATRIMONIO": 0.0,
+        "PERDIDA_PATRIMONIO": 45.6,
         "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 1.31
+        "TOTAL_GESTIONADO": 46.91
     },
     {
         "sucursal": "SANTA RITA (MARZO)",
@@ -243,6 +229,13 @@
         "PERDIDA_PATRIMONIO": 939.49,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 940.37
+    },
+    {
+        "sucursal": "BOSQUE (MAYO)",
+        "COBRADO": 0.76,
+        "PERDIDA_PATRIMONIO": 186.3,
+        "EXCEDENTE": 92.29,
+        "TOTAL_GESTIONADO": 279.35
     },
     {
         "sucursal": "IPSFA (MARZO)",
@@ -299,6 +292,13 @@
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 0.0
+    },
+    {
+        "sucursal": "BARQUISIMETO (MAYO)",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 2.12,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 2.12
     },
     {
         "sucursal": "CENTRAL (MAYO)",
