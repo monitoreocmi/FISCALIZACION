@@ -189,6 +189,13 @@
         "TOTAL_GESTIONADO": 2.7
     },
     {
+        "sucursal": "BARQUISIMETO (MAYO)",
+        "COBRADO": 2.12,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 2.12
+    },
+    {
         "sucursal": "SANTA RITA (ABRIL)",
         "COBRADO": 2.0,
         "PERDIDA_PATRIMONIO": 0.0,
@@ -292,13 +299,6 @@
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 0.0
-    },
-    {
-        "sucursal": "BARQUISIMETO (MAYO)",
-        "COBRADO": 0.0,
-        "PERDIDA_PATRIMONIO": 2.12,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 2.12
     },
     {
         "sucursal": "CENTRAL (MAYO)",
