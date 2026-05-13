@@ -9,6 +9,11 @@ import glob
 import threading
 import time
 
+# =================================================================
+# ID: GENERADOR DE COBROS, PÉRDIDAS Y EXCEDENTES (LUXOR)
+# FUNCIÓN: Clasificación por colores de Excel y Reportes de Auditoría
+# =================================================================
+
 # Silenciar advertencias de validación de Excel
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -21,7 +26,7 @@ MESES_ES = {
     9: "SEPTIEMBRE", 10: "OCTUBRE", 11: "NOVIEMBRE", 12: "DICIEMBRE"
 }
 
-# Ruta optimizada para GitHub (Case Sensitive)
+# Ruta para recursos estáticos
 RUTA_LOGO_ESTANDAR = "../../RECURSOS/logo.png"
 
 def limpiar_monto(valor):
@@ -36,6 +41,7 @@ def limpiar_monto(valor):
     except: return 0.0
 
 def obtener_indices_flexibles(headers):
+    """Mapeo inteligente de columnas según el encabezado del Excel"""
     indices = {'sucursal': -1, 'monto': -1, 'fecha': -1, 'foto': -1}
     for i, h in enumerate(headers):
         h_up = str(h).upper() if h else ""
@@ -45,6 +51,7 @@ def obtener_indices_flexibles(headers):
         if 'FECHA' in h_up: indices['fecha'] = i
         if 'F COBRADA' in h_up: indices['foto'] = i
     
+    # Defaults por si falla el mapeo exacto
     if indices['monto'] == -1: indices['monto'] = 9 
     if indices['foto'] == -1: indices['foto'] = 10 
     return indices
@@ -69,18 +76,18 @@ def generar_reporte_cobros_final():
                     archivos.append(os.path.join(root, file))
         
         if not archivos:
-            print(f"⚠️ No hay archivos Excel válidos en: {ruta_cuadros}")
+            print(f"⚠️ No se hallaron archivos .xlsx en: {ruta_cuadros}")
             return
 
-        print(f"✅ Se encontraron {len(archivos)} archivos. Procesando...\n")
+        print(f"✅ Procesando {len(archivos)} archivos de Excel...\n")
 
         datos_finales = []
         columnas_reales = [] 
 
         for f in archivos:
             rel_path = os.path.relpath(f, ruta_cuadros)
-            print(f"📖 Leyendo: {rel_path}")
-            wb = load_workbook(f, data_only=False)
+            print(f"📖 Analizando: {rel_path}")
+            wb = load_workbook(f, data_only=False) # data_only=False para leer colores
             ws = wb.active
             headers = [str(cell.value) if cell.value else f"Col_{i}" for i, cell in enumerate(ws[1])]
             
@@ -88,7 +95,6 @@ def generar_reporte_cobros_final():
                 columnas_reales = headers[:11]
             
             idx = obtener_indices_flexibles(headers)
-            print(f"   -> Mapeo: Sucursal Col {idx['sucursal']}, Monto Col {idx['monto']}, Foto Col {idx['foto']}")
             
             count_rows = 0
             for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
@@ -100,6 +106,7 @@ def generar_reporte_cobros_final():
                     celda_monto = row[idx['monto']]
                     color = str(celda_monto.fill.start_color.index).upper()
                     
+                    # Lógica de detección por color de celda (HEX o Index)
                     if color in ['FF00B050', 'FF92D050', '00FF00', 'FF00FF00', 'FFC6EFCE', '13', 'FF548235']: 
                         estatus = "COBRADO"
                     elif color in ['FFFFFF00', 'FFFFFFE1', 'FFFFEB9C', '17', 'FFFFD966', 'FFFFC000']: 
@@ -109,6 +116,7 @@ def generar_reporte_cobros_final():
                 except: 
                     pass
 
+                # Detección por presencia de número de foto si el color no está definido
                 foto_raw = str(row_vals[idx['foto']]).strip() if len(row_vals) > idx['foto'] and row_vals[idx['foto']] else ""
                 if estatus == "OTRO" and foto_raw != "" and foto_raw.upper() not in ["NONE", "NAN", "SIN FOTO"]:
                     estatus = "COBRADO"
@@ -131,33 +139,32 @@ def generar_reporte_cobros_final():
                         'IDX_MONTO': idx['monto']
                     })
                     count_rows += 1
-            print(f"   -> ✓ {count_rows} filas válidas extraídas.")
+            print(f"    -> ✓ {count_rows} registros extraídos.")
 
         if not datos_finales:
-            print("\n❌ No se encontraron datos válidos (coloreados o con foto).")
+            print("\n❌ No hay datos que cumplan con los criterios (celda con color o número de foto).")
             return
 
         df = pd.DataFrame(datos_finales)
         totales_globales = {}
 
+        # Estilos compartidos para los reportes de cobros
         estilo_css = """<style>
             body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; }
             .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; margin-bottom: 20px; border-bottom: 4px solid #F9D908; }
-            .logo-header { height: 50px; max-width: 100px; object-fit: contain; }
-            h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; flex-grow: 1; }
+            .logo-header { height: 50px; }
+            h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; }
             .resumen-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
-            .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; transition: 0.3s; }
-            .card-resumen:hover { transform: translateY(-3px); }
-            .card-resumen h3 { margin: 0; color: #666; text-transform: uppercase; font-size: 10px; height: 30px; display: flex; align-items: center; justify-content: center; }
+            .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; }
+            .card-resumen h3 { margin: 0; color: #666; font-size: 10px; height: 30px; display: flex; align-items: center; justify-content: center; }
             .card-resumen .monto { font-size: 24px; font-weight: 900; color: #002060; margin: 10px 0; }
             .cobrado { border-color: #27ae60; } .recuperado { border-color: #f1c40f; } .excedente { border-color: #0070c0; }
             .blue-box-container { background: #002060; padding: 15px; border-radius: 12px; width: 98%; margin: 10px auto; border: 2px solid #F9D908; color: white; box-sizing: border-box; }
             .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 15px; }
             table { width: 100%; border-collapse: collapse; min-width: 800px; }
-            th { background: #001a4d; color: #F9D908; padding: 10px; font-size: 9px; text-transform: uppercase; border-bottom: 2px solid #F9D908; }
+            th { background: #001a4d; color: #F9D908; padding: 10px; font-size: 9px; border-bottom: 2px solid #F9D908; }
             td { padding: 8px; border-bottom: 1px solid #eee; font-size: 9px; font-weight: bold; text-align: left; }
-            .btn-group { margin-top: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-            .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; text-transform: uppercase; font-size: 11px; }
+            .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; font-size: 11px; }
             .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
             .modal-content { max-width: 95%; max-height: 95%; border: 3px solid #F9D908; }
         </style>"""
@@ -165,12 +172,13 @@ def generar_reporte_cobros_final():
         script_modal = """<div id="myModal" class="modal" onclick="this.style.display='none'"><img class="modal-content" id="imgModal"></div>
         <script>function openModal(src) { document.getElementById('myModal').style.display = "flex"; document.getElementById('imgModal').src = src; }</script>"""
 
-        print("\n📂 Generando estructuras de carpetas y HTMLs...")
+        print("\n📂 Construyendo estructura de navegación...")
         for periodo in sorted(df['PERIODO'].unique()):
             df_p = df[df['PERIODO'] == periodo]
             n_m = str(df_p['MES'].iloc[0])
-            print(f"📍 Procesando Mes: {n_m}")
+            print(f"📍 Mes: {n_m}")
             
+            # Guardar acumulados para el Dashboard Central
             totales_globales[n_m] = {
                 "TOTAL_COBRADO": float(df_p[df_p['ESTATUS'] == 'COBRADO']['MONTO_CALC'].sum() or 0),
                 "TOTAL_PERDIDA_PATRIMONIO": float(df_p[df_p['ESTATUS'] == 'RECUPERADO']['MONTO_CALC'].sum() or 0),
@@ -187,21 +195,20 @@ def generar_reporte_cobros_final():
                 t_r = df_s[df_s['ESTATUS']=='RECUPERADO']['MONTO_CALC'].sum() or 0
                 t_e = df_s[df_s['ESTATUS']=='EXCEDENTE']['MONTO_CALC'].sum() or 0
                 
-                html_menu = f"""<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{estilo_css}</head><body>
+                # HTML de entrada de cobros por sucursal
+                html_menu = f"""<html><head><meta charset='UTF-8'>{estilo_css}</head><body>
                 <div class='header-logos'><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'><h1>GERENCIA DE FISCALIZACIÓN</h1><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'></div>
                 <h2>{suc} | {n_m}</h2>
                 <div class='resumen-grid'>
                     <a href='cobrado.html' class='card-resumen cobrado'><h3>Cobrado</h3><div class='monto'>${t_c:,.2f}</div></a>
-                    <a href='recuperado.html' class='card-resumen recuperado'><h3>Pérdida mitigada y patrimonio</h3><div class='monto'>${t_r:,.2f}</div></a>
+                    <a href='recuperado.html' class='card-resumen recuperado'><h3>Pérdida mitigada</h3><div class='monto'>${t_r:,.2f}</div></a>
                     <a href='excedente.html' class='card-resumen excedente'><h3>Excedentes</h3><div class='monto'>${t_e:,.2f}</div></a>
                 </div>
-                <div class='btn-group'>
-                    <a href='todo_detallado.html' class='btn'>LISTADO COMPLETO</a>
-                    <a href='../../index.html?tab=cobs' class='btn'>MENÚ PRINCIPAL</a>
-                </div>
+                <div style='margin-top:20px;'><a href='../../index.html' class='btn'>VOLVER AL PANEL</a></div>
                 </body></html>"""
-                with open(os.path.join(p_suc, "cobros_detalles.html"), "w", encoding="utf-8") as f_out: f_out.write(html_menu)
+                with open(os.path.join(p_suc, "cobros_detalles.html"), "w", encoding="utf-8") as f: f.write(html_menu)
 
+                # Generar los 4 tipos de reportes detallados (Cobrado, Recuperado, Excedente y Todo)
                 for est_key, file_name, titulo_web in [('COBRADO', 'cobrado.html', 'DETALLE COBRADO'), ('RECUPERADO', 'recuperado.html', 'PÉRDIDA MITIGADA'), ('EXCEDENTE', 'excedente.html', 'DETALLE EXCEDENTES'), ('TODO', 'todo_detallado.html', 'DETALLE COMPLETO')]:
                     df_view = df_s if est_key == 'TODO' else df_s[df_s['ESTATUS'] == est_key]
                     filas = ""
@@ -210,7 +217,8 @@ def generar_reporte_cobros_final():
                         tds = ""
                         for i, v in enumerate(r['FILA']):
                             if i == idx_monto:
-                                if r['FOTO_LINK'] and r['FOTO_LINK'] != "":
+                                if r['FOTO_LINK']:
+                                    # Enlace a la factura en FACTURAS/MES/SUCURSAL/FOTO.jpeg
                                     tds += f"<td><span style='cursor:pointer; color:#002060; text-decoration:underline;' onclick='openModal(\"../../FACTURAS/{n_m}/{suc}/{r['FOTO_LINK']}.jpeg\")'>${r['MONTO_CALC']:,.2f}</span></td>"
                                 else:
                                     tds += f"<td>${r['MONTO_CALC']:,.2f}</td>"
@@ -220,36 +228,27 @@ def generar_reporte_cobros_final():
 
                     cabeceras_html = "".join([f"<th>{col}</th>" for col in columnas_reales])
                     with open(os.path.join(p_suc, file_name), "w", encoding="utf-8") as f_out:
-                        f_out.write(f"<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>{estilo_css}</head><body>"
+                        f_out.write(f"<html><head><meta charset='UTF-8'>{estilo_css}</head><body>"
                                 f"<div class='header-logos'><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'><h1>GERENCIA DE FISCALIZACIÓN</h1><img src='{RUTA_LOGO_ESTANDAR}' class='logo-header'></div>"
                                 f"<div class='blue-box-container'><h2>{titulo_web}</h2><h3>{suc} - {n_m}</h3>"
                                 f"<div class='table-responsive'><table><thead><tr>{cabeceras_html}</tr></thead><tbody>{filas}</tbody></table></div>"
-                                f"<div class='btn-group'>"
-                                f"<a href='cobros_detalles.html' class='btn'>VOLVER AL RESUMEN</a>"
-                                f"<a href='../../index.html?tab=cobs' class='btn'>MENÚ PRINCIPAL</a>"
-                                f"</div></div>{script_modal}</body></html>")
-            print(f"   ✓ {suc}: Archivos de detalle creados.")
+                                f"<div style='margin-top:20px;'><a href='cobros_detalles.html' class='btn'>VOLVER</a></div></div>{script_modal}</body></html>")
 
+        # Exportar JSON consolidado para el index general
         with open(os.path.join(ruta_base, "TOTALES_GLOBALES_COBROS.json"), "w", encoding="utf-8") as f_json:
             json.dump(totales_globales, f_json, indent=4, ensure_ascii=False)
 
-        print("\n" + "="*60)
-        print("✅ PROCESO FINALIZADO CON ÉXITO.")
-        print("="*60)
+        print("\n✅ PROCESO COMPLETADO: Reportes y JSON generados.")
 
     except Exception as e: 
         print(f"\n❌ Error Crítico: {e}")
 
-    # LÓGICA DE CIERRE AUTOMÁTICO EN 10 SEGUNDOS
-    print("\n" + "-"*30)
-    print("Presiona ENTER para salir (o espera 10 segundos)...")
-    
+    # Temporizador de cierre
+    print("\nPresiona ENTER para salir (cierre automático en 10s)...")
     timer = threading.Timer(10.0, lambda: os._exit(0))
     timer.start()
-    try:
-        input()
-    finally:
-        timer.cancel()
+    try: input()
+    finally: timer.cancel()
 
 if __name__ == "__main__":
     generar_reporte_cobros_final()

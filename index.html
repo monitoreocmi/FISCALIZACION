@@ -9,21 +9,19 @@
             #mes-selector { background: transparent; color: white; border: none; font-weight: 900; font-size: 14px; cursor: pointer; outline: none; }
             .tab-btn { padding: 10px 15px; border: none; background: #ddd; color: #666; font-weight: 900; border-radius: 5px; cursor: pointer; font-size: 11px; }
             .tab-btn.active { background: var(--azul); color: white; box-shadow: 0 3px 0 var(--amarillo); }
-            #btn-hon.active { background: var(--verde) !important; }
-            #btn-peo.active { background: var(--rojo) !important; }
             .main-content { padding: 0 15px 20px; max-width: 1400px; margin: 0 auto; }
             .mes-container, .tab-content { display: none; }
             .active { display: block !important; }
             .sub-title { background: var(--azul); color: white; padding: 10px; border-radius: 6px; font-size: 12px; border-left: 6px solid var(--amarillo); margin-bottom: 15px; }
             .audit-grid-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-            .grid-half { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
             .audit-card { background: white; border-radius: 8px; padding: 12px; border-top: 4px solid var(--azul); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
             .audit-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; font-size: 11px; font-weight: bold; border-left: 4px solid transparent; }
             
-            .sucursal-central { display: none !important; } 
-            .modo-central .sucursal-comun { display: none !important; } 
-            .modo-central .sucursal-central { display: flex !important; } 
-            a.sucursal-central { display: block !important; } 
+            /* LÓGICA DE CENTRAL */
+            .sucursal-central { display: none !important; }
+            .modo-central .sucursal-central { display: flex !important; }
+            a.sucursal-central.card { display: none !important; }
+            .modo-central a.sucursal-central.card { display: block !important; }
 
             .row-blue { background: #e3f2fd; color: #0d47a1; border-left-color: var(--azul); }
             .status-ok { color: var(--verde); background: #e8f5e9; border-left-color: var(--verde); }
@@ -173,24 +171,20 @@
                 </div>
             </div></main>
             <script>
-                // Almacenamos la pestaña en localStorage para que sea persistente al volver
                 function toggleCentral() {
-                    const body = document.body;
-                    body.classList.toggle('modo-central');
+                    document.body.classList.toggle('modo-central');
                 }
                 
                 function cambiarMes() {
                     document.querySelectorAll(".mes-container").forEach(e => e.classList.remove('active'));
                     let sel = document.getElementById("mes-selector").value;
                     if(sel) document.getElementById(sel).classList.add('active');
-                    
                     actualizarPestañaInterna();
                 }
 
                 function showGlobalTab(t) {
-                    localStorage.setItem('pestañaActiva', t); // Guardar en el navegador
+                    localStorage.setItem('pestañaActiva', t);
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    
                     let btnId = 'btn-' + t.substring(0,3);
                     let btn = document.getElementById(btnId);
                     if(btn) btn.classList.add('active');
@@ -205,7 +199,6 @@
                 }
 
                 function actualizarPestañaInterna() {
-                    // Recuperar la última pestaña o usar 'incs' por defecto
                     let t = localStorage.getItem('pestañaActiva') || 'incs';
                     showGlobalTab(t);
                 }

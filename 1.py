@@ -6,6 +6,11 @@ import warnings
 import threading
 import time
 
+# =================================================================
+# ID: SCRIPT DE GENERACIÓN DE REPORTES DE INCIDENCIAS V3.0
+# FUNCIÓN: Análisis de desempeño, ranking de personal y reporte visual.
+# =================================================================
+
 # Silenciar advertencias de validación de Excel
 warnings.filterwarnings("ignore")
 
@@ -38,15 +43,12 @@ def obtener_links_fotos(sucursal, mes, nombre_columna_n, id_registro, ruta_base)
     links = []
     fotos_encontradas = set()
     
-    # 1. Foto directa
     nombre_n = str(nombre_columna_n).strip()
     if nombre_n and nombre_n.lower() != 'nan' and nombre_n != '-':
         ruta_relativa = f"../../{CARPETA_FOTOS}/{mes}/{sucursal}/{nombre_n}"
-        # Cambio a llamada de función JS 'abrirModal'
         links.append(f"<a href='#' onclick=\"abrirModal('{ruta_relativa}')\" class='link-incidencias'>📷 Ver Foto</a>")
         fotos_encontradas.add(nombre_n.lower())
 
-    # 2. Búsqueda por ID
     id_str = str(id_registro).strip()
     id_busqueda = id_str[-6:] if len(id_str) >= 6 else None
     extensiones_validas = ('.jpg', '.jpeg', '.png', '.webp', '.bmp', '.jfif')
@@ -75,18 +77,14 @@ CSS_UNIFICADO = f"""
     .btn-volver {{ display: inline-block; cursor: pointer; margin: 20px 5px; padding: 10px 20px; background-color: #0844a4; color: #ffffff !important; text-decoration: none; font-weight: 900; font-size: 13px; text-transform: uppercase; border-radius: 50px; border: 2px solid #F9D908; }}
     .ranking-title {{ background: #ed1c24; color: white; padding: 10px; margin-top: 20px; font-size: 14px; font-weight: 900; border: 2px solid #333; border-bottom: none; }}
     .link-incidencias {{ color: #0844a4; text-decoration: underline; font-size: 10px; font-weight: bold; cursor: pointer; }}
-    
-    /* MODAL STYLES */
     #modalFoto {{ display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }}
     .modal-content {{ margin: auto; display: block; max-width: 80%; max-height: 80%; margin-top: 50px; border: 5px solid white; }}
     .close-modal {{ position: absolute; top: 20px; right: 35px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; }}
 </style>
-
 <div id="modalFoto" onclick="cerrarModal()">
     <span class="close-modal">&times;</span>
     <img class="modal-content" id="imgModal">
 </div>
-
 <script>
     function abrirModal(ruta) {{
         document.getElementById("imgModal").src = ruta;
@@ -101,14 +99,17 @@ CSS_UNIFICADO = f"""
 def generar_reporte_v30_final():
     try:
         print("\n" + "="*60)
-        print(">>> INICIANDO GENERACIÓN DE REPORTES V3.0 <<<")
+        print(">>> INICIANDO GENERACIÓN DE REPORTES V3.0 (INCIDENCIAS) <<<")
         print("="*60)
         
         ruta_base = os.path.dirname(os.path.abspath(sys.argv[0]))
         sucursales_txt = obtener_sucursales_txt(ruta_base)
         ruta_cuadros = os.path.join(ruta_base, "cuadros")
+        
+        print(f"🔍 Buscando archivos en: {ruta_cuadros}")
         archivos = [os.path.join(root, f) for root, dirs, files in os.walk(ruta_cuadros) for f in files if f.endswith(('.xlsx', '.xls')) and not f.startswith('~$')]
 
+        print(f"📊 Se encontraron {len(archivos)} archivos Excel para procesar.")
         lista_df = []
         for f in archivos:
             try:
@@ -156,7 +157,7 @@ def generar_reporte_v30_final():
             df_m_act = df_master[df_master['PERIODO'] == p_act]
 
             for i, n_s in enumerate(sucursales_txt, 1):
-                print(f"  {i}. SUCURSAL: {n_s}")
+                print(f"  {i}. Generando para SUCURSAL: {n_s}")
                 df_suc_act = df_m_act[df_m_act['SUCURSAL'].astype(str).str.upper() == n_s]
                 p_f = os.path.join(ruta_base, n_m_act, n_s); os.makedirs(p_f, exist_ok=True)
                 
@@ -230,7 +231,9 @@ def generar_reporte_v30_final():
                             <br><a href='../../index.html#mes-{n_m_act}' class='btn-volver'>VOLVER</a>
                         </div></body></html>""")
 
-        print("\n✅ PROCESO FINALIZADO CON ÉXITO.")
+        print("\n" + "="*60)
+        print("✅ PROCESO FINALIZADO CON ÉXITO.")
+        print("="*60)
     except Exception as e: 
         print(f"\n❌ ERROR CRÍTICO: {e}")
 
@@ -240,11 +243,14 @@ def generar_reporte_v30_final():
             if stop_event.is_set(): return
             time.sleep(1)
         os._exit(0)
+    
     t = threading.Thread(target=temporizador); t.daemon = True; t.start()
     
     print("\nPresione ENTER para salir o el programa se cerrará en 10 segundos...")
-    try: input()
-    except: pass
+    try: 
+        input()
+    except: 
+        pass
     stop_event.set()
 
 if __name__ == "__main__":

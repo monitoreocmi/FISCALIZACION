@@ -4,6 +4,11 @@ import json
 import threading
 import time
 
+# =================================================================
+# ID: PANEL CENTRALIZADO LUXOR V3.0 (EL INTEGRADOR)
+# FUNCIÓN: Generar el index.html final con dashboard interactivo
+# =================================================================
+
 # Forzar UTF-8 para evitar errores de caracteres en Windows
 if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
@@ -15,7 +20,7 @@ def generar_panel_luxor_centralizado():
     try:
         os.system('cls' if os.name == 'nt' else 'clear')
         print("="*60)
-        print("        SISTEMA LUXOR - PANEL CENTRALIZADO V3.0")
+        print("         SISTEMA LUXOR - PANEL CENTRALIZADO V3.0")
         print("="*60)
         
         ruta_raiz = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -35,12 +40,14 @@ def generar_panel_luxor_centralizado():
             print(f"   ❌ {nombre} no encontrado en la ruta.")
             return [] if "sucursales" in nombre or "graves" in nombre else {}
 
+        # Carga de todos los componentes del ecosistema
         data_totales = cargar_json("incidencias_totales.json")
         data_status = cargar_json("sucursales_status.json")
         data_graves = cargar_json("incidencias_graves.json")
         data_cobros_glob = cargar_json("TOTALES_GLOBALES_COBROS.json")
         data_suc_cobros_raw = cargar_json("TOTALES_SUCURSALES_COBROS.json")
 
+        # Filtrado de carpetas por mes
         meses_carpetas = sorted([m for m in os.listdir(ruta_raiz) if m.upper() in MESES_ES and os.path.isdir(os.path.join(ruta_raiz, m))], 
                                 key=lambda x: MESES_ES.index(x.upper()))
 
@@ -51,6 +58,7 @@ def generar_panel_luxor_centralizado():
         html_meses_data = ""
         opciones_dropdown = ""
 
+        # Normalización de datos de cobros
         cobros_db = []
         c_raw = data_suc_cobros_raw if isinstance(data_suc_cobros_raw, (dict, list)) else []
         if isinstance(c_raw, dict):
@@ -69,14 +77,13 @@ def generar_panel_luxor_centralizado():
 
             def limpiar(t): return str(t).split("(")[0].strip().upper()
 
+            # Filtrado por mes para las listas de ranking
             list_totales = sorted([{'n': limpiar(k), 'v': v} for k, v in data_totales.items() if f"({m_key})" in str(k).upper()], key=lambda x: x['v'], reverse=True)
             list_graves = sorted([{'n': limpiar(i['n']), 'v': i['v']} for i in data_graves if f"({m_key})" in str(i['n']).upper()], key=lambda x: x['v'], reverse=True)
             list_aprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in data_status.get("aprobadas", []) if f"({m_key})" in str(i['n']).upper()]
             list_reprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in data_status.get("reprobadas", []) if f"({m_key})" in str(i['n']).upper()]
 
-            n_aprobadas = [i['n'] for i in list_aprob]
-            n_reprobadas = [i['n'] for i in list_reprob]
-
+            # Cálculo de Rankings
             rank_fisc, rank_cobs = [], []
             for s in sucursales_fisicas:
                 s_key = f"{s.strip().upper()} ({m_key})"
@@ -85,13 +92,14 @@ def generar_panel_luxor_centralizado():
                 c_val, p_val = 0, 0
                 for cb in cobros_db:
                     if str(cb.get('sucursal','')).upper() == s_key: c_val, p_val = cb.get('c',0), cb.get('p',0); break
-                rank_fisc.append({'n': s, 'v': inc_val + (grv_val * 10)})
+                rank_fisc.append({'n': s, 'v': inc_val + (grv_val * 10)}) # Peso extra a graves
                 rank_cobs.append({'n': s, 'c': c_val, 'p': p_val, 't': c_val + p_val})
 
-            top_f = sorted([x for x in rank_fisc if x['n'].upper() in n_aprobadas], key=lambda x: x['v'])[:3]
-            top_c = sorted([x for x in rank_cobs if x['n'].upper() in n_aprobadas], key=lambda x: x['t'])[:3]
-            bad_f = sorted([x for x in rank_fisc if x['n'].upper() in n_reprobadas], key=lambda x: x['v'], reverse=True)[:3]
-            bad_c = sorted([x for x in rank_cobs if x['n'].upper() in n_reprobadas], key=lambda x: x['t'], reverse=True)[:3]
+            # Selección de mejores/peores
+            top_f = sorted([x for x in rank_fisc if x['n'].upper() in [i['n'] for i in list_aprob]], key=lambda x: x['v'])[:3]
+            top_c = sorted([x for x in rank_cobs if x['n'].upper() in [i['n'] for i in list_aprob]], key=lambda x: x['t'])[:3]
+            bad_f = sorted([x for x in rank_fisc if x['n'].upper() in [i['n'] for i in list_reprob]], key=lambda x: x['v'], reverse=True)[:3]
+            bad_c = sorted([x for x in rank_cobs if x['n'].upper() in [i['n'] for i in list_reprob]], key=lambda x: x['t'], reverse=True)[:3]
 
             def gen_rows_simple(lista, css=""):
                 html = ""
@@ -108,6 +116,7 @@ def generar_panel_luxor_centralizado():
                     html += f"<div class='audit-row {css} {tipo}'><span>{i['n']}</span><b>{val}</b></div>"
                 return html or '<div class="audit-row">Sin datos</div>'
 
+            # Estética de montos globales
             c_glob = data_cobros_glob.get(m_key, {})
             tc, tp = c_glob.get('TOTAL_COBRADO', 0), c_glob.get('TOTAL_PERDIDA_PATRIMONIO', 0)
             color_label = c_glob.get("COLOR_COBRADO", "NEGRO")
@@ -116,6 +125,7 @@ def generar_panel_luxor_centralizado():
             botones_suc = "".join([f'<a href="{m}/{s}/reporte.html" class="card card-inc {"sucursal-central" if s.upper()=="CENTRAL" else "sucursal-comun"}">{s}</a>' for s in sucursales_fisicas])
             botones_cob = "".join([f'<a href="{m}/{s}/cobros_detalles.html" class="card {"sucursal-central" if s.upper()=="CENTRAL" else "sucursal-comun"}">{s}</a>' for s in sucursales_fisicas])
 
+            # Bloque HTML para cada mes
             html_meses_data += f"""
             <div id="mes-{m}" class="mes-container">
                 <div id="incs-{m}" class="tab-content active">
@@ -158,6 +168,7 @@ def generar_panel_luxor_centralizado():
                 </div>
             </div>"""
 
+        # Construcción del HTML final con estilos CSS y JS embebido
         html_final = f"""<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
             :root {{ --azul: #0844a4; --amarillo: #F9D908; --verde: #27ae60; --rojo: #ed1c24; --fondo: #f4f7f6; }}
             body {{ font-family: 'Segoe UI', sans-serif; background: var(--fondo); margin: 0; padding: 0; }}
@@ -169,21 +180,19 @@ def generar_panel_luxor_centralizado():
             #mes-selector {{ background: transparent; color: white; border: none; font-weight: 900; font-size: 14px; cursor: pointer; outline: none; }}
             .tab-btn {{ padding: 10px 15px; border: none; background: #ddd; color: #666; font-weight: 900; border-radius: 5px; cursor: pointer; font-size: 11px; }}
             .tab-btn.active {{ background: var(--azul); color: white; box-shadow: 0 3px 0 var(--amarillo); }}
-            #btn-hon.active {{ background: var(--verde) !important; }}
-            #btn-peo.active {{ background: var(--rojo) !important; }}
             .main-content {{ padding: 0 15px 20px; max-width: 1400px; margin: 0 auto; }}
             .mes-container, .tab-content {{ display: none; }}
             .active {{ display: block !important; }}
             .sub-title {{ background: var(--azul); color: white; padding: 10px; border-radius: 6px; font-size: 12px; border-left: 6px solid var(--amarillo); margin-bottom: 15px; }}
             .audit-grid-full {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }}
-            .grid-half {{ grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }}
             .audit-card {{ background: white; border-radius: 8px; padding: 12px; border-top: 4px solid var(--azul); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }}
             .audit-row {{ display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; font-size: 11px; font-weight: bold; border-left: 4px solid transparent; }}
             
-            .sucursal-central {{ display: none !important; }} 
-            .modo-central .sucursal-comun {{ display: none !important; }} 
-            .modo-central .sucursal-central {{ display: flex !important; }} 
-            a.sucursal-central {{ display: block !important; }} 
+            /* LÓGICA DE CENTRAL */
+            .sucursal-central {{ display: none !important; }}
+            .modo-central .sucursal-central {{ display: flex !important; }}
+            a.sucursal-central.card {{ display: none !important; }}
+            .modo-central a.sucursal-central.card {{ display: block !important; }}
 
             .row-blue {{ background: #e3f2fd; color: #0d47a1; border-left-color: var(--azul); }}
             .status-ok {{ color: var(--verde); background: #e8f5e9; border-left-color: var(--verde); }}
@@ -213,24 +222,20 @@ def generar_panel_luxor_centralizado():
             </div>
             <main class="main-content" id="main-panel">{html_meses_data}</main>
             <script>
-                // Almacenamos la pestaña en localStorage para que sea persistente al volver
                 function toggleCentral() {{
-                    const body = document.body;
-                    body.classList.toggle('modo-central');
+                    document.body.classList.toggle('modo-central');
                 }}
                 
                 function cambiarMes() {{
                     document.querySelectorAll(".mes-container").forEach(e => e.classList.remove('active'));
                     let sel = document.getElementById("mes-selector").value;
                     if(sel) document.getElementById(sel).classList.add('active');
-                    
                     actualizarPestañaInterna();
                 }}
 
                 function showGlobalTab(t) {{
-                    localStorage.setItem('pestañaActiva', t); // Guardar en el navegador
+                    localStorage.setItem('pestañaActiva', t);
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    
                     let btnId = 'btn-' + t.substring(0,3);
                     let btn = document.getElementById(btnId);
                     if(btn) btn.classList.add('active');
@@ -245,7 +250,6 @@ def generar_panel_luxor_centralizado():
                 }}
 
                 function actualizarPestañaInterna() {{
-                    // Recuperar la última pestaña o usar 'incs' por defecto
                     let t = localStorage.getItem('pestañaActiva') || 'incs';
                     showGlobalTab(t);
                 }}
@@ -260,6 +264,7 @@ def generar_panel_luxor_centralizado():
         print("\n✅ PANEL ACTUALIZADO CORRECTAMENTE.")
     except Exception as e: print(f"\n❌ ERROR CRÍTICO: {e}")
 
+    # Temporizador de cierre
     print("\nPresiona ENTER para salir o espera 10 segundos...")
     timer = threading.Timer(10.0, lambda: os._exit(0)); timer.start()
     try: input()
