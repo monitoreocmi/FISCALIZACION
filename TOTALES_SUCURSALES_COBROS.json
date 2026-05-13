@@ -8,10 +8,10 @@
     },
     {
         "sucursal": "BOSQUE (MAYO)",
-        "COBRADO": 279.35,
+        "COBRADO": 283.49,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 279.35
+        "TOTAL_GESTIONADO": 283.49
     },
     {
         "sucursal": "CENTRAL (ABRIL)",
@@ -47,6 +47,13 @@
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 52.66
+    },
+    {
+        "sucursal": "TUCACAS (MAYO)",
+        "COBRADO": 46.91,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 46.91
     },
     {
         "sucursal": "MORA (ABRIL)",
@@ -215,13 +222,6 @@
         "PERDIDA_PATRIMONIO": 74.78,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 76.36
-    },
-    {
-        "sucursal": "TUCACAS (MAYO)",
-        "COBRADO": 1.31,
-        "PERDIDA_PATRIMONIO": 45.6,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 46.91
     },
     {
         "sucursal": "SANTA RITA (MARZO)",
