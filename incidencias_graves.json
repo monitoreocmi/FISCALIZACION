@@ -165,14 +165,19 @@
             "detalle": "D: 1 | E: 0"
         },
         {
+            "n": "CENTRAL (MAYO)",
+            "v": 1,
+            "detalle": "D: 0 | E: 1"
+        },
+        {
             "n": "GUACARA (MAYO)",
             "v": 2,
             "detalle": "D: 2 | E: 0"
         },
         {
             "n": "NAGUANAGUA (MAYO)",
-            "v": 3,
-            "detalle": "D: 2 | E: 1"
+            "v": 4,
+            "detalle": "D: 3 | E: 1"
         },
         {
             "n": "SANTA RITA (MAYO)",

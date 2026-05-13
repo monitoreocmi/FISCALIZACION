@@ -77,18 +77,18 @@
         "TOTAL_GESTIONADO": 1100.0
     },
     {
+        "sucursal": "NAGUANAGUA (MAYO)",
+        "COBRADO": 22.67,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 22.67
+    },
+    {
         "sucursal": "TUCACAS (ABRIL)",
         "COBRADO": 21.89,
         "PERDIDA_PATRIMONIO": 1.69,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 23.58
-    },
-    {
-        "sucursal": "NAGUANAGUA (MAYO)",
-        "COBRADO": 20.85,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 20.85
     },
     {
         "sucursal": "SAN DIEGO (MARZO)",
