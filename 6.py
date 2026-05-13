@@ -1,6 +1,8 @@
 import os
 import json
 import sys
+import threading
+import time
 from bs4 import BeautifulSoup
 
 # =================================================================
@@ -103,8 +105,14 @@ def generar_json_agrupado_por_mes():
     except Exception as e:
         print(f"\n❌ ERROR: {e}")
 
-    print("\nPresiona ENTER para salir...")
-    input()
+    # Lógica de cierre automático o por teclado
+    print("\nPresiona ENTER para salir o espera 10 segundos...")
+    timer = threading.Timer(10.0, lambda: os._exit(0))
+    timer.start()
+    try:
+        input()
+    finally:
+        timer.cancel()
 
 if __name__ == "__main__":
     generar_json_agrupado_por_mes()

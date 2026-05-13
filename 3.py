@@ -36,7 +36,6 @@ def sistema_luxor_v3():
             ruta_mes = os.path.join(ruta_raiz, carpeta_mes)
             
             if os.path.isdir(ruta_mes):
-                # Recolectar datos de sucursales para los JSON globales
                 for suc in os.listdir(ruta_mes):
                     p_suc = os.path.join(ruta_mes, suc)
                     if os.path.isdir(p_suc):
@@ -64,8 +63,6 @@ def sistema_luxor_v3():
                                     
                                     dict_incidencias[nombre_clave] = num_incidencias
 
-                # --- GENERACIÓN DE INDEX LOCAL PARA ESTE MES ESPECÍFICO ---
-                # Este bloque crea un index.html DENTRO de la carpeta del mes
                 sucs_fisc = sorted([s for s in os.listdir(ruta_mes) if os.path.isdir(os.path.join(ruta_mes, s)) and s.upper() != "CENTRAL"])
                 
                 l_aprob = [i for i in dict_status["aprobadas"] if f"({mes_key})" in i['n']]
@@ -102,12 +99,10 @@ def sistema_luxor_v3():
                     </div>
                 </body></html>"""
 
-                # GUARDAR EL INDEX DENTRO DE LA CARPETA DEL MES
                 with open(os.path.join(ruta_mes, "index.html"), "w", encoding="utf-8") as f:
                     f.write(html_local)
-                print(f"   📂 Index local generado en: {carpeta_mes}/index.html")
+                print(f"    📂 Index local generado en: {carpeta_mes}/index.html")
 
-        # Guardar JSONs Globales en la raíz para que el Script 7 los lea
         with open(os.path.join(ruta_raiz, "sucursales_status.json"), "w", encoding="utf-8") as f:
             json.dump(dict_status, f, ensure_ascii=False, indent=4)
         
@@ -124,8 +119,14 @@ def sistema_luxor_v3():
     except Exception as e:
         print(f"\n❌ ERROR CRÍTICO: {e}")
 
-    print("\nPresiona ENTER para finalizar...")
-    input()
+    # Lógica de cierre automático en 10 segundos o por teclado
+    print("\nPresiona ENTER para salir o espera 10 segundos...")
+    timer = threading.Timer(10.0, lambda: os._exit(0))
+    timer.start()
+    try:
+        input()
+    finally:
+        timer.cancel()
 
 if __name__ == "__main__":
     sistema_luxor_v3()
