@@ -9,10 +9,8 @@ import time
 
 # =================================================================
 # ID: SCRIPT DE GESTIÓN DE COBROS Y AUDITORÍA FINANCIERA (LUXOR)
-# FUNCIÓN: Clasificación por colores, cálculo de montos y reportes HTML.
 # =================================================================
 
-# Silenciar advertencias de validación de Excel
 warnings.filterwarnings("ignore", category=UserWarning)
 
 if sys.stdout.encoding != 'utf-8':
@@ -26,6 +24,9 @@ MESES_ES = {
 
 RUTA_LOGO_ESTANDAR = "../../RECURSOS/logo.png"
 ARCHIVO_SUCURSALES = "sucursales.txt"
+
+# --- NUEVA LISTA PARA OCULTAR COLUMNAS ---
+COLUMNAS_OCULTAS = ['CLASIFICACIÓN', 'MONTOID', 'FOTO_INCIDENCIA']
 
 def obtener_sucursales_txt(ruta_base):
     ruta_txt = os.path.join(ruta_base, ARCHIVO_SUCURSALES)
@@ -75,14 +76,11 @@ def generar_reporte_cobros_final():
         archivos = [os.path.join(root, f) for root, dirs, files in os.walk(ruta_cuadros) 
                     for f in files if f.endswith(".xlsx") and not f.startswith("~$")]
 
-        print(f"📍 Sucursales maestras cargadas: {len(sucursales_maestras)}")
-        print(f"📂 Archivos detectados para análisis: {len(archivos)}")
-        
         datos_finales = []
         periodos_detectados = set()
 
         for f in archivos:
-            print(f"   📖 Leyendo colores en: {os.path.basename(f)}")
+            print(f"   📖 Leyendo: {os.path.basename(f)}")
             wb = load_workbook(f, data_only=False)
             ws = wb.active
             headers_reales = [str(cell.value).strip() if cell.value else f"COL_{i+1}" for i, cell in enumerate(ws[1])]
@@ -107,12 +105,14 @@ def generar_reporte_cobros_final():
 
                 if estatus != "OTRO":
                     mes_nombre = MESES_ES.get(fecha_val.month, "VARIOS") if fecha_val else "VARIOS"
+                    foto_final = str(row_vals[idx['foto']]).strip() if idx['foto'] != -1 and row_vals[idx['foto']] else ""
+                    
                     datos_finales.append({
                         'SUCURSAL': str(row_vals[idx['sucursal']]).strip().upper() if idx['sucursal'] != -1 else "GENERAL",
                         'MES': mes_nombre, 
                         'PERIODO': fecha_val.to_period('M') if fecha_val and not pd.isna(fecha_val) else None,
                         'MONTO_CALC': limpiar_monto(row_vals[idx['monto']]),
-                        'FOTO_BASE': str(row_vals[idx['foto']]).strip() if idx['foto'] != -1 and row_vals[idx['foto']] else "",
+                        'FOTO_FINAL': foto_final,
                         'ESTATUS': estatus, 'FILA': row_vals, 'HEADERS': headers_reales, 'IDX': idx
                     })
             wb.close()
@@ -128,8 +128,6 @@ def generar_reporte_cobros_final():
 
         for periodo in sorted(list(periodos_detectados)):
             n_m = MESES_ES[periodo.month]
-            print(f"🔨 Generando estructuras web para el mes: {n_m}")
-            
             t_glob[n_m] = {"TOTAL_COBRADO": 0.0, "TOTAL_PERDIDA_PATRIMONIO": 0.0, "TOTAL_EXCEDENTE": 0.0}
 
             for suc_f in sucursales_maestras:
@@ -148,16 +146,34 @@ def generar_reporte_cobros_final():
 
                 for est_k, f_n, tit in [('COBRADO', 'cobrado.html', 'DETALLE COBRADO'), ('RECUPERADO', 'recuperado.html', 'PÉRDIDA MITIGADA'), ('EXCEDENTE', 'excedente.html', 'DETALLE EXCEDENTES')]:
                     filas = ""
-                    h_h = "<th>DATO</th>"
+                    h_h = ""
                     if not df_s.empty:
                         df_v = df_s[df_s['ESTATUS'] == est_k]
                         idx_a = df_s.iloc[0]['IDX']
-                        h_h = "".join([f"<th>{h}</th>" for h in df_s.iloc[0]['HEADERS']])
+                        
+                        indices_validos = []
+                        for i, h in enumerate(df_s.iloc[0]['HEADERS']):
+                            if str(h).upper() not in COLUMNAS_OCULTAS:
+                                h_h += f"<th>{h}</th>"
+                                indices_validos.append(i)
+
                         for _, r in df_v.iterrows():
-                            tds = "".join([f"<td>${r['MONTO_CALC']:,.2f}</td>" if i == idx_a['monto'] else f"<td>{str(v).strip()}</td>" for i, v in enumerate(r['FILA'])])
+                            tds = ""
+                            for i in indices_validos:
+                                v = r['FILA'][i]
+                                if i == idx_a['monto']:
+                                    tds += f"<td>${r['MONTO_CALC']:,.2f}</td>"
+                                elif i == idx_a['foto'] and r['FOTO_FINAL']:
+                                    # CORRECCIÓN DE RUTA: Sube de Mes/Sucursal a FACTURAS/Mes/Sucursal
+                                    ruta_foto_web = f"../../FACTURAS/{n_m}/{suc_f}/{r['FOTO_FINAL']}"
+                                    tds += f'<td><span class="foto-link" onclick="openModal(\'{ruta_foto_web}\')">{r["FOTO_FINAL"]}</span></td>'
+                                else:
+                                    tds += f"<td>{str(v).strip() if v is not None else ''}</td>"
                             filas += f"<tr>{tds}</tr>"
                     
-                    if not filas: filas = "<tr><td colspan='20'>Sin registros en este mes</td></tr>"
+                    if not filas: 
+                        h_h = "<th>DATO</th>"
+                        filas = "<tr><td colspan='20'>Sin registros en este mes</td></tr>"
                     
                     with open(os.path.join(r_suc, f_n), "w", encoding="utf-8") as f_out:
                         f_out.write(f"<html><head><meta charset='UTF-8'>{estilo_css}</head><body><div class='header-logos'><h1>{tit}</h1></div><div class='blue-box-container'><div class='table-responsive'><table><thead><tr>{h_h}</tr></thead><tbody>{filas}</tbody></table></div><a href='cobros_detalles.html' class='btn'>VOLVER</a></div>{script_modal}</body></html>")
@@ -169,18 +185,14 @@ def generar_reporte_cobros_final():
                     f_out.write(f"<a href='excedente.html' class='card-resumen excedente'><h3>Excedentes</h3><div class='monto'>${s_e:,.2f}</div></a>")
                     f_out.write(f"</div><a href='../../index.html?tab=cobs#mes-{n_m}' class='btn'>INICIO</a></body></html>")
 
-        print("💾 Guardando TOTALES_GLOBALES_COBROS.json...")
         with open(os.path.join(ruta_base, "TOTALES_GLOBALES_COBROS.json"), "w", encoding="utf-8") as f_json:
             json.dump(t_glob, f_json, indent=4)
 
-        print("\n" + "="*60)
-        print("✅ PROCESO COMPLETADO EXITOSAMENTE CON LISTA MAESTRA.")
-        print("="*60)
+        print("\n✅ PROCESO COMPLETADO EXITOSAMENTE.")
 
     except Exception as e: 
         print(f"\n❌ Error Crítico: {e}")
 
-    # Temporizador de 10 segundos antes de cerrar
     stop_event = threading.Event()
     def auto_close():
         for i in range(10, 0, -1):
@@ -189,12 +201,8 @@ def generar_reporte_cobros_final():
         os._exit(0)
     
     threading.Thread(target=auto_close, daemon=True).start()
-    
-    print("\nPresione ENTER para salir o el programa se cerrará en 10 segundos...")
-    try: 
-        input()
-    except: 
-        pass
+    try: input()
+    except: pass
     stop_event.set()
 
 if __name__ == "__main__":
