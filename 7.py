@@ -9,7 +9,6 @@ import time
 # FUNCIÓN: Generar el index.html final con dashboard interactivo
 # =================================================================
 
-# Forzar UTF-8 para evitar errores de caracteres en Windows
 if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
 
@@ -40,14 +39,22 @@ def generar_panel_luxor_centralizado():
             print(f"   ❌ {nombre} no encontrado en la ruta.")
             return [] if "sucursales" in nombre or "graves" in nombre else {}
 
-        # Carga de todos los componentes del ecosistema
         data_totales = cargar_json("incidencias_totales.json")
         data_status = cargar_json("sucursales_status.json")
-        data_graves = cargar_json("incidencias_graves.json")
+        
+        # --- CORRECCIÓN PARA FORMATO DICCIONARIO DEL SCRIPT 6 ---
+        data_graves_raw = cargar_json("incidencias_graves.json")
+        data_graves = []
+        if isinstance(data_graves_raw, dict):
+            for mes in data_graves_raw:
+                data_graves.extend(data_graves_raw[mes])
+        else:
+            data_graves = data_graves_raw
+        # -------------------------------------------------------
+
         data_cobros_glob = cargar_json("TOTALES_GLOBALES_COBROS.json")
         data_suc_cobros_raw = cargar_json("TOTALES_SUCURSALES_COBROS.json")
 
-        # Filtrado de carpetas por mes
         meses_carpetas = sorted([m for m in os.listdir(ruta_raiz) if m.upper() in MESES_ES and os.path.isdir(os.path.join(ruta_raiz, m))], 
                                 key=lambda x: MESES_ES.index(x.upper()))
 
@@ -58,7 +65,6 @@ def generar_panel_luxor_centralizado():
         html_meses_data = ""
         opciones_dropdown = ""
 
-        # Normalización de datos de cobros
         cobros_db = []
         c_raw = data_suc_cobros_raw if isinstance(data_suc_cobros_raw, (dict, list)) else []
         if isinstance(c_raw, dict):
@@ -77,13 +83,11 @@ def generar_panel_luxor_centralizado():
 
             def limpiar(t): return str(t).split("(")[0].strip().upper()
 
-            # Filtrado por mes para las listas de ranking
             list_totales = sorted([{'n': limpiar(k), 'v': v} for k, v in data_totales.items() if f"({m_key})" in str(k).upper()], key=lambda x: x['v'], reverse=True)
             list_graves = sorted([{'n': limpiar(i['n']), 'v': i['v']} for i in data_graves if f"({m_key})" in str(i['n']).upper()], key=lambda x: x['v'], reverse=True)
             list_aprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in data_status.get("aprobadas", []) if f"({m_key})" in str(i['n']).upper()]
             list_reprob = [{'n': limpiar(i['n']), 'v': i['v']} for i in data_status.get("reprobadas", []) if f"({m_key})" in str(i['n']).upper()]
 
-            # Cálculo de Rankings
             rank_fisc, rank_cobs = [], []
             for s in sucursales_fisicas:
                 s_key = f"{s.strip().upper()} ({m_key})"
@@ -92,10 +96,9 @@ def generar_panel_luxor_centralizado():
                 c_val, p_val = 0, 0
                 for cb in cobros_db:
                     if str(cb.get('sucursal','')).upper() == s_key: c_val, p_val = cb.get('c',0), cb.get('p',0); break
-                rank_fisc.append({'n': s, 'v': inc_val + (grv_val * 10)}) # Peso extra a graves
+                rank_fisc.append({'n': s, 'v': inc_val + (grv_val * 10)})
                 rank_cobs.append({'n': s, 'c': c_val, 'p': p_val, 't': c_val + p_val})
 
-            # Selección de mejores/peores
             top_f = sorted([x for x in rank_fisc if x['n'].upper() in [i['n'] for i in list_aprob]], key=lambda x: x['v'])[:3]
             top_c = sorted([x for x in rank_cobs if x['n'].upper() in [i['n'] for i in list_aprob]], key=lambda x: x['t'])[:3]
             bad_f = sorted([x for x in rank_fisc if x['n'].upper() in [i['n'] for i in list_reprob]], key=lambda x: x['v'], reverse=True)[:3]
@@ -116,7 +119,6 @@ def generar_panel_luxor_centralizado():
                     html += f"<div class='audit-row {css} {tipo}'><span>{i['n']}</span><b>{val}</b></div>"
                 return html or '<div class="audit-row">Sin datos</div>'
 
-            # Estética de montos globales
             c_glob = data_cobros_glob.get(m_key, {})
             tc, tp = c_glob.get('TOTAL_COBRADO', 0), c_glob.get('TOTAL_PERDIDA_PATRIMONIO', 0)
             color_label = c_glob.get("COLOR_COBRADO", "NEGRO")
@@ -125,7 +127,6 @@ def generar_panel_luxor_centralizado():
             botones_suc = "".join([f'<a href="{m}/{s}/reporte.html" class="card card-inc {"sucursal-central" if s.upper()=="CENTRAL" else "sucursal-comun"}">{s}</a>' for s in sucursales_fisicas])
             botones_cob = "".join([f'<a href="{m}/{s}/cobros_detalles.html" class="card {"sucursal-central" if s.upper()=="CENTRAL" else "sucursal-comun"}">{s}</a>' for s in sucursales_fisicas])
 
-            # Bloque HTML para cada mes
             html_meses_data += f"""
             <div id="mes-{m}" class="mes-container">
                 <div id="incs-{m}" class="tab-content active">
@@ -168,7 +169,6 @@ def generar_panel_luxor_centralizado():
                 </div>
             </div>"""
 
-        # Construcción del HTML final con estilos CSS y JS embebido
         html_final = f"""<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
             :root {{ --azul: #0844a4; --amarillo: #F9D908; --verde: #27ae60; --rojo: #ed1c24; --fondo: #f4f7f6; }}
             body {{ font-family: 'Segoe UI', sans-serif; background: var(--fondo); margin: 0; padding: 0; }}
@@ -188,7 +188,6 @@ def generar_panel_luxor_centralizado():
             .audit-card {{ background: white; border-radius: 8px; padding: 12px; border-top: 4px solid var(--azul); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }}
             .audit-row {{ display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; font-size: 11px; font-weight: bold; border-left: 4px solid transparent; }}
             
-            /* LÓGICA DE CENTRAL */
             .sucursal-central {{ display: none !important; }}
             .modo-central .sucursal-central {{ display: flex !important; }}
             a.sucursal-central.card {{ display: none !important; }}
@@ -264,7 +263,6 @@ def generar_panel_luxor_centralizado():
         print("\n✅ PANEL ACTUALIZADO CORRECTAMENTE.")
     except Exception as e: print(f"\n❌ ERROR CRÍTICO: {e}")
 
-    # Temporizador de cierre
     print("\nPresiona ENTER para salir o espera 10 segundos...")
     timer = threading.Timer(10.0, lambda: os._exit(0)); timer.start()
     try: input()

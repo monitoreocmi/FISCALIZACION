@@ -7,6 +7,13 @@
         "TOTAL_GESTIONADO": 992.47
     },
     {
+        "sucursal": "BOSQUE (MAYO)",
+        "COBRADO": 279.35,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 279.35
+    },
+    {
         "sucursal": "CENTRAL (ABRIL)",
         "COBRADO": 127.68,
         "PERDIDA_PATRIMONIO": 404.26,
@@ -229,13 +236,6 @@
         "PERDIDA_PATRIMONIO": 939.49,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 940.37
-    },
-    {
-        "sucursal": "BOSQUE (MAYO)",
-        "COBRADO": 0.76,
-        "PERDIDA_PATRIMONIO": 186.3,
-        "EXCEDENTE": 92.29,
-        "TOTAL_GESTIONADO": 279.35
     },
     {
         "sucursal": "IPSFA (MARZO)",
