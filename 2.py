@@ -15,7 +15,10 @@ import re
 warnings.filterwarnings("ignore", category=UserWarning)
 
 if sys.stdout.encoding != 'utf-8':
-    sys.stdout.reconfigure(encoding='utf-8')
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except:
+        pass
 
 MESES_ES = {
     1: "ENERO", 2: "FEBRERO", 3: "MARZO", 4: "ABRIL", 
@@ -68,6 +71,10 @@ def generar_reporte_cobros_final():
         sucursales_maestras = obtener_sucursales_txt(ruta_base)
         ruta_cuadros = os.path.join(ruta_base, "cuadros")
         
+        if not os.path.exists(ruta_cuadros):
+            print(f"⚠️ No se encontró la carpeta: {ruta_cuadros}")
+            return
+
         archivos = [os.path.join(root, f) for root, dirs, files in os.walk(ruta_cuadros) 
                     for f in files if f.endswith(".xlsx") and not f.startswith("~$")]
 
@@ -75,7 +82,7 @@ def generar_reporte_cobros_final():
         periodos_detectados = set()
 
         for f in archivos:
-            print(f"   📖 Leyendo: {os.path.basename(f)}")
+            print(f"    📖 Leyendo: {os.path.basename(f)}")
             wb = load_workbook(f, data_only=False)
             ws = wb.active
             headers_reales = [str(cell.value).strip() if cell.value else f"COL_{i+1}" for i, cell in enumerate(ws[1])]
@@ -86,8 +93,8 @@ def generar_reporte_cobros_final():
                 if not any(v is not None for v in row_vals): continue
                 
                 fecha_val = pd.to_datetime(row_vals[idx['fecha']], errors='coerce') if idx['fecha'] != -1 else None
-                if fecha_val and not pd.isna(fecha_val):
-                    periodos_detectados.add(fecha_val.to_period('M'))
+                per_str = fecha_val.to_period('M').to_timestamp().strftime('%Y-%m') if fecha_val and not pd.isna(fecha_val) else "2026-05"
+                periodos_detectados.add(per_str)
                 
                 estatus = "OTRO"
                 try:
@@ -100,37 +107,36 @@ def generar_reporte_cobros_final():
 
                 if estatus != "OTRO":
                     mes_nombre = MESES_ES.get(fecha_val.month, "VARIOS") if fecha_val else "VARIOS"
-                    # Captura el contenido de la celda de fotos
                     foto_celda = str(row_vals[idx['foto']]).strip() if idx['foto'] != -1 and row_vals[idx['foto']] else ""
                     
                     datos_finales.append({
                         'SUCURSAL': str(row_vals[idx['sucursal']]).strip().upper() if idx['sucursal'] != -1 else "GENERAL",
                         'MES': mes_nombre, 
-                        'PERIODO': fecha_val.to_period('M') if fecha_val and not pd.isna(fecha_val) else None,
+                        'PERIODO_STR': per_str,
                         'MONTO_CALC': limpiar_monto(row_vals[idx['monto']]),
-                        'FOTOS_LISTA': foto_celda, # Guardamos el string original para procesarlo después
+                        'FOTOS_LISTA': foto_celda, 
                         'ESTATUS': estatus, 'FILA': row_vals, 'HEADERS': headers_reales, 'IDX': idx
                     })
             wb.close()
 
-        if not periodos_detectados: periodos_detectados.add(pd.Period('2026-05', freq='M')) 
-
         df = pd.DataFrame(datos_finales) if datos_finales else pd.DataFrame()
 
-        estilo_css = """<style>body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; } .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 4px solid #F9D908; } .logo-header { height: 50px; } h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; flex-grow: 1; } .resumen-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; } .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; transition: 0.3s; } .card-resumen .monto { font-size: 20px; font-weight: 900; color: #002060; margin: 10px 0; } .cobrado { border-color: #27ae60; } .recuperado { border-color: #f1c40f; } .excedente { border-color: #0070c0; } .blue-box-container { background: #002060; padding: 15px; border-radius: 12px; width: 98%; margin: 10px auto; border: 2px solid #F9D908; color: white; box-sizing: border-box; } .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 15px; } table { width: 100%; border-collapse: collapse; min-width: 1000px; } th { background: #001a4d; color: #F9D908; padding: 8px; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #F9D908; white-space: nowrap; } td { padding: 6px; border-bottom: 1px solid #eee; font-size: 10px; font-weight: bold; text-align: left; } .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; display: inline-block; margin: 5px; font-size: 11px; } .foto-link { color: #002060; text-decoration: underline; font-weight: bold; cursor: pointer; display: block; margin-bottom: 2px; font-size: 9px; }</style>"""
+        estilo_css = """<style>body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; } .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 4px solid #F9D908; } .logo-header { height: 50px; } h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; flex-grow: 1; } .resumen-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; } .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; transition: 0.3s; } .card-resumen .monto { font-size: 20px; font-weight: 900; color: #002060; margin: 10px 0; } .cobrado { border-color: #27ae60; } .recuperado { border-color: #f1c40f; } .excedente { border-color: #0070c0; } .blue-box-container { background: #002060; padding: 15px; border-radius: 12px; width: 98%; margin: 10px auto; border: 2px solid #F9D908; color: white; box-sizing: border-box; } .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 15px; } table { width: 100%; border-collapse: collapse; min-width: 1000px; } th { background: #001a4d; color: #F9D908; padding: 8px; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #F9D908; white-space: nowrap; } td { padding: 6px; border-bottom: 1px solid #eee; font-size: 10px; font-weight: bold; text-align: left; } .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; display: inline-block; margin: 5px; font-size: 11px; } .foto-link { color: #002060; text-decoration: underline; font-weight: bold; cursor: pointer; display: block; margin-bottom: 4px; font-size: 9px; }</style>"""
         script_modal = """<div id="myModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.9);" onclick="this.style.display='none'"><span style="position:absolute; top:15px; right:35px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;">&times;</span><img style="margin:auto; display:block; max-width:90%; max-height:90%; border:3px solid #F9D908; position:relative; top:50%; transform:translateY(-50%);" id="img01"></div><script>function openModal(src) { document.getElementById('myModal').style.display = "block"; document.getElementById('img01').src = src; }</script>"""
 
         t_glob = {}
 
-        for periodo in sorted(list(periodos_detectados)):
-            n_m = MESES_ES[periodo.month]
+        for periodo_str in sorted(list(periodos_detectados)):
+            mes_num = int(periodo_str.split('-')[1])
+            n_m = MESES_ES.get(mes_num, "VARIOS")
+            
             t_glob[n_m] = {"TOTAL_COBRADO": 0.0, "TOTAL_PERDIDA_PATRIMONIO": 0.0, "TOTAL_EXCEDENTE": 0.0}
 
             for suc_f in sucursales_maestras:
                 r_suc = os.path.join(ruta_base, n_m, suc_f)
                 os.makedirs(r_suc, exist_ok=True)
                 
-                df_s = df[(df['PERIODO'] == periodo) & (df['SUCURSAL'] == suc_f)] if not df.empty else pd.DataFrame()
+                df_s = df[(df['PERIODO_STR'] == periodo_str) & (df['SUCURSAL'] == suc_f)] if not df.empty else pd.DataFrame()
                 
                 s_c = df_s[df_s['ESTATUS']=='COBRADO']['MONTO_CALC'].sum() if not df_s.empty else 0.0
                 s_r = df_s[df_s['ESTATUS']=='RECUPERADO']['MONTO_CALC'].sum() if not df_s.empty else 0.0
@@ -144,39 +150,42 @@ def generar_reporte_cobros_final():
                     filas = ""
                     h_h = ""
                     if not df_s.empty:
+                        # FILTRO CRÍTICO: Solo incidencias del estatus correspondiente
                         df_v = df_s[df_s['ESTATUS'] == est_k]
-                        idx_a = df_s.iloc[0]['IDX']
                         
-                        indices_validos = []
-                        for i, h in enumerate(df_s.iloc[0]['HEADERS']):
-                            if str(h).upper() not in COLUMNAS_OCULTAS:
-                                h_h += f"<th>{h}</th>"
-                                indices_validos.append(i)
+                        if not df_v.empty:
+                            idx_a = df_s.iloc[0]['IDX']
+                            indices_validos = []
+                            for i, h in enumerate(df_s.iloc[0]['HEADERS']):
+                                if str(h).upper() not in COLUMNAS_OCULTAS:
+                                    h_h += f"<th>{h}</th>"
+                                    indices_validos.append(i)
 
-                        for _, r in df_v.iterrows():
-                            tds = ""
-                            for i in indices_validos:
-                                v = r['FILA'][i]
-                                if i == idx_a['monto']:
-                                    tds += f"<td>${r['MONTO_CALC']:,.2f}</td>"
-                                elif i == idx_a['foto'] and r['FOTOS_LISTA']:
-                                    # --- PROCESAMIENTO DE MÚLTIPLES FOTOS ---
-                                    # Separa por coma, punto y coma o espacios
-                                    nombres_fotos = re.split(r'[,; \n]+', r['FOTOS_LISTA'])
-                                    html_links_fotos = ""
-                                    for nombre in nombres_fotos:
-                                        nombre = nombre.strip()
-                                        if nombre:
-                                            ruta_foto_web = f"../../FACTURAS/{n_m}/{suc_f}/{nombre}"
-                                            html_links_fotos += f'<span class="foto-link" onclick="openModal(\'{ruta_foto_web}\')">📷 {nombre}</span>'
-                                    tds += f"<td>{html_links_fotos}</td>"
-                                else:
-                                    tds += f"<td>{str(v).strip() if v is not None else ''}</td>"
-                            filas += f"<tr>{tds}</tr>"
+                            for _, r in df_v.iterrows():
+                                tds = ""
+                                for i in indices_validos:
+                                    v = r['FILA'][i]
+                                    if i == idx_a['monto']:
+                                        tds += f"<td>${r['MONTO_CALC']:,.2f}</td>"
+                                    elif i == idx_a['foto']:
+                                        valor_foto = str(v).strip() if v is not None else ""
+                                        html_links_fotos = ""
+                                        if valor_foto and valor_foto.upper() != "SIN_FOTO":
+                                            nombres_fotos = re.split(r'[,\s;]+', valor_foto)
+                                            for nombre in nombres_fotos:
+                                                nombre = nombre.strip()
+                                                if nombre:
+                                                    # Se quitó la extensión fija ya que viene en el Excel
+                                                    ruta_foto_web = f"../../FACTURAS/{n_m}/{suc_f}/{nombre}"
+                                                    html_links_fotos += f'<span class="foto-link" onclick="openModal(\'{ruta_foto_web}\')">📷 {nombre}</span>'
+                                        tds += f"<td>{html_links_fotos if html_links_fotos else '-'}</td>"
+                                    else:
+                                        tds += f"<td>{str(v).strip() if v is not None else ''}</td>"
+                                filas += f"<tr>{tds}</tr>"
                     
                     if not filas: 
-                        h_h = "<th>DATO</th>"
-                        filas = "<tr><td colspan='20'>Sin registros en este mes</td></tr>"
+                        h_h = "<th>INFO</th>"
+                        filas = f"<tr><td>No hay incidencias de tipo {tit} registradas.</td></tr>"
                     
                     with open(os.path.join(r_suc, f_n), "w", encoding="utf-8") as f_out:
                         f_out.write(f"<html><head><meta charset='UTF-8'>{estilo_css}</head><body><div class='header-logos'><h1>{tit}</h1></div><div class='blue-box-container'><div class='table-responsive'><table><thead><tr>{h_h}</tr></thead><tbody>{filas}</tbody></table></div><a href='cobros_detalles.html' class='btn'>VOLVER</a></div>{script_modal}</body></html>")
@@ -200,12 +209,16 @@ def generar_reporte_cobros_final():
     def auto_close():
         for i in range(10, 0, -1):
             if stop_event.is_set(): return
+            sys.stdout.write(f"\rCERRANDO CMD EN {i} SEGUNDOS... (Presione ENTER para salir ahora)")
+            sys.stdout.flush()
             time.sleep(1)
         os._exit(0)
     
     threading.Thread(target=auto_close, daemon=True).start()
-    try: input()
-    except: pass
+    try: 
+        input()
+    except: 
+        pass
     stop_event.set()
 
 if __name__ == "__main__":

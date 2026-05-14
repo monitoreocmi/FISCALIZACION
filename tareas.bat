@@ -4,7 +4,9 @@ cd /d "C:\Users\Admin\Desktop\FISCALIZACION"
 
 echo === Iniciando Actualizacion de Datos Luxor ===
 
-:: Ejecutar los 7 scripts en orden
+:: Ejecutar los 8 scripts en orden
+echo Ejecutando script 0...
+python COLORES.py
 echo Ejecutando script 1...
 python 1.py
 echo Ejecutando script 2...
