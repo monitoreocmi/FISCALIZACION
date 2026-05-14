@@ -1,11 +1,11 @@
 {
     "aprobadas": [
         {
-            "n": "CASTAÑO (ABRIL)",
-            "v": 90
+            "n": "BARQUISIMETO (ABRIL)",
+            "v": 80
         },
         {
-            "n": "CENTRAL (ABRIL)",
+            "n": "CASTAÑO (ABRIL)",
             "v": 90
         },
         {
@@ -15,6 +15,10 @@
         {
             "n": "IPSFA (ABRIL)",
             "v": 100
+        },
+        {
+            "n": "MORA (ABRIL)",
+            "v": 75
         },
         {
             "n": "SAN DIEGO (ABRIL)",
@@ -34,10 +38,6 @@
         },
         {
             "n": "BARQUISIMETO (MAYO)",
-            "v": 100
-        },
-        {
-            "n": "BOSQUE (MAYO)",
             "v": 85
         },
         {
@@ -53,10 +53,6 @@
             "v": 100
         },
         {
-            "n": "IPSFA (MAYO)",
-            "v": 80
-        },
-        {
             "n": "MORA (MAYO)",
             "v": 100
         },
@@ -69,10 +65,6 @@
             "v": 100
         },
         {
-            "n": "TUCACAS (MAYO)",
-            "v": 85
-        },
-        {
             "n": "VILLAS DE ARAGUA (MAYO)",
             "v": 100
         }
@@ -83,19 +75,15 @@
             "v": 50
         },
         {
-            "n": "BARQUISIMETO (ABRIL)",
-            "v": 55
-        },
-        {
             "n": "BOSQUE (ABRIL)",
             "v": 45
         },
         {
-            "n": "CIRCULO MILITAR (ABRIL)",
-            "v": 50
+            "n": "CENTRAL (ABRIL)",
+            "v": 65
         },
         {
-            "n": "MORA (ABRIL)",
+            "n": "CIRCULO MILITAR (ABRIL)",
             "v": 50
         },
         {
@@ -164,7 +152,7 @@
         },
         {
             "n": "SANTA RITA (MARZO)",
-            "v": 30
+            "v": 55
         },
         {
             "n": "TUCACAS (MARZO)",
@@ -179,16 +167,28 @@
             "v": 55
         },
         {
+            "n": "BOSQUE (MAYO)",
+            "v": 55
+        },
+        {
             "n": "GUACARA (MAYO)",
             "v": 65
         },
         {
+            "n": "IPSFA (MAYO)",
+            "v": 70
+        },
+        {
             "n": "NAGUANAGUA (MAYO)",
-            "v": 60
+            "v": 40
         },
         {
             "n": "SANTA RITA (MAYO)",
-            "v": 45
+            "v": 70
+        },
+        {
+            "n": "TUCACAS (MAYO)",
+            "v": 65
         },
         {
             "n": "VICTORIA (MAYO)",

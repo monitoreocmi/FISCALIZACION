@@ -42,18 +42,18 @@
         "TOTAL_GESTIONADO": 68.89
     },
     {
+        "sucursal": "TUCACAS (MAYO)",
+        "COBRADO": 62.18,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 62.18
+    },
+    {
         "sucursal": "VILLAS DE ARAGUA (ABRIL)",
         "COBRADO": 52.66,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 52.66
-    },
-    {
-        "sucursal": "TUCACAS (MAYO)",
-        "COBRADO": 46.91,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 46.91
     },
     {
         "sucursal": "MORA (ABRIL)",

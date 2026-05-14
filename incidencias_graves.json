@@ -2,13 +2,13 @@
     "ABRIL": [
         {
             "n": "ACACIAS (ABRIL)",
-            "v": 10,
-            "detalle": "D: 10 | E: 0"
+            "v": 9,
+            "detalle": "D: 9 | E: 0"
         },
         {
             "n": "BARQUISIMETO (ABRIL)",
-            "v": 5,
-            "detalle": "D: 5 | E: 0"
+            "v": 3,
+            "detalle": "D: 3 | E: 0"
         },
         {
             "n": "BOSQUE (ABRIL)",
@@ -22,13 +22,13 @@
         },
         {
             "n": "CENTRAL (ABRIL)",
-            "v": 21,
-            "detalle": "D: 16 | E: 5"
+            "v": 19,
+            "detalle": "D: 14 | E: 5"
         },
         {
             "n": "CIRCULO MILITAR (ABRIL)",
-            "v": 4,
-            "detalle": "D: 3 | E: 1"
+            "v": 3,
+            "detalle": "D: 2 | E: 1"
         },
         {
             "n": "GUACARA (ABRIL)",
@@ -37,11 +37,6 @@
         },
         {
             "n": "IPSFA (ABRIL)",
-            "v": 2,
-            "detalle": "D: 2 | E: 0"
-        },
-        {
-            "n": "MORA (ABRIL)",
             "v": 2,
             "detalle": "D: 2 | E: 0"
         },
@@ -94,8 +89,8 @@
         },
         {
             "n": "CENTRAL (MARZO)",
-            "v": 33,
-            "detalle": "D: 16 | E: 17"
+            "v": 29,
+            "detalle": "D: 12 | E: 17"
         },
         {
             "n": "CIRCULO MILITAR (MARZO)",
@@ -133,11 +128,6 @@
             "detalle": "D: 0 | E: 1"
         },
         {
-            "n": "SANTA RITA (MARZO)",
-            "v": 2,
-            "detalle": "D: 2 | E: 0"
-        },
-        {
             "n": "TUCACAS (MARZO)",
             "v": 8,
             "detalle": "D: 0 | E: 8"
@@ -160,11 +150,6 @@
             "detalle": "D: 1 | E: 1"
         },
         {
-            "n": "CASTAÑO (MAYO)",
-            "v": 1,
-            "detalle": "D: 1 | E: 0"
-        },
-        {
             "n": "CENTRAL (MAYO)",
             "v": 4,
             "detalle": "D: 0 | E: 4"
@@ -181,8 +166,8 @@
         },
         {
             "n": "SANTA RITA (MAYO)",
-            "v": 4,
-            "detalle": "D: 1 | E: 3"
+            "v": 3,
+            "detalle": "D: 0 | E: 3"
         },
         {
             "n": "TUCACAS (MAYO)",
@@ -196,8 +181,8 @@
         },
         {
             "n": "VILLAS DE ARAGUA (MAYO)",
-            "v": 2,
-            "detalle": "D: 2 | E: 0"
+            "v": 1,
+            "detalle": "D: 1 | E: 0"
         }
     ]
 }
