@@ -6,6 +6,7 @@ from openpyxl import load_workbook
 import warnings
 import threading
 import time
+import re
 
 # =================================================================
 # ID: SCRIPT DE GESTIÓN DE COBROS Y AUDITORÍA FINANCIERA (LUXOR)
@@ -24,8 +25,6 @@ MESES_ES = {
 
 RUTA_LOGO_ESTANDAR = "../../RECURSOS/logo.png"
 ARCHIVO_SUCURSALES = "sucursales.txt"
-
-# --- NUEVA LISTA PARA OCULTAR COLUMNAS ---
 COLUMNAS_OCULTAS = ['CLASIFICACIÓN', 'MONTOID', 'FOTO_INCIDENCIA']
 
 def obtener_sucursales_txt(ruta_base):
@@ -62,17 +61,13 @@ def obtener_indices_flexibles(headers):
 def generar_reporte_cobros_final():
     try:
         print("\n" + "="*60)
-        print(">>> SISTEMA LUXOR: PROCESANDO COBROS (MAESTRO TXT) <<<")
+        print(">>> SISTEMA LUXOR: PROCESANDO COBROS (MÚLTIPLES FOTOS) <<<")
         print("="*60)
         
         ruta_base = os.path.dirname(os.path.abspath(sys.argv[0]))
         sucursales_maestras = obtener_sucursales_txt(ruta_base)
         ruta_cuadros = os.path.join(ruta_base, "cuadros")
         
-        if not os.path.exists(ruta_cuadros):
-            print(f"❌ Error: No existe la carpeta 'cuadros' en {ruta_base}")
-            return
-
         archivos = [os.path.join(root, f) for root, dirs, files in os.walk(ruta_cuadros) 
                     for f in files if f.endswith(".xlsx") and not f.startswith("~$")]
 
@@ -105,14 +100,15 @@ def generar_reporte_cobros_final():
 
                 if estatus != "OTRO":
                     mes_nombre = MESES_ES.get(fecha_val.month, "VARIOS") if fecha_val else "VARIOS"
-                    foto_final = str(row_vals[idx['foto']]).strip() if idx['foto'] != -1 and row_vals[idx['foto']] else ""
+                    # Captura el contenido de la celda de fotos
+                    foto_celda = str(row_vals[idx['foto']]).strip() if idx['foto'] != -1 and row_vals[idx['foto']] else ""
                     
                     datos_finales.append({
                         'SUCURSAL': str(row_vals[idx['sucursal']]).strip().upper() if idx['sucursal'] != -1 else "GENERAL",
                         'MES': mes_nombre, 
                         'PERIODO': fecha_val.to_period('M') if fecha_val and not pd.isna(fecha_val) else None,
                         'MONTO_CALC': limpiar_monto(row_vals[idx['monto']]),
-                        'FOTO_FINAL': foto_final,
+                        'FOTOS_LISTA': foto_celda, # Guardamos el string original para procesarlo después
                         'ESTATUS': estatus, 'FILA': row_vals, 'HEADERS': headers_reales, 'IDX': idx
                     })
             wb.close()
@@ -121,7 +117,7 @@ def generar_reporte_cobros_final():
 
         df = pd.DataFrame(datos_finales) if datos_finales else pd.DataFrame()
 
-        estilo_css = """<style>body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; } .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 4px solid #F9D908; } .logo-header { height: 50px; } h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; flex-grow: 1; } .resumen-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; } .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; transition: 0.3s; } .card-resumen .monto { font-size: 20px; font-weight: 900; color: #002060; margin: 10px 0; } .cobrado { border-color: #27ae60; } .recuperado { border-color: #f1c40f; } .excedente { border-color: #0070c0; } .blue-box-container { background: #002060; padding: 15px; border-radius: 12px; width: 98%; margin: 10px auto; border: 2px solid #F9D908; color: white; box-sizing: border-box; } .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 15px; } table { width: 100%; border-collapse: collapse; min-width: 1000px; } th { background: #001a4d; color: #F9D908; padding: 8px; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #F9D908; white-space: nowrap; } td { padding: 6px; border-bottom: 1px solid #eee; font-size: 10px; font-weight: bold; text-align: left; } .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; display: inline-block; margin: 5px; font-size: 11px; } .foto-link { color: #002060; text-decoration: underline; font-weight: bold; cursor: pointer; }</style>"""
+        estilo_css = """<style>body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 10px; text-align: center; margin: 0; } .header-logos { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 4px solid #F9D908; } .logo-header { height: 50px; } h1 { color: #002060; margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 900; flex-grow: 1; } .resumen-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; } .card-resumen { background: white; padding: 20px; border-radius: 12px; text-decoration: none; width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-bottom: 6px solid #ccc; color: inherit; transition: 0.3s; } .card-resumen .monto { font-size: 20px; font-weight: 900; color: #002060; margin: 10px 0; } .cobrado { border-color: #27ae60; } .recuperado { border-color: #f1c40f; } .excedente { border-color: #0070c0; } .blue-box-container { background: #002060; padding: 15px; border-radius: 12px; width: 98%; margin: 10px auto; border: 2px solid #F9D908; color: white; box-sizing: border-box; } .table-responsive { background: white; border-radius: 8px; overflow-x: auto; color: #333; margin-top: 15px; } table { width: 100%; border-collapse: collapse; min-width: 1000px; } th { background: #001a4d; color: #F9D908; padding: 8px; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #F9D908; white-space: nowrap; } td { padding: 6px; border-bottom: 1px solid #eee; font-size: 10px; font-weight: bold; text-align: left; } .btn { padding: 10px 18px; background: #002060; color: white !important; text-decoration: none; font-weight: bold; border-radius: 6px; border: 2px solid #F9D908; display: inline-block; margin: 5px; font-size: 11px; } .foto-link { color: #002060; text-decoration: underline; font-weight: bold; cursor: pointer; display: block; margin-bottom: 2px; font-size: 9px; }</style>"""
         script_modal = """<div id="myModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.9);" onclick="this.style.display='none'"><span style="position:absolute; top:15px; right:35px; color:#fff; font-size:40px; font-weight:bold; cursor:pointer;">&times;</span><img style="margin:auto; display:block; max-width:90%; max-height:90%; border:3px solid #F9D908; position:relative; top:50%; transform:translateY(-50%);" id="img01"></div><script>function openModal(src) { document.getElementById('myModal').style.display = "block"; document.getElementById('img01').src = src; }</script>"""
 
         t_glob = {}
@@ -163,10 +159,17 @@ def generar_reporte_cobros_final():
                                 v = r['FILA'][i]
                                 if i == idx_a['monto']:
                                     tds += f"<td>${r['MONTO_CALC']:,.2f}</td>"
-                                elif i == idx_a['foto'] and r['FOTO_FINAL']:
-                                    # CORRECCIÓN DE RUTA: Sube de Mes/Sucursal a FACTURAS/Mes/Sucursal
-                                    ruta_foto_web = f"../../FACTURAS/{n_m}/{suc_f}/{r['FOTO_FINAL']}"
-                                    tds += f'<td><span class="foto-link" onclick="openModal(\'{ruta_foto_web}\')">{r["FOTO_FINAL"]}</span></td>'
+                                elif i == idx_a['foto'] and r['FOTOS_LISTA']:
+                                    # --- PROCESAMIENTO DE MÚLTIPLES FOTOS ---
+                                    # Separa por coma, punto y coma o espacios
+                                    nombres_fotos = re.split(r'[,; \n]+', r['FOTOS_LISTA'])
+                                    html_links_fotos = ""
+                                    for nombre in nombres_fotos:
+                                        nombre = nombre.strip()
+                                        if nombre:
+                                            ruta_foto_web = f"../../FACTURAS/{n_m}/{suc_f}/{nombre}"
+                                            html_links_fotos += f'<span class="foto-link" onclick="openModal(\'{ruta_foto_web}\')">📷 {nombre}</span>'
+                                    tds += f"<td>{html_links_fotos}</td>"
                                 else:
                                     tds += f"<td>{str(v).strip() if v is not None else ''}</td>"
                             filas += f"<tr>{tds}</tr>"
