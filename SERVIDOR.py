@@ -1,14 +1,16 @@
 import os
 import sys
 import re
+import subprocess
 import pandas as pd
+import time
 from bs4 import BeautifulSoup
 from datetime import datetime
 from functools import wraps
 
 # --- VERIFICACIÓN DE LIBRERÍAS ---
 try:
-    from flask import Flask, request, jsonify, render_template_string, send_from_directory, session, redirect, url_for
+    from flask import Flask, request, jsonify, render_template_string, send_from_directory, session, redirect, url_for, send_file
     from flask_cors import CORS
 except ImportError:
     print("\n[!] ERROR: Faltan librerias. Ejecuta: pip install flask flask-cors pandas openpyxl requests beautifulsoup4")
@@ -16,13 +18,17 @@ except ImportError:
 
 app = Flask(__name__)
 app.secret_key = 'luxor_full_system_2026'
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}}) # Esto permite peticiones desde cualquier puerto
 
 # --- CONFIGURACIÓN DE RUTAS ---
 RUTA_RAIZ = os.path.dirname(os.path.abspath(__file__))
 os.chdir(RUTA_RAIZ)
 
+# IMPORTANTE: Asegúrate de que tu archivo index.html esté en la misma carpeta que este script
+RUTA_PANEL_HTML = os.path.join(RUTA_RAIZ, "index.html") 
+
 ULTIMO_ANALISIS = {"SUCURSAL": "", "PROVEEDOR": "", "FACTURA": "", "RESPONSABLE": ""}
+PROCESO_ACTIVO = False  # Flag para monitorear el script sincronizar.py
 
 # --- USUARIOS LOCALES ---
 USUARIOS = {
@@ -50,13 +56,24 @@ def login_required(f):
         return f(*args, **kwargs)
     return dec
 
+# --- NUEVA RUTA PARA EL PANEL ---
+# --- MODIFICACIÓN EN RUTA PANEL ---
+@app.route('/panel')
+@login_required
+def servir_panel():
+    # En lugar de buscar el archivo localmente, redirigimos al servidor del puerto 80
+    # Cambia la IP por la de tu servidor
+    return redirect("http://192.168.7.77")
+
 def buscar_archivo(mes, sucursal):
     rd = os.path.join(RUTA_RAIZ, "cuadros", mes.upper())
     if not os.path.exists(rd): return None
     sn = sucursal.upper().replace(" ", "")
     for a in os.listdir(rd):
-        if not a.startswith('~$') and a.endswith(".xlsx") and sn in a.upper().replace(" ", ""):
-            return os.path.join(rd, a)
+        if not a.startswith('~$') and a.endswith(".xlsx"):
+            nombre_limpio = a.upper().replace(" ", "")
+            if sn in nombre_limpio:
+                return os.path.join(rd, a)
     return None
 
 @app.route('/analizar_codigo', methods=['POST'])
@@ -95,6 +112,10 @@ def analizar_codigo():
 def obtener_ultimo_analisis():
     return jsonify({"status": "ok", "data": ULTIMO_ANALISIS})
 
+@app.route('/status_sincronizacion')
+def status_sincronizacion():
+    return jsonify({"activo": PROCESO_ACTIVO})
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -114,6 +135,7 @@ def logout():
 @app.route('/guardar', methods=['POST'])
 @login_required
 def guardar():
+    global PROCESO_ACTIVO
     try:
         d = request.form
         suc, fec, ide = d.get('SUCURSAL'), d.get('FECHA'), str(d.get('ID_EDICION') or "").strip()
@@ -149,7 +171,6 @@ def guardar():
         f_cob_val = " ".join(fotos_cobro_list).strip() if fotos_cobro_list else "SIN_FOTO"
         f_inc_name = " ".join(fotos_inc_list).strip() if fotos_inc_list else ""
 
-        # Leer especificando que FACTURA es string para no perder ceros
         if os.path.exists(path_xlsx):
             df = pd.read_excel(path_xlsx, dtype={'FACTURA': str})
         else:
@@ -165,10 +186,26 @@ def guardar():
             'F COBRADA': f_cob_val, 'CLASIFICACIÓN MONTO': d.get('CLASIFICACION_MONTO'),
             'FOTO_INCIDENCIA': f_inc_name, 'ID': ide if ide else f"ID_{datetime.now().strftime('%Y%m%d%H%M%S')}"
         }
+        
         df = pd.concat([df, pd.DataFrame([nueva])], ignore_index=True)
-        df.to_excel(path_xlsx, index=False)
+        
+        try:
+            df.to_excel(path_xlsx, index=False)
+            
+            # --- EJECUTAR SINCRONIZACIÓN AL GUARDAR ---
+            script_maestro = os.path.join(RUTA_RAIZ, "sincronizar.py")
+            if os.path.exists(script_maestro):
+                PROCESO_ACTIVO = True
+                subprocess.run([sys.executable, script_maestro])
+                PROCESO_ACTIVO = False
+            
+        except PermissionError:
+            return jsonify({"status": "error", "message": f"El archivo de {suc} está abierto en el servidor. Ciérralo."}), 500
+
         return jsonify({"status": "ok"})
-    except Exception as e: return jsonify({"status": "error", "message": str(e)}), 500
+    except Exception as e: 
+        PROCESO_ACTIVO = False
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/ver_foto/<tipo>/<mes>/<sucursal>/<nombre>')
 @login_required
@@ -239,8 +276,12 @@ HTML_LOGIN = """<!DOCTYPE html><html><head><meta charset="UTF-8"><style>:root { 
 
 HTML_FORM = """
 <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-:root { --azul: #0844a4; --amarillo: #F9D908; --fondo: #f4f7f6; }
+:root { --azul: #0844a4; --amarillo: #F9D908; --fondo: #f4f7f6; --verde: #28a745; }
 body { font-family: 'Segoe UI', sans-serif; background: var(--fondo); margin: 0; font-size: 11px; }
+
+#progress-container { width: 100%; background: #eee; height: 6px; position: fixed; top: 0; left: 0; z-index: 2000; display: none; }
+#progress-bar { width: 0%; height: 100%; background: var(--verde); transition: width 0.3s; }
+
 .header { background: white; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid var(--amarillo); }
 .tabs { display: flex; justify-content: center; background: #ddd; border-bottom: 1px solid #ccc; }
 .tab-btn { padding: 12px 25px; cursor: pointer; border: none; background: none; font-weight: bold; color: #555; }
@@ -251,8 +292,12 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--fondo); margin: 0;
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 label { font-weight: bold; color: #555; }
 input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 11px; box-sizing: border-box; }
+
 .btn-main { background: var(--azul); color: white; border: none; font-size: 14px; cursor: pointer; font-weight: bold; padding: 12px; width: 100%; margin-top: 10px; border-radius: 4px; }
 .btn-sync-top { background: #ff9800; color: white; border: none; font-size: 12px; cursor: pointer; padding: 4px 10px; border-radius: 4px; font-weight: bold; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; width: fit-content; }
+
+.btn-panel { background: var(--verde); color: white; border: none; font-size: 11px; cursor: pointer; padding: 6px 12px; border-radius: 4px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+
 table { width: 100%; border-collapse: collapse; background: white; font-size: 9px; margin-top: 10px; }
 th, td { border: 1px solid #ddd; padding: 6px; text-align: left; }
 th { background: var(--azul); color: white; position: sticky; top: 0; }
@@ -264,11 +309,15 @@ th { background: var(--azul); color: white; position: sticky; top: 0; }
 .ws-icon { width: 18px; height: 18px; fill: white; }
 .foto-mini-link { color: var(--azul); text-decoration: underline; cursor: pointer; flex-grow: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 </style></head><body>
+
+<div id="progress-container"><div id="progress-bar"></div></div>
+
 <div id="modalImg" onclick="this.style.display='none'"><img id="imgFull"></div>
 <div class="header">
-    <div style="display: flex; align-items: center; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 15px;">
         <img src="https://tusupermercadoluxor.com/src/assets/img/general/logo_fusion_luxor_euromaxx.png" width="25">
-        <h3>DEPARTAMENTO DE FISCALIZACION LUXOR</h3>
+        <h3 style="margin:0">DEPARTAMENTO DE FISCALIZACION LUXOR</h3>
+        <button class="btn-panel" id="btnVerPanel" onclick="irAlPanel()">📊 VER PANEL</button>
     </div>
     <span><strong id="current_user">{{usuario}}</strong> | <a href="/logout">Salir</a></span>
 </div>
@@ -288,7 +337,7 @@ th { background: var(--azul); color: white; position: sticky; top: 0; }
 <div style="grid-column:span 2"><label>SUCURSAL</label><select name="SUCURSAL" id="e_suc">{% for s in sucursales %}<option>{{s}}</option>{% endfor %}</select></div>
 <div><label>FECHA</label><input type="date" name="FECHA" id="e_fec" value="{{fecha_hoy}}"></div>
 <div><label>PROVEEDOR</label><input type="text" name="PROVEEDOR" id="e_pro"></div>
-<div><label>FACTURA (Permite 0 delante)</label><input type="text" name="FACTURA" id="e_fac"></div>
+<div><label>FACTURA</label><input type="text" name="FACTURA" id="e_fac"></div>
 <div><label>RESPONSABLE</label><input type="text" name="RESPONSABLE" id="e_res"></div>
 <div style="grid-column:span 2"><label>TIPO FISCALIZACIÓN</label><select name="TIPO_FISC" id="e_tip"><option value="RECEPCION">RECEPCIÓN</option><option value="DEVOLUCION">DEVOLUCIÓN</option><option value="TRANSFERENCIA">TRANSFERENCIA</option></select></div>
 <div style="grid-column:span 2"><label>CLASIFICACIÓN MONTO</label><select name="CLASIFICACION_MONTO" id="e_clasm" onchange="toggleM()"><option value="NINGUNA">NINGUNA</option><option value="COBRO">COBRO</option><option value="RECUPERACIÓN">RECUPERACIÓN</option><option value="EXCEDENTES">EXCEDENTES</option></select></div>
@@ -315,6 +364,15 @@ th { background: var(--azul); color: white; position: sticky; top: 0; }
 
 <script>
 const meses_lista = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
+
+// FUNCIÓN ACTUALIZADA EN EL HTML_FORM
+function irAlPanel() {
+    const mesSeleccionado = document.getElementById('s_m').value;
+    // Apuntamos directamente a la raíz del servidor del Panel (Puerto 80)
+    const urlPanel = `http://192.168.77.7:80`;
+    window.open(urlPanel, '_blank');
+}
+
 function toggleM(){ let v=document.getElementById('e_clasm').value; document.getElementById('b_m').style.display=(v!=='NINGUNA')?'block':'none'; }
 function openTab(e, n){ 
     document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); 
@@ -353,11 +411,50 @@ async function sincronizar() {
     } catch(e) { alert("Error al conectar."); }
 }
 
-document.getElementById('fM').onsubmit=async(e)=>{
+document.getElementById('fM').onsubmit = async (e) => {
     e.preventDefault();
+    const btn = e.target.querySelector('.btn-main');
+    const bar = document.getElementById('progress-bar');
+    const container = document.getElementById('progress-container');
+    
+    btn.disabled = true;
+    btn.innerText = "⏳ GUARDANDO Y ACTUALIZANDO PANEL...";
+    container.style.display = 'block';
+    bar.style.width = '10%';
+
     const fd = new FormData(e.target);
-    const res = await fetch('/guardar',{method:'POST', body:fd});
-    if((await res.json()).status === 'ok') { alert("¡Guardado!"); location.reload(); }
+    
+    try {
+        let width = 10;
+        const interval = setInterval(() => {
+            if (width < 95) {
+                width += 2;
+                bar.style.width = width + '%';
+            }
+        }, 400);
+
+        const res = await fetch('/guardar', { method: 'POST', body: fd });
+        const r = await res.json();
+
+        clearInterval(interval);
+        
+        if (r.status === 'ok') {
+            bar.style.width = '100%';
+            setTimeout(() => {
+                alert("¡Guardado y Sincronizado exitosamente!");
+                location.reload();
+            }, 500);
+        } else {
+            alert("Error: " + r.message);
+            btn.disabled = false;
+            btn.innerText = "GUARDAR REGISTRO";
+            container.style.display = 'none';
+        }
+    } catch (err) {
+        alert("Error de conexión");
+        btn.disabled = false;
+        container.style.display = 'none';
+    }
 };
 
 async function cargar(){
@@ -401,8 +498,20 @@ async function bF(id,f,s,t,nombre){
 async function borrarR(id,f,s){ if(confirm("¿Borrar registro?")){ await fetch('/borrar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,fecha:f,sucursal:s})}); cargar(); } }
 
 function sendWA(r){
-    const t=`REPORTE FISCALIZACIÓN%0A%0A SUCURSAL: ${r.SUCURSAL}%0A FECHA: ${r.FECHA}%0A PROVEEDOR: ${r.PROVEEDOR}%0A FACTURA: ${r.FACTURA}%0A RESPONSABLE: ${r.RESPONSABLE}%0A INCIDENCIA: ${r.INCIDENCIA}`;
-    window.open(`https://wa.me/584140511731?text=${t}`,'_blank');
+    let mensaje = `REPORTE FISCALIZACIÓN%0A%0A`;
+    mensaje += ` FECHA: ${r.FECHA}%0A`;
+    mensaje += ` TIPO: ${r['TIPO FISCALIZACIÓN']}%0A`;
+    mensaje += ` PROVEEDOR: ${r.PROVEEDOR}%0A`;
+    mensaje += ` FACTURA: ${r.FACTURA}%0A`;
+    mensaje += ` RESPONSABLE: ${r.RESPONSABLE}%0A`;
+    let montoNum = parseFloat(r['MONTO $']);
+    if(!isNaN(montoNum) && montoNum > 0) {
+        mensaje += ` MONTO: $${montoNum.toFixed(2)}%0A`;
+    }
+    mensaje += ` INCIDENCIA: ${r.INCIDENCIA}%0A`;
+    mensaje += ` OBSERVACIONES: ${r.OBSERVACIÓN}`;
+    const url = `https://wa.me/584140511731?text=${mensaje}`;
+    window.open(url, '_blank');
 }
 
 function editar(r){
@@ -418,7 +527,6 @@ function editar(r){
     const campos = ['e_suc', 'e_fec', 'e_pro', 'e_fac', 'e_res', 'e_tip', 'e_inc'];
     campos.forEach(id => {
         const el = document.getElementById(id);
-        // SI ES ADMIN: Habilita todo. SI NO ES ADMIN: Bloquea
         if(userAct === 'admin'){
             if(el.tagName === 'SELECT') { el.style.pointerEvents = 'auto'; el.style.background = 'white'; }
             else { el.readOnly = false; el.style.background = 'white'; }

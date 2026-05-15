@@ -1,335 +1,407 @@
 [
     {
-        "sucursal": "CENTRAL (MARZO)",
+        "sucursal": "CENTRAL",
+        "mes": "MARZO",
         "COBRADO": 284.98,
         "PERDIDA_PATRIMONIO": 707.49,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 992.47
     },
     {
-        "sucursal": "CENTRAL (ABRIL)",
+        "sucursal": "CENTRAL",
+        "mes": "ABRIL",
         "COBRADO": 127.68,
         "PERDIDA_PATRIMONIO": 404.26,
         "EXCEDENTE": 156.0,
         "TOTAL_GESTIONADO": 687.94
     },
     {
-        "sucursal": "BARQUISIMETO (ABRIL)",
+        "sucursal": "BARQUISIMETO",
+        "mes": "ABRIL",
         "COBRADO": 79.6,
         "PERDIDA_PATRIMONIO": 5.51,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 85.11
     },
     {
-        "sucursal": "VICTORIA (MARZO)",
+        "sucursal": "VICTORIA",
+        "mes": "MARZO",
         "COBRADO": 70.71,
         "PERDIDA_PATRIMONIO": 691.99,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 762.7
     },
     {
-        "sucursal": "BOSQUE (ABRIL)",
+        "sucursal": "BOSQUE",
+        "mes": "ABRIL",
         "COBRADO": 64.99,
         "PERDIDA_PATRIMONIO": 3.9,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 68.89
     },
     {
-        "sucursal": "VILLAS DE ARAGUA (ABRIL)",
+        "sucursal": "VILLAS DE ARAGUA",
+        "mes": "ABRIL",
         "COBRADO": 52.66,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 52.66
     },
     {
-        "sucursal": "MORA (ABRIL)",
+        "sucursal": "MORA",
+        "mes": "ABRIL",
         "COBRADO": 31.13,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 31.13
     },
     {
-        "sucursal": "ACACIAS (ABRIL)",
+        "sucursal": "ACACIAS",
+        "mes": "ABRIL",
         "COBRADO": 26.36,
         "PERDIDA_PATRIMONIO": 124.3,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 150.66
     },
     {
-        "sucursal": "BOSQUE (MARZO)",
+        "sucursal": "BOSQUE",
+        "mes": "MARZO",
         "COBRADO": 23.65,
         "PERDIDA_PATRIMONIO": 1076.35,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 1100.0
     },
     {
-        "sucursal": "TUCACAS (ABRIL)",
+        "sucursal": "NAGUANAGUA",
+        "mes": "MAYO",
+        "COBRADO": 22.07,
+        "PERDIDA_PATRIMONIO": 1.54,
+        "EXCEDENTE": 3.76,
+        "TOTAL_GESTIONADO": 27.37
+    },
+    {
+        "sucursal": "TUCACAS",
+        "mes": "ABRIL",
         "COBRADO": 21.89,
         "PERDIDA_PATRIMONIO": 1.69,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 23.58
     },
     {
-        "sucursal": "SAN DIEGO (MARZO)",
+        "sucursal": "CASTAÑO",
+        "mes": "MAYO",
+        "COBRADO": 20.79,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 20.79
+    },
+    {
+        "sucursal": "SAN DIEGO",
+        "mes": "MARZO",
         "COBRADO": 18.09,
         "PERDIDA_PATRIMONIO": 15062.85,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 15080.94
     },
     {
-        "sucursal": "CASTAÑO (MAYO)",
-        "COBRADO": 17.96,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 17.96
-    },
-    {
-        "sucursal": "CIRCULO MILITAR (MAYO)",
+        "sucursal": "CIRCULO MILITAR",
+        "mes": "MAYO",
         "COBRADO": 17.67,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 17.67
     },
     {
-        "sucursal": "NAGUANAGUA (MAYO)",
-        "COBRADO": 17.37,
-        "PERDIDA_PATRIMONIO": 1.54,
-        "EXCEDENTE": 3.76,
-        "TOTAL_GESTIONADO": 22.67
-    },
-    {
-        "sucursal": "CIRCULO MILITAR (ABRIL)",
+        "sucursal": "CIRCULO MILITAR",
+        "mes": "ABRIL",
         "COBRADO": 15.24,
         "PERDIDA_PATRIMONIO": 655.35,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 670.59
     },
     {
-        "sucursal": "NAGUANAGUA (ABRIL)",
+        "sucursal": "NAGUANAGUA",
+        "mes": "ABRIL",
         "COBRADO": 15.03,
         "PERDIDA_PATRIMONIO": 57.1,
         "EXCEDENTE": 92.0,
         "TOTAL_GESTIONADO": 164.13
     },
     {
-        "sucursal": "VICTORIA (ABRIL)",
+        "sucursal": "VICTORIA",
+        "mes": "ABRIL",
         "COBRADO": 11.4,
         "PERDIDA_PATRIMONIO": 28.8,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 40.2
     },
     {
-        "sucursal": "VILLAS DE ARAGUA (MAYO)",
+        "sucursal": "VILLAS DE ARAGUA",
+        "mes": "MAYO",
         "COBRADO": 11.31,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 11.31
     },
     {
-        "sucursal": "CIRCULO MILITAR (MARZO)",
+        "sucursal": "CIRCULO MILITAR",
+        "mes": "MARZO",
         "COBRADO": 10.48,
         "PERDIDA_PATRIMONIO": 34541.75,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 34552.23
     },
     {
-        "sucursal": "ACACIAS (MARZO)",
+        "sucursal": "ACACIAS",
+        "mes": "MARZO",
         "COBRADO": 7.38,
         "PERDIDA_PATRIMONIO": 753.38,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 760.76
     },
     {
-        "sucursal": "CASTAÑO (ABRIL)",
+        "sucursal": "CASTAÑO",
+        "mes": "ABRIL",
         "COBRADO": 6.43,
         "PERDIDA_PATRIMONIO": 1.8,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 8.23
     },
     {
-        "sucursal": "MORA (MAYO)",
+        "sucursal": "MORA",
+        "mes": "MAYO",
         "COBRADO": 4.66,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 4.66
     },
     {
-        "sucursal": "SAN DIEGO (ABRIL)",
+        "sucursal": "SAN DIEGO",
+        "mes": "ABRIL",
         "COBRADO": 4.59,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 4.59
     },
     {
-        "sucursal": "BARQUISIMETO (MARZO)",
+        "sucursal": "BARQUISIMETO",
+        "mes": "MARZO",
         "COBRADO": 3.43,
         "PERDIDA_PATRIMONIO": 1.41,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 4.84
     },
     {
-        "sucursal": "GUACARA (MARZO)",
+        "sucursal": "GUACARA",
+        "mes": "MARZO",
         "COBRADO": 3.4,
         "PERDIDA_PATRIMONIO": 1338.4,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 1341.8
     },
     {
-        "sucursal": "GUACARA (MAYO)",
+        "sucursal": "GUACARA",
+        "mes": "MAYO",
         "COBRADO": 3.06,
         "PERDIDA_PATRIMONIO": 13.57,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 16.63
     },
     {
-        "sucursal": "SANTA RITA (ABRIL)",
+        "sucursal": "SANTA RITA",
+        "mes": "ABRIL",
         "COBRADO": 2.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 2.0
     },
     {
-        "sucursal": "NAGUANAGUA (MARZO)",
+        "sucursal": "NAGUANAGUA",
+        "mes": "MARZO",
         "COBRADO": 1.58,
         "PERDIDA_PATRIMONIO": 74.78,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 76.36
     },
     {
-        "sucursal": "TUCACAS (MAYO)",
+        "sucursal": "TUCACAS",
+        "mes": "MAYO",
         "COBRADO": 1.31,
         "PERDIDA_PATRIMONIO": 60.87,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 62.18
     },
     {
-        "sucursal": "SANTA RITA (MARZO)",
+        "sucursal": "SANTA RITA",
+        "mes": "MARZO",
         "COBRADO": 1.2,
         "PERDIDA_PATRIMONIO": 2456.61,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 2457.81
     },
     {
-        "sucursal": "IPSFA (ABRIL)",
+        "sucursal": "IPSFA",
+        "mes": "ABRIL",
         "COBRADO": 1.14,
         "PERDIDA_PATRIMONIO": 2.57,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 3.71
     },
     {
-        "sucursal": "CASTAÑO (MARZO)",
+        "sucursal": "CASTAÑO",
+        "mes": "MARZO",
         "COBRADO": 0.88,
         "PERDIDA_PATRIMONIO": 939.49,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 940.37
     },
     {
-        "sucursal": "BOSQUE (MAYO)",
+        "sucursal": "BOSQUE",
+        "mes": "MAYO",
         "COBRADO": 0.76,
         "PERDIDA_PATRIMONIO": 190.44,
         "EXCEDENTE": 92.29,
         "TOTAL_GESTIONADO": 283.49
     },
     {
-        "sucursal": "IPSFA (MARZO)",
+        "sucursal": "IPSFA",
+        "mes": "MARZO",
         "COBRADO": 0.69,
         "PERDIDA_PATRIMONIO": 309.85,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 310.54
     },
     {
-        "sucursal": "GUACARA (ABRIL)",
+        "sucursal": "GUACARA",
+        "mes": "ABRIL",
         "COBRADO": 0.3,
         "PERDIDA_PATRIMONIO": 4.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 4.3
     },
     {
-        "sucursal": "SAN JUAN (ABRIL)",
+        "sucursal": "LA MORA",
+        "mes": "ABRIL",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
+        "sucursal": "SAN JUAN",
+        "mes": "ABRIL",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 4.19,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 4.19
     },
     {
-        "sucursal": "MORA (MARZO)",
+        "sucursal": "LA MORA",
+        "mes": "MARZO",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
+        "sucursal": "MORA",
+        "mes": "MARZO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 163.49,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 163.49
     },
     {
-        "sucursal": "SAN JUAN (MARZO)",
+        "sucursal": "SAN JUAN",
+        "mes": "MARZO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 498.38,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 498.38
     },
     {
-        "sucursal": "TUCACAS (MARZO)",
+        "sucursal": "TUCACAS",
+        "mes": "MARZO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 1055.69,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 1055.69
     },
     {
-        "sucursal": "VILLAS DE ARAGUA (MARZO)",
+        "sucursal": "VILLAS DE ARAGUA",
+        "mes": "MARZO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 2580.94,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 2580.94
     },
     {
-        "sucursal": "ACACIAS (MAYO)",
+        "sucursal": "ACACIAS",
+        "mes": "MAYO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 0.0
     },
     {
-        "sucursal": "BARQUISIMETO (MAYO)",
+        "sucursal": "BARQUISIMETO",
+        "mes": "MAYO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 2.12,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 2.12
     },
     {
-        "sucursal": "CENTRAL (MAYO)",
+        "sucursal": "CENTRAL",
+        "mes": "MAYO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 0.0
     },
     {
-        "sucursal": "IPSFA (MAYO)",
+        "sucursal": "IPSFA",
+        "mes": "MAYO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 0.0
     },
     {
-        "sucursal": "SAN DIEGO (MAYO)",
+        "sucursal": "LA MORA",
+        "mes": "MAYO",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
+        "sucursal": "SAN DIEGO",
+        "mes": "MAYO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 3.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 3.0
     },
     {
-        "sucursal": "SAN JUAN (MAYO)",
+        "sucursal": "SAN JUAN",
+        "mes": "MAYO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 0.0
     },
     {
-        "sucursal": "SANTA RITA (MAYO)",
+        "sucursal": "SANTA RITA",
+        "mes": "MAYO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 0.0
     },
     {
-        "sucursal": "VICTORIA (MAYO)",
+        "sucursal": "VICTORIA",
+        "mes": "MAYO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,

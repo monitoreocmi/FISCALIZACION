@@ -1,12 +1,20 @@
 import os
+import sys
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 import warnings
 
-# Silenciar advertencias de validación
+# Forzamos la salida de consola a UTF-8 para evitar errores de caracteres en Windows
+if sys.stdout.encoding != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except:
+        pass
+
+# Silenciar advertencias de validación de Excel
 warnings.filterwarnings("ignore", category=UserWarning)
 
-def colorear_excels_raiz():
+def ejecutar():
     print("\n" + "="*60)
     print(">>> COLOREANDO MONTOS (BUSCANDO EN CARPETA CUADROS) <<<")
     print("="*60)
@@ -21,8 +29,7 @@ def colorear_excels_raiz():
     azul_fill = PatternFill(start_color="FF00B0F0", end_color="FF00B0F0", fill_type="solid")
 
     if not os.path.exists(ruta_cuadros):
-        print(f"⚠️ No se encontró la carpeta: {ruta_cuadros}")
-        input("\nPresiona ENTER para salir...")
+        print(f"!! No se encontro la carpeta: {ruta_cuadros}")
         return
 
     # Búsqueda recursiva en CUADROS y sus subcarpetas
@@ -32,7 +39,8 @@ def colorear_excels_raiz():
             if nombre_archivo.endswith(".xlsx") and not nombre_archivo.startswith("~$"):
                 encontrado = True
                 ruta_archivo = os.path.join(raiz, nombre_archivo)
-                print(f"📄 Procesando: {os.path.relpath(ruta_archivo, ruta_script)}...")
+                # Quitamos emojis del print para evitar bloqueos
+                print(f"Archivo: {os.path.relpath(ruta_archivo, ruta_script)}...")
                 
                 try:
                     wb = load_workbook(ruta_archivo)
@@ -47,7 +55,7 @@ def colorear_excels_raiz():
                             break
 
                     if idx_monto == -1:
-                        print(f"   ⚠️ No se encontró la columna 'MONTO'.")
+                        print(f"    !! No se encontro la columna 'MONTO'.")
                         continue
 
                     # 2. Leer Columna L (12) y pintar Monto
@@ -69,17 +77,18 @@ def colorear_excels_raiz():
                             celda_monto.fill = PatternFill(fill_type=None)
 
                     wb.save(ruta_archivo)
-                    print(f"   ✅ Coloreado y guardado.")
+                    # Cerramos el libro para liberar memoria y evitar bloqueos en el siguiente script
+                    wb.close()
+                    print(f"    OK -> Guardado con exito.")
 
                 except Exception as e:
-                    print(f"   ❌ Error en {nombre_archivo}: {e}")
+                    print(f"    ERROR en {nombre_archivo}: {e}")
 
     if not encontrado:
-        print("⚠️ No se encontraron archivos Excel en 'CUADROS' ni en sus subcarpetas.")
+        print("!! No se encontraron archivos Excel en 'CUADROS'.")
 
     print("\n" + "="*60)
     print(">>> PROCESO FINALIZADO <<<")
-    input("Presiona ENTER para cerrar...")
 
 if __name__ == "__main__":
-    colorear_excels_raiz()
+    ejecutar()

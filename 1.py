@@ -3,17 +3,20 @@ import os
 import sys
 import re
 import warnings
-import threading
 import time
 
 # Silenciar advertencias de validación de Excel
 warnings.filterwarnings("ignore")
 
+# Configuración de codificación para evitar errores en consola
 if sys.stdout.encoding != 'utf-8':
     try:
         sys.stdout.reconfigure(encoding='utf-8')
     except:
         pass
+
+# Aseguramos que Python use UTF-8 para evitar los errores de las capturas
+os.environ["PYTHONIOENCODING"] = "utf-8"
 
 MESES_ES = {
     1: "ENERO", 2: "FEBRERO", 3: "MARZO", 4: "ABRIL", 
@@ -34,7 +37,7 @@ def obtener_links_fotos(sucursal, mes, nombre_archivo_n):
         nombres = nombre_n.split()
         for n in nombres:
             ruta_relativa = f"../../{CARPETA_FOTOS}/{mes}/{sucursal}/{n}"
-            links.append(f"<a href='#' onclick=\"abrirModal('{ruta_relativa}')\" class='link-incidencias'>📷 Ver Foto</a>")
+            links.append(f"<a href='#' onclick=\"abrirModal('{ruta_relativa}')\" class='link-incidencias'>VER FOTO</a>")
     return "<br>" + " ".join(links) if links else ""
 
 CSS_UNIFICADO = f"""
@@ -71,14 +74,19 @@ CSS_UNIFICADO = f"""
 </script>
 """
 
-def generar_reporte_v30_final():
+def ejecutar():
     try:
         print("\n" + "="*60)
-        print(">>> INICIANDO GENERACIÓN DE REPORTES V3.0 <<<")
+        print(">>> GENERANDO REPORTES V3.0 PARA PANEL <<<")
         print("="*60)
         
-        ruta_base = os.path.dirname(os.path.abspath(sys.argv[0]))
+        ruta_base = os.path.dirname(os.path.abspath(__file__))
         ruta_cuadros = os.path.join(ruta_base, "cuadros")
+        
+        if not os.path.exists(ruta_cuadros):
+            print(f"ERROR: Carpeta 'cuadros' no encontrada en: {ruta_cuadros}")
+            return
+
         archivos = [os.path.join(root, f) for root, dirs, files in os.walk(ruta_cuadros) for f in files if f.endswith(('.xlsx', '.xls')) and not f.startswith('~$')]
 
         lista_df = []
@@ -86,6 +94,8 @@ def generar_reporte_v30_final():
             try:
                 df_t = pd.read_excel(f, engine='openpyxl')
                 df_t.columns = [str(c).strip().upper() for c in df_t.columns]
+                
+                # Normalización de columnas
                 if 'RESPONSABLE' not in df_t.columns:
                     for col in df_t.columns:
                         if 'NOMBRE' in col or 'AUDITOR' in col:
@@ -99,8 +109,13 @@ def generar_reporte_v30_final():
                 df_t['INC_LIMPIA'] = df_t.iloc[:, 6].astype(str).str.strip().str.upper().str.replace('.', '', regex=False)
                 df_t['FECHA'] = pd.to_datetime(df_t['FECHA'], errors='coerce')
                 lista_df.append(df_t)
-            except: continue
+            except: 
+                continue
         
+        if not lista_df:
+            print("ERROR: No se pudieron cargar datos de los Excels.")
+            return
+
         df_master = pd.concat(lista_df, ignore_index=True).dropna(subset=['FECHA', 'SUCURSAL'])
         df_master['PERIODO'] = df_master['FECHA'].dt.to_period('M')
         
@@ -126,7 +141,6 @@ def generar_reporte_v30_final():
                 df_suc_act = df_m_act[df_m_act['SUCURSAL'] == suc]
                 p_f = os.path.join(ruta_base, n_m_act, n_s); os.makedirs(p_f, exist_ok=True)
                 
-                # Directorio base del mes anterior para vínculos relativos
                 base_ant = f"../../{n_m_ant}/{n_s}/"
                 btn_panel_principal = f"<a href='../../index.html#mes-{n_m_act}' class='btn-volver btn-panel'>PANEL PRINCIPAL</a>"
                 btn_atras_historial = "<a onclick='window.history.back()' class='btn-volver'>VOLVER AL REPORTE</a>"
@@ -145,13 +159,13 @@ def generar_reporte_v30_final():
                         filas.append(fila)
                     return "".join(filas)
 
-                # 1. TODO_EL_MES.HTML
+                # Generar HTMLs
                 if not df_suc_act.empty:
                     cuerpo_mes = generar_cuerpo_tabla(df_suc_act, n_s, n_m_act)
                     html_mes_completo = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TOTAL INCIDENCIAS {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in columnas_reporte])}</tr></thead><tbody>{cuerpo_mes}</tbody></table><br>{btn_atras_historial}{btn_panel_principal}</div></body></html>"
                     with open(os.path.join(p_f, "todo_el_mes.html"), "w", encoding="utf-8") as f: f.write(html_mes_completo)
 
-                # 2. RANKING & PERSONAS
+                # Ranking
                 ranking_html = ""
                 if not df_suc_act.empty and 'RESPONSABLE' in df_suc_act.columns:
                     top_inc = df_suc_act['RESPONSABLE'].value_counts().head(3)
@@ -162,7 +176,7 @@ def generar_reporte_v30_final():
                         html_pers = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>INCIDENCIAS: {nombre}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in columnas_reporte])}</tr></thead><tbody>{cuerpo_p}</tbody></table><br>{btn_atras_historial}{btn_panel_principal}</div></body></html>"
                         with open(os.path.join(p_f, archivo_persona), "w", encoding="utf-8") as f: f.write(html_pers)
 
-                # 3. OTRAS e INCIDENCIAS DEFINIDAS
+                # Otros y Grupos
                 suma_impacto, t_act, t_ant = 0, 0, 0
                 df_otras_act = df_suc_act[~df_suc_act['INC_LIMPIA'].isin(lista_items_definidos)].copy()
                 df_otras_ant = df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ant) & (~df_master['INC_LIMPIA'].isin(lista_items_definidos))].copy()
@@ -205,7 +219,7 @@ def generar_reporte_v30_final():
                 nota_f = max(0, 100 - suma_impacto)
                 color_eval = "#ed1c24" if nota_f < 75 else "#27ae60"
 
-                # 4. REPORTE.HTML
+                # Guardar Reportes Finales
                 v_total_ant = f"<a href='{base_ant}todo_el_mes.html' style='color:white;'>{t_ant}</a>" if t_ant > 0 else "0"
                 with open(os.path.join(p_f, "reporte.html"), "w", encoding="utf-8") as f: 
                     f.write(f"""<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body>
@@ -215,37 +229,32 @@ def generar_reporte_v30_final():
                                 <thead><tr><th>INCIDENCIA</th><th>TIPO</th><th>{n_m_ant}</th><th>{n_m_act}</th><th>APROBATORIO 75%</th></tr></thead>
                                 <tbody>{filas_html_txt}
                                     <tr style='background-color:#0844a4; color:white;'>
-                                        <td style='text-align:right; color:white;' colspan='2'>TOTAL / CALIFICACIÓN</td>
+                                        <td style='text-align:right; color:white;' colspan='2'>TOTAL / CALIFICACION</td>
                                         <td style='color:white;'>{v_total_ant}</td>
                                         <td style='color:white;'><a href='todo_el_mes.html' style='color:white;'>{t_act}</a></td>
                                         <td style='background:{color_eval}; color:white;'>{nota_f}%</td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class='ranking-title'>PERSONAS CON MAYOR NÚMERO DE INCIDENCIAS</div>
+                            <div class='ranking-title'>PERSONAS CON MAYOR NUMERO DE INCIDENCIAS</div>
                             <table><tbody>{ranking_html if ranking_html else "<tr><td>Sin datos</td></tr>"}</tbody></table>
                             <br><a href='solo_mes.html' class='btn-volver'>VOLVER AL RESUMEN</a>{btn_panel_principal}
                         </div></body></html>""")
 
-                # 5. SOLO_MES.HTML
                 with open(os.path.join(p_f, "solo_mes.html"), "w", encoding="utf-8") as f:
                     f.write(f"""<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body>
                         <div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>RESUMEN {n_s}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div>
                         <div class='main-container'>
-                            <table><thead><tr><th>MES</th><th>INCIDENCIAS</th><th>EVALUACIÓN</th></tr></thead>
+                            <table><thead><tr><th>MES</th><th>INCIDENCIAS</th><th>EVALUACION</th></tr></thead>
                             <tbody><tr><td>{n_m_act}</td><td>{t_act}</td><td style='background:{color_eval}; color:white;'>{nota_f}%</td></tr></tbody></table>
                             <br><a href='reporte.html' class='btn-volver'>VER REPORTE DETALLADO</a>{btn_panel_principal}
                         </div></body></html>""")
 
-                print(f"🏢 {n_s} | Procesado")
+                print(f"Sucursal: {n_s} -> OK")
 
-        print("\n✅ PROCESO FINALIZADO. CERRANDO EN 10 SEGUNDOS...")
-        threading.Thread(target=lambda: (time.sleep(10), os._exit(0)), daemon=True).start()
-        while True: time.sleep(1) 
+        print("\nOK: GENERACION DE REPORTES FINALIZADA.")
     except Exception as e: 
-        print(f"\n❌ ERROR: {e}")
-        time.sleep(10)
-        os._exit(1)
+        print(f"\nERROR CRITICO: {e}")
 
 if __name__ == "__main__":
-    generar_reporte_v30_final()
+    ejecutar()

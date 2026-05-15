@@ -1,17 +1,263 @@
 {
-    "MARZO": {
-        "TOTAL_COBRADO": 426.47,
-        "TOTAL_PERDIDA_PATRIMONIO": 62252.85000000001,
-        "TOTAL_EXCEDENTE": 0.0
-    },
     "ABRIL": {
-        "TOTAL_COBRADO": 460.44,
+        "TOTAL_COBRADO": 460.43999999999994,
         "TOTAL_PERDIDA_PATRIMONIO": 1293.473,
-        "TOTAL_EXCEDENTE": 248.0
+        "TOTAL_EXCEDENTE": 248.0,
+        "DETALLE_SUCURSALES": {
+            "ACACIAS": {
+                "COBRADO": 26.36,
+                "RECUPERADO": 124.3,
+                "EXCEDENTE": 0.0
+            },
+            "VILLAS DE ARAGUA": {
+                "COBRADO": 52.66,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "BARQUISIMETO": {
+                "COBRADO": 79.60000000000001,
+                "RECUPERADO": 5.51,
+                "EXCEDENTE": 0.0
+            },
+            "CASTAÑO": {
+                "COBRADO": 6.43,
+                "RECUPERADO": 1.8,
+                "EXCEDENTE": 0.0
+            },
+            "BOSQUE": {
+                "COBRADO": 64.99000000000001,
+                "RECUPERADO": 3.9,
+                "EXCEDENTE": 0.0
+            },
+            "TUCACAS": {
+                "COBRADO": 21.89,
+                "RECUPERADO": 1.69,
+                "EXCEDENTE": 0.0
+            },
+            "NAGUANAGUA": {
+                "COBRADO": 15.03,
+                "RECUPERADO": 57.1,
+                "EXCEDENTE": 92.0
+            },
+            "CENTRAL": {
+                "COBRADO": 127.68000000000002,
+                "RECUPERADO": 404.263,
+                "EXCEDENTE": 156.0
+            },
+            "GUACARA": {
+                "COBRADO": 0.3,
+                "RECUPERADO": 4.0,
+                "EXCEDENTE": 0.0
+            },
+            "IPSFA": {
+                "COBRADO": 1.1400000000000001,
+                "RECUPERADO": 2.57,
+                "EXCEDENTE": 0.0
+            },
+            "CIRCULO MILITAR": {
+                "COBRADO": 15.24,
+                "RECUPERADO": 655.3499999999999,
+                "EXCEDENTE": 0.0
+            },
+            "SAN DIEGO": {
+                "COBRADO": 4.59,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "SAN JUAN": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 4.19,
+                "EXCEDENTE": 0.0
+            },
+            "VICTORIA": {
+                "COBRADO": 11.4,
+                "RECUPERADO": 28.8,
+                "EXCEDENTE": 0.0
+            },
+            "MORA": {
+                "COBRADO": 31.13,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "SANTA RITA": {
+                "COBRADO": 2.0,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            }
+        }
+    },
+    "MARZO": {
+        "TOTAL_COBRADO": 426.46999999999997,
+        "TOTAL_PERDIDA_PATRIMONIO": 62252.85000000001,
+        "TOTAL_EXCEDENTE": 0.0,
+        "DETALLE_SUCURSALES": {
+            "ACACIAS": {
+                "COBRADO": 7.38,
+                "RECUPERADO": 753.38,
+                "EXCEDENTE": 0.0
+            },
+            "VILLAS DE ARAGUA": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 2580.94,
+                "EXCEDENTE": 0.0
+            },
+            "CASTAÑO": {
+                "COBRADO": 0.88,
+                "RECUPERADO": 939.49,
+                "EXCEDENTE": 0.0
+            },
+            "BARQUISIMETO": {
+                "COBRADO": 3.4299999999999997,
+                "RECUPERADO": 1.41,
+                "EXCEDENTE": 0.0
+            },
+            "BOSQUE": {
+                "COBRADO": 23.65,
+                "RECUPERADO": 1076.35,
+                "EXCEDENTE": 0.0
+            },
+            "TUCACAS": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 1055.6899999999998,
+                "EXCEDENTE": 0.0
+            },
+            "NAGUANAGUA": {
+                "COBRADO": 1.58,
+                "RECUPERADO": 74.78,
+                "EXCEDENTE": 0.0
+            },
+            "CENTRAL": {
+                "COBRADO": 284.98,
+                "RECUPERADO": 707.4900000000001,
+                "EXCEDENTE": 0.0
+            },
+            "GUACARA": {
+                "COBRADO": 3.4,
+                "RECUPERADO": 1338.4,
+                "EXCEDENTE": 0.0
+            },
+            "IPSFA": {
+                "COBRADO": 0.69,
+                "RECUPERADO": 309.85,
+                "EXCEDENTE": 0.0
+            },
+            "VICTORIA": {
+                "COBRADO": 70.71000000000001,
+                "RECUPERADO": 691.99,
+                "EXCEDENTE": 0.0
+            },
+            "SAN JUAN": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 498.38,
+                "EXCEDENTE": 0.0
+            },
+            "SAN DIEGO": {
+                "COBRADO": 18.09,
+                "RECUPERADO": 15062.850000000002,
+                "EXCEDENTE": 0.0
+            },
+            "CIRCULO MILITAR": {
+                "COBRADO": 10.48,
+                "RECUPERADO": 34541.75000000001,
+                "EXCEDENTE": 0.0
+            },
+            "MORA": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 163.49,
+                "EXCEDENTE": 0.0
+            },
+            "SANTA RITA": {
+                "COBRADO": 1.2,
+                "RECUPERADO": 2456.61,
+                "EXCEDENTE": 0.0
+            }
+        }
     },
     "MAYO": {
-        "TOTAL_COBRADO": 74.1,
-        "TOTAL_PERDIDA_PATRIMONIO": 271.54,
-        "TOTAL_EXCEDENTE": 96.05000000000001
+        "TOTAL_COBRADO": 81.63,
+        "TOTAL_PERDIDA_PATRIMONIO": 271.53999999999996,
+        "TOTAL_EXCEDENTE": 96.05000000000001,
+        "DETALLE_SUCURSALES": {
+            "ACACIAS": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "BARQUISIMETO": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 2.12,
+                "EXCEDENTE": 0.0
+            },
+            "BOSQUE": {
+                "COBRADO": 0.76,
+                "RECUPERADO": 190.44,
+                "EXCEDENTE": 92.29
+            },
+            "CASTAÑO": {
+                "COBRADO": 20.79,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "CENTRAL": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "CIRCULO MILITAR": {
+                "COBRADO": 17.67,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "GUACARA": {
+                "COBRADO": 3.06,
+                "RECUPERADO": 13.57,
+                "EXCEDENTE": 0.0
+            },
+            "IPSFA": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "MORA": {
+                "COBRADO": 4.66,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "NAGUANAGUA": {
+                "COBRADO": 22.07,
+                "RECUPERADO": 1.54,
+                "EXCEDENTE": 3.76
+            },
+            "SAN DIEGO": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 3.0,
+                "EXCEDENTE": 0.0
+            },
+            "SAN JUAN": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "SANTA RITA": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "TUCACAS": {
+                "COBRADO": 1.31,
+                "RECUPERADO": 60.870000000000005,
+                "EXCEDENTE": 0.0
+            },
+            "VICTORIA": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "VILLAS DE ARAGUA": {
+                "COBRADO": 11.31,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            }
+        }
     }
 }
