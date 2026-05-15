@@ -53,10 +53,6 @@
             "v": 100
         },
         {
-            "n": "SAN DIEGO (MAYO)",
-            "v": 85
-        },
-        {
             "n": "VILLAS DE ARAGUA (MAYO)",
             "v": 75
         }
@@ -181,6 +177,10 @@
         {
             "n": "NAGUANAGUA (MAYO)",
             "v": 15
+        },
+        {
+            "n": "SAN DIEGO (MAYO)",
+            "v": 65
         },
         {
             "n": "SAN JUAN (MAYO)",
