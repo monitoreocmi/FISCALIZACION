@@ -185,6 +185,11 @@
             "detalle": "D: 4 | E: 1"
         },
         {
+            "sucursal": "SAN DIEGO",
+            "total": 1,
+            "detalle": "D: 0 | E: 1"
+        },
+        {
             "sucursal": "SAN JUAN",
             "total": 1,
             "detalle": "D: 0 | E: 1"

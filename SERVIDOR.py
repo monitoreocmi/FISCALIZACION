@@ -18,17 +18,31 @@ except ImportError:
 
 app = Flask(__name__)
 app.secret_key = 'luxor_full_system_2026'
-CORS(app, resources={r"/*": {"origins": "*"}}) # Esto permite peticiones desde cualquier puerto
+CORS(app, resources={r"/*": {"origins": "*"}}) 
 
 # --- CONFIGURACIÓN DE RUTAS ---
 RUTA_RAIZ = os.path.dirname(os.path.abspath(__file__))
 os.chdir(RUTA_RAIZ)
 
-# IMPORTANTE: Asegúrate de que tu archivo index.html esté en la misma carpeta que este script
 RUTA_PANEL_HTML = os.path.join(RUTA_RAIZ, "index.html") 
 
 ULTIMO_ANALISIS = {"SUCURSAL": "", "PROVEEDOR": "", "FACTURA": "", "RESPONSABLE": ""}
-PROCESO_ACTIVO = False  # Flag para monitorear el script sincronizar.py
+PROCESO_ACTIVO = False 
+
+# --- FUNCIÓN AUTOMÁTICA DE GITHUB ---
+def subir_a_github():
+    """Ejecuta los comandos de Git para sincronizar con la nube"""
+    try:
+        subprocess.run(["git", "add", "."], check=True)
+        mensaje = f"Auto-update: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        subprocess.run(["git", "commit", "-m", mensaje], check=True)
+        # Se asume que la rama es 'main', si es 'master' cámbialo abajo
+        subprocess.run(["git", "push", "origin", "main"], check=True)
+        print(">>> GitHub actualizado con éxito.")
+        return True
+    except Exception as e:
+        print(f">>> Error al subir a GitHub: {e}")
+        return False
 
 # --- USUARIOS LOCALES ---
 USUARIOS = {
@@ -128,21 +142,19 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-# --- RUTA GUARDAR MODIFICADA PARA EJECUTAR SINCRONIZAR.PY ---
 @app.route('/guardar', methods=['POST'])
 def guardar():
     global PROCESO_ACTIVO
     try:
-        # 1. Verificar si la peticion viene del Panel Centralizado (JSON vacio o sin formulario)
-        # o si viene del Formulario de Carga (multipart/form-data)
+        # 1. Sincronización manual desde el Panel
         if not request.files and not request.form.get('SUCURSAL'):
-            # Si entramos aqui, es porque se pulso "SINCRONIZAR" en el Panel index.html
             script_maestro = os.path.join(RUTA_RAIZ, "sincronizar.py")
             if os.path.exists(script_maestro):
                 PROCESO_ACTIVO = True
                 subprocess.run([sys.executable, script_maestro], check=True)
+                subir_a_github() # SUBIDA AUTOMÁTICA A GITHUB
                 PROCESO_ACTIVO = False
-                return jsonify({"status": "ok", "message": "Sincronización manual completada"}), 200
+                return jsonify({"status": "ok", "message": "Sincronización manual y GitHub completada"}), 200
             else:
                 return jsonify({"status": "error", "message": "No se encontró sincronizar.py"}), 404
 
@@ -202,11 +214,12 @@ def guardar():
         try:
             df.to_excel(path_xlsx, index=False)
             
-            # --- Ejecutar sincronización automática después de guardar ---
+            # Sincronización automática local y remota
             script_maestro = os.path.join(RUTA_RAIZ, "sincronizar.py")
             if os.path.exists(script_maestro):
                 PROCESO_ACTIVO = True
                 subprocess.run([sys.executable, script_maestro], check=True)
+                subir_a_github() # SUBIDA AUTOMÁTICA A GITHUB
                 PROCESO_ACTIVO = False
             
         except PermissionError:
@@ -245,6 +258,7 @@ def borrar():
         df = pd.read_excel(rx, dtype={'FACTURA': str})
         df = df[df['ID'].astype(str) != str(data['id'])]
         df.to_excel(rx, index=False)
+        subir_a_github() # SUBIDA AUTOMÁTICA DESPUÉS DE BORRAR
     return jsonify({"status": "ok"})
 
 @app.route('/borrar_foto', methods=['POST'])
@@ -267,6 +281,7 @@ def borrar_foto():
             carpeta = "FACTURAS" if data['tipo'].upper() == 'FACTURAS' else "fotos_incidencias"
             ruta_física = os.path.join(RUTA_RAIZ, carpeta, mes.upper(), data['sucursal'].upper(), data['nombre'])
             if os.path.exists(ruta_física): os.remove(ruta_física)
+            subir_a_github() # SUBIDA AUTOMÁTICA DESPUÉS DE BORRAR FOTO
     return jsonify({"status": "ok"})
 
 @app.route('/')
