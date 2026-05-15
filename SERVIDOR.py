@@ -56,13 +56,9 @@ def login_required(f):
         return f(*args, **kwargs)
     return dec
 
-# --- NUEVA RUTA PARA EL PANEL ---
-# --- MODIFICACIÓN EN RUTA PANEL ---
 @app.route('/panel')
 @login_required
 def servir_panel():
-    # En lugar de buscar el archivo localmente, redirigimos al servidor del puerto 80
-    # Cambia la IP por la de tu servidor
     return redirect("http://192.168.7.77")
 
 def buscar_archivo(mes, sucursal):
@@ -132,11 +128,25 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+# --- RUTA GUARDAR MODIFICADA PARA EJECUTAR SINCRONIZAR.PY ---
 @app.route('/guardar', methods=['POST'])
-@login_required
 def guardar():
     global PROCESO_ACTIVO
     try:
+        # 1. Verificar si la peticion viene del Panel Centralizado (JSON vacio o sin formulario)
+        # o si viene del Formulario de Carga (multipart/form-data)
+        if not request.files and not request.form.get('SUCURSAL'):
+            # Si entramos aqui, es porque se pulso "SINCRONIZAR" en el Panel index.html
+            script_maestro = os.path.join(RUTA_RAIZ, "sincronizar.py")
+            if os.path.exists(script_maestro):
+                PROCESO_ACTIVO = True
+                subprocess.run([sys.executable, script_maestro], check=True)
+                PROCESO_ACTIVO = False
+                return jsonify({"status": "ok", "message": "Sincronización manual completada"}), 200
+            else:
+                return jsonify({"status": "error", "message": "No se encontró sincronizar.py"}), 404
+
+        # 2. Proceso normal de guardado del Formulario
         d = request.form
         suc, fec, ide = d.get('SUCURSAL'), d.get('FECHA'), str(d.get('ID_EDICION') or "").strip()
         mes = MESES_ES[datetime.strptime(fec, '%Y-%m-%d').month]
@@ -192,11 +202,11 @@ def guardar():
         try:
             df.to_excel(path_xlsx, index=False)
             
-            # --- EJECUTAR SINCRONIZACIÓN AL GUARDAR ---
+            # --- Ejecutar sincronización automática después de guardar ---
             script_maestro = os.path.join(RUTA_RAIZ, "sincronizar.py")
             if os.path.exists(script_maestro):
                 PROCESO_ACTIVO = True
-                subprocess.run([sys.executable, script_maestro])
+                subprocess.run([sys.executable, script_maestro], check=True)
                 PROCESO_ACTIVO = False
             
         except PermissionError:
@@ -365,12 +375,8 @@ th { background: var(--azul); color: white; position: sticky; top: 0; }
 <script>
 const meses_lista = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
 
-// FUNCIÓN ACTUALIZADA EN EL HTML_FORM
 function irAlPanel() {
-    const mesSeleccionado = document.getElementById('s_m').value;
-    // Apuntamos directamente a la raíz del servidor del Panel (Puerto 80)
-    const urlPanel = `http://192.168.77.7:80`;
-    window.open(urlPanel, '_blank');
+    window.open("http://192.168.77.7:80", '_blank');
 }
 
 function toggleM(){ let v=document.getElementById('e_clasm').value; document.getElementById('b_m').style.display=(v!=='NINGUNA')?'block':'none'; }
