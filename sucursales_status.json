@@ -1,0 +1,230 @@
+{
+    "aprobadas": [
+        {
+            "n": "CASTAÑO (ABRIL)",
+            "v": 90
+        },
+        {
+            "n": "CENTRAL (ABRIL)",
+            "v": 90
+        },
+        {
+            "n": "GUACARA (ABRIL)",
+            "v": 80
+        },
+        {
+            "n": "IPSFA (ABRIL)",
+            "v": 100
+        },
+        {
+            "n": "SAN DIEGO (ABRIL)",
+            "v": 100
+        },
+        {
+            "n": "SAN JUAN (ABRIL)",
+            "v": 100
+        },
+        {
+            "n": "SANTA RITA (ABRIL)",
+            "v": 85
+        },
+        {
+            "n": "ACACIAS (JUNIO)",
+            "v": 100
+        },
+        {
+            "n": "BARQUISIMETO (JUNIO)",
+            "v": 100
+        },
+        {
+            "n": "BOSQUE (JUNIO)",
+            "v": 100
+        },
+        {
+            "n": "CASTAÑO (JUNIO)",
+            "v": 100
+        },
+        {
+            "n": "CENTRAL (JUNIO)",
+            "v": 100
+        },
+        {
+            "n": "TUCACAS (JUNIO)",
+            "v": 100
+        },
+        {
+            "n": "VILLAS DE ARAGUA (JUNIO)",
+            "v": 100
+        },
+        {
+            "n": "CIRCULO MILITAR (MAYO)",
+            "v": 90
+        },
+        {
+            "n": "MORA (MAYO)",
+            "v": 100
+        }
+    ],
+    "reprobadas": [
+        {
+            "n": "ACACIAS (ABRIL)",
+            "v": 50
+        },
+        {
+            "n": "BARQUISIMETO (ABRIL)",
+            "v": 55
+        },
+        {
+            "n": "BOSQUE (ABRIL)",
+            "v": 45
+        },
+        {
+            "n": "CIRCULO MILITAR (ABRIL)",
+            "v": 50
+        },
+        {
+            "n": "MORA (ABRIL)",
+            "v": 50
+        },
+        {
+            "n": "NAGUANAGUA (ABRIL)",
+            "v": 50
+        },
+        {
+            "n": "TUCACAS (ABRIL)",
+            "v": 45
+        },
+        {
+            "n": "VICTORIA (ABRIL)",
+            "v": 65
+        },
+        {
+            "n": "VILLAS DE ARAGUA (ABRIL)",
+            "v": 35
+        },
+        {
+            "n": "ACACIAS (MARZO)",
+            "v": 45
+        },
+        {
+            "n": "BARQUISIMETO (MARZO)",
+            "v": 30
+        },
+        {
+            "n": "BOSQUE (MARZO)",
+            "v": 0
+        },
+        {
+            "n": "CASTAÑO (MARZO)",
+            "v": 0
+        },
+        {
+            "n": "CENTRAL (MARZO)",
+            "v": 0
+        },
+        {
+            "n": "CIRCULO MILITAR (MARZO)",
+            "v": 30
+        },
+        {
+            "n": "GUACARA (MARZO)",
+            "v": 0
+        },
+        {
+            "n": "IPSFA (MARZO)",
+            "v": 0
+        },
+        {
+            "n": "LA MORA (MARZO)",
+            "v": 70
+        },
+        {
+            "n": "MORA (MARZO)",
+            "v": 30
+        },
+        {
+            "n": "NAGUANAGUA (MARZO)",
+            "v": 30
+        },
+        {
+            "n": "SAN DIEGO (MARZO)",
+            "v": 0
+        },
+        {
+            "n": "SAN JUAN (MARZO)",
+            "v": 50
+        },
+        {
+            "n": "SANTA RITA (MARZO)",
+            "v": 30
+        },
+        {
+            "n": "TUCACAS (MARZO)",
+            "v": 25
+        },
+        {
+            "n": "VICTORIA (MARZO)",
+            "v": 25
+        },
+        {
+            "n": "VILLAS DE ARAGUA (MARZO)",
+            "v": 55
+        },
+        {
+            "n": "ACACIAS (MAYO)",
+            "v": 55
+        },
+        {
+            "n": "BARQUISIMETO (MAYO)",
+            "v": 55
+        },
+        {
+            "n": "BOSQUE (MAYO)",
+            "v": 25
+        },
+        {
+            "n": "CASTAÑO (MAYO)",
+            "v": 50
+        },
+        {
+            "n": "CENTRAL (MAYO)",
+            "v": 50
+        },
+        {
+            "n": "GUACARA (MAYO)",
+            "v": 50
+        },
+        {
+            "n": "IPSFA (MAYO)",
+            "v": 70
+        },
+        {
+            "n": "NAGUANAGUA (MAYO)",
+            "v": 15
+        },
+        {
+            "n": "SAN DIEGO (MAYO)",
+            "v": 55
+        },
+        {
+            "n": "SAN JUAN (MAYO)",
+            "v": 70
+        },
+        {
+            "n": "SANTA RITA (MAYO)",
+            "v": 30
+        },
+        {
+            "n": "TUCACAS (MAYO)",
+            "v": 35
+        },
+        {
+            "n": "VICTORIA (MAYO)",
+            "v": 30
+        },
+        {
+            "n": "VILLAS DE ARAGUA (MAYO)",
+            "v": 60
+        }
+    ]
+}

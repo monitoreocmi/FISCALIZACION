@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><style>
+                :root { --azul: #002060; --amarillo: #F9D908; --verde: #27ae60; --rojo: #ed1c24; --fondo: #f4f7f6; }
+                body { font-family: 'Segoe UI', sans-serif; background: var(--fondo); margin: 20px; }
+                .header { background: white; padding: 15px; border-bottom: 4px solid var(--amarillo); display: flex; justify-content: space-between; align-items: center; border-radius: 8px; }
+                h1 { color: var(--azul); margin: 0; font-size: 20px; }
+                .grid-local { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 20px 0; }
+                .card { background: var(--azul); color: white; padding: 15px; text-decoration: none; text-align: center; border-radius: 6px; font-weight: bold; font-size: 13px; }
+                .audit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+                .audit-card { background: white; padding: 15px; border-radius: 8px; border-top: 4px solid var(--azul); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+                .audit-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; font-size: 12px; }
+                .status-ok { color: var(--verde); font-weight: bold; } .status-fail { color: var(--rojo); font-weight: bold; }
+            </style></head><body>
+                <div class="header"><h1>RESUMEN MENSUAL: JUNIO</h1><a href="../../index.html" style="color:var(--azul); font-weight:bold;">← Volver al Panel Global</a></div>
+                <div class="grid-local"><a href="ACACIAS/reporte.html" class="card">ACACIAS</a><a href="BARQUISIMETO/reporte.html" class="card">BARQUISIMETO</a><a href="BOSQUE/reporte.html" class="card">BOSQUE</a><a href="CASTAÑO/reporte.html" class="card">CASTAÑO</a><a href="TUCACAS/reporte.html" class="card">TUCACAS</a><a href="VILLAS DE ARAGUA/reporte.html" class="card">VILLAS DE ARAGUA</a></div>
+                <div class="audit-grid">
+                    <div class="audit-card"><h3>INCIDENCIAS</h3><div class='audit-row '><span>CASTAÑO</span><b>3</b></div><div class='audit-row '><span>BOSQUE</span><b>2</b></div><div class='audit-row '><span>ACACIAS</span><b>1</b></div><div class='audit-row '><span>BARQUISIMETO</span><b>1</b></div><div class='audit-row '><span>CENTRAL</span><b>1</b></div><div class='audit-row '><span>TUCACAS</span><b>1</b></div><div class='audit-row '><span>VILLAS DE ARAGUA</span><b>1</b></div></div>
+                    <div class="audit-card"><h3>APROBADAS (>=75%)</h3><div class='audit-row status-ok'><span>ACACIAS</span><b>100</b></div><div class='audit-row status-ok'><span>BARQUISIMETO</span><b>100</b></div><div class='audit-row status-ok'><span>BOSQUE</span><b>100</b></div><div class='audit-row status-ok'><span>CASTAÑO</span><b>100</b></div><div class='audit-row status-ok'><span>CENTRAL</span><b>100</b></div><div class='audit-row status-ok'><span>TUCACAS</span><b>100</b></div><div class='audit-row status-ok'><span>VILLAS DE ARAGUA</span><b>100</b></div></div>
+                    <div class="audit-card"><h3>REPROBADAS (<75%)</h3><div class="audit-row">Sin registros</div></div>
+                </div>
+            </body></html>

@@ -1,0 +1,235 @@
+{
+    "ABRIL": [
+        {
+            "sucursal": "ACACIAS",
+            "total": 10,
+            "detalle": "D: 10 | E: 0"
+        },
+        {
+            "sucursal": "BARQUISIMETO",
+            "total": 5,
+            "detalle": "D: 5 | E: 0"
+        },
+        {
+            "sucursal": "BOSQUE",
+            "total": 6,
+            "detalle": "D: 4 | E: 2"
+        },
+        {
+            "sucursal": "CASTAÑO",
+            "total": 6,
+            "detalle": "D: 1 | E: 5"
+        },
+        {
+            "sucursal": "CENTRAL",
+            "total": 21,
+            "detalle": "D: 16 | E: 5"
+        },
+        {
+            "sucursal": "CIRCULO MILITAR",
+            "total": 4,
+            "detalle": "D: 3 | E: 1"
+        },
+        {
+            "sucursal": "GUACARA",
+            "total": 3,
+            "detalle": "D: 1 | E: 2"
+        },
+        {
+            "sucursal": "IPSFA",
+            "total": 2,
+            "detalle": "D: 2 | E: 0"
+        },
+        {
+            "sucursal": "MORA",
+            "total": 2,
+            "detalle": "D: 2 | E: 0"
+        },
+        {
+            "sucursal": "NAGUANAGUA",
+            "total": 3,
+            "detalle": "D: 3 | E: 0"
+        },
+        {
+            "sucursal": "SAN DIEGO",
+            "total": 4,
+            "detalle": "D: 3 | E: 1"
+        },
+        {
+            "sucursal": "TUCACAS",
+            "total": 13,
+            "detalle": "D: 2 | E: 11"
+        },
+        {
+            "sucursal": "VICTORIA",
+            "total": 3,
+            "detalle": "D: 1 | E: 2"
+        },
+        {
+            "sucursal": "VILLAS DE ARAGUA",
+            "total": 4,
+            "detalle": "D: 2 | E: 2"
+        }
+    ],
+    "JUNIO": [
+        {
+            "sucursal": "CENTRAL",
+            "total": 1,
+            "detalle": "D: 0 | E: 1"
+        },
+        {
+            "sucursal": "VILLAS DE ARAGUA",
+            "total": 1,
+            "detalle": "D: 1 | E: 0"
+        }
+    ],
+    "MARZO": [
+        {
+            "sucursal": "ACACIAS",
+            "total": 5,
+            "detalle": "D: 5 | E: 0"
+        },
+        {
+            "sucursal": "BARQUISIMETO",
+            "total": 4,
+            "detalle": "D: 4 | E: 0"
+        },
+        {
+            "sucursal": "BOSQUE",
+            "total": 2,
+            "detalle": "D: 1 | E: 1"
+        },
+        {
+            "sucursal": "CASTAÑO",
+            "total": 8,
+            "detalle": "D: 2 | E: 6"
+        },
+        {
+            "sucursal": "CENTRAL",
+            "total": 33,
+            "detalle": "D: 16 | E: 17"
+        },
+        {
+            "sucursal": "CIRCULO MILITAR",
+            "total": 3,
+            "detalle": "D: 3 | E: 0"
+        },
+        {
+            "sucursal": "GUACARA",
+            "total": 5,
+            "detalle": "D: 1 | E: 4"
+        },
+        {
+            "sucursal": "IPSFA",
+            "total": 4,
+            "detalle": "D: 3 | E: 1"
+        },
+        {
+            "sucursal": "MORA",
+            "total": 1,
+            "detalle": "D: 1 | E: 0"
+        },
+        {
+            "sucursal": "NAGUANAGUA",
+            "total": 1,
+            "detalle": "D: 1 | E: 0"
+        },
+        {
+            "sucursal": "SAN DIEGO",
+            "total": 10,
+            "detalle": "D: 8 | E: 2"
+        },
+        {
+            "sucursal": "SAN JUAN",
+            "total": 1,
+            "detalle": "D: 0 | E: 1"
+        },
+        {
+            "sucursal": "SANTA RITA",
+            "total": 2,
+            "detalle": "D: 2 | E: 0"
+        },
+        {
+            "sucursal": "TUCACAS",
+            "total": 8,
+            "detalle": "D: 0 | E: 8"
+        },
+        {
+            "sucursal": "VICTORIA",
+            "total": 5,
+            "detalle": "D: 0 | E: 5"
+        }
+    ],
+    "MAYO": [
+        {
+            "sucursal": "ACACIAS",
+            "total": 1,
+            "detalle": "D: 1 | E: 0"
+        },
+        {
+            "sucursal": "BARQUISIMETO",
+            "total": 3,
+            "detalle": "D: 2 | E: 1"
+        },
+        {
+            "sucursal": "BOSQUE",
+            "total": 5,
+            "detalle": "D: 2 | E: 3"
+        },
+        {
+            "sucursal": "CASTAÑO",
+            "total": 3,
+            "detalle": "D: 2 | E: 1"
+        },
+        {
+            "sucursal": "CENTRAL",
+            "total": 16,
+            "detalle": "D: 10 | E: 6"
+        },
+        {
+            "sucursal": "CIRCULO MILITAR",
+            "total": 2,
+            "detalle": "D: 2 | E: 0"
+        },
+        {
+            "sucursal": "GUACARA",
+            "total": 3,
+            "detalle": "D: 3 | E: 0"
+        },
+        {
+            "sucursal": "NAGUANAGUA",
+            "total": 9,
+            "detalle": "D: 6 | E: 3"
+        },
+        {
+            "sucursal": "SAN DIEGO",
+            "total": 3,
+            "detalle": "D: 2 | E: 1"
+        },
+        {
+            "sucursal": "SAN JUAN",
+            "total": 2,
+            "detalle": "D: 0 | E: 2"
+        },
+        {
+            "sucursal": "SANTA RITA",
+            "total": 8,
+            "detalle": "D: 4 | E: 4"
+        },
+        {
+            "sucursal": "TUCACAS",
+            "total": 12,
+            "detalle": "D: 0 | E: 12"
+        },
+        {
+            "sucursal": "VICTORIA",
+            "total": 10,
+            "detalle": "D: 3 | E: 7"
+        },
+        {
+            "sucursal": "VILLAS DE ARAGUA",
+            "total": 6,
+            "detalle": "D: 6 | E: 0"
+        }
+    ]
+}

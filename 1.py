@@ -1,0 +1,260 @@
+import pandas as pd
+import os
+import sys
+import re
+import warnings
+import time
+
+# Silenciar advertencias de validación de Excel
+warnings.filterwarnings("ignore")
+
+# Configuración de codificación para evitar errores en consola
+if sys.stdout.encoding != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except:
+        pass
+
+# Aseguramos que Python use UTF-8 para evitar los errores de las capturas
+os.environ["PYTHONIOENCODING"] = "utf-8"
+
+MESES_ES = {
+    1: "ENERO", 2: "FEBRERO", 3: "MARZO", 4: "ABRIL", 
+    5: "MAYO", 6: "JUNIO", 7: "JULIO", 8: "AGOSTO", 
+    9: "SEPTIEMBRE", 10: "OCTUBRE", 11: "NOVIEMBRE", 12: "DICIEMBRE"
+}
+
+RUTA_LOGO = "../../RECURSOS/logo.png"
+
+def limpiar_nombre_archivo(nombre):
+    return re.sub(r'[^\w\s-]', '', str(nombre)).strip().replace(' ', '_')
+
+def obtener_links_fotos(sucursal, mes, nombre_archivo_n):
+    CARPETA_FOTOS = "fotos_incidencias" 
+    links = []
+    nombre_n = str(nombre_archivo_n).strip()
+    if nombre_n and nombre_n.lower() != 'nan' and nombre_n != '-':
+        nombres = nombre_n.split()
+        for n in nombres:
+            ruta_relativa = f"../../{CARPETA_FOTOS}/{mes}/{sucursal}/{n}"
+            links.append(f"<a href='#' onclick=\"abrirModal('{ruta_relativa}')\" class='link-incidencias'>VER FOTO</a>")
+    return "<br>" + " ".join(links) if links else ""
+
+CSS_UNIFICADO = f"""
+<style>
+    body {{ font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; text-align: center; }}
+    .top-bar {{ height: 100px; background: white; border-bottom: 4px solid #F9D908; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; margin-bottom: 30px; }}
+    .logo-ext {{ height: 60px; max-width: 100px; object-fit: contain; }}
+    h1 {{ color: #0844a4; margin: 0; text-transform: uppercase; font-weight: 900; font-size: 18px; text-align: center; flex-grow: 1; padding: 0 10px; }}
+    .main-container {{ background-color: white; width: 95%; margin: 0 auto 40px auto; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; text-align: center; overflow-x: auto; }}
+    table {{ width: 100%; border-collapse: collapse; border: 2px solid #333; margin: 0 auto; }}
+    th {{ background-color: #0844a4; color: #F9D908; padding: 10px; font-size: 12px; text-transform: uppercase; border: 2px solid #333; }}
+    td {{ border: 2px solid #333; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; color: black; }}
+    tr:nth-child(even) {{ background-color: #f2f2f2; }}
+    .btn-volver {{ display: inline-block; cursor: pointer; margin: 10px 5px; padding: 10px 20px; background-color: #0844a4; color: #ffffff !important; text-decoration: none; font-weight: 900; font-size: 13px; text-transform: uppercase; border-radius: 50px; border: 2px solid #F9D908; }}
+    .btn-panel {{ background-color: #ed1c24; }}
+    .ranking-title {{ background: #ed1c24; color: white; padding: 10px; margin-top: 20px; font-size: 14px; font-weight: 900; border: 2px solid #333; border-bottom: none; }}
+    .link-incidencias {{ color: #0844a4; text-decoration: underline; font-size: 10px; font-weight: bold; cursor: pointer; }}
+    #modalFoto {{ display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }}
+    .modal-content {{ margin: auto; display: block; max-width: 80%; max-height: 80%; margin-top: 50px; border: 5px solid white; }}
+    .close-modal {{ position: absolute; top: 20px; right: 35px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; }}
+</style>
+<div id="modalFoto" onclick="cerrarModal()">
+    <span class="close-modal">&times;</span>
+    <img class="modal-content" id="imgModal">
+</div>
+<script>
+    function abrirModal(ruta) {{
+        document.getElementById("imgModal").src = ruta;
+        document.getElementById("modalFoto").style.display = "block";
+    }}
+    function cerrarModal() {{
+        document.getElementById("modalFoto").style.display = "none";
+    }}
+</script>
+"""
+
+def ejecutar():
+    try:
+        print("\n" + "="*60)
+        print(">>> GENERANDO REPORTES V3.0 PARA PANEL <<<")
+        print("="*60)
+        
+        ruta_base = os.path.dirname(os.path.abspath(__file__))
+        ruta_cuadros = os.path.join(ruta_base, "cuadros")
+        
+        if not os.path.exists(ruta_cuadros):
+            print(f"ERROR: Carpeta 'cuadros' no encontrada en: {ruta_cuadros}")
+            return
+
+        archivos = [os.path.join(root, f) for root, dirs, files in os.walk(ruta_cuadros) for f in files if f.endswith(('.xlsx', '.xls')) and not f.startswith('~$')]
+
+        lista_df = []
+        for f in archivos:
+            try:
+                df_t = pd.read_excel(f, engine='openpyxl')
+                df_t.columns = [str(c).strip().upper() for c in df_t.columns]
+                
+                # Normalización de columnas
+                if 'RESPONSABLE' not in df_t.columns:
+                    for col in df_t.columns:
+                        if 'NOMBRE' in col or 'AUDITOR' in col:
+                            df_t.rename(columns={col: 'RESPONSABLE'}, inplace=True)
+                            break
+                if 'FECHA' not in df_t.columns and len(df_t.columns) >= 4:
+                    df_t.rename(columns={df_t.columns[3]: 'FECHA'}, inplace=True)
+                if len(df_t.columns) >= 14:
+                    df_t.rename(columns={df_t.columns[13]: 'FOTO_INCIDENCIAS'}, inplace=True)
+
+                df_t['INC_LIMPIA'] = df_t.iloc[:, 6].astype(str).str.strip().str.upper().str.replace('.', '', regex=False)
+                df_t['FECHA'] = pd.to_datetime(df_t['FECHA'], errors='coerce')
+                lista_df.append(df_t)
+            except: 
+                continue
+        
+        if not lista_df:
+            print("ERROR: No se pudieron cargar datos de los Excels.")
+            return
+
+        df_master = pd.concat(lista_df, ignore_index=True).dropna(subset=['FECHA', 'SUCURSAL'])
+        df_master['PERIODO'] = df_master['FECHA'].dt.to_period('M')
+        
+        columnas_reporte = ['RESPONSABLE', 'PROVEEDOR', 'FECHA', 'FACTURA', 'INCIDENCIA', 'TIPO FISCALIZACIÓN', 'OBSERVACIÓN']
+        grupos_defs = [
+            {"tipo": "A", "porc": 10, "color": "#f4faf0", "items": ["NÚMERO DE CONTROL O DOCUMENTO ERRÓNEO", "FALTA SELLO, FIRMA O CÉDULA", "DOCUMENTO NO LEGIBLE"]},
+            {"tipo": "B", "porc": 15, "color": "#f0f7ff", "items": ["DOCUMENTACIÓN ERRÓNEA", "FISCALIZACIÓN A DESTIEMPO", "PRODUCTO O SKU DUPLICADO", "RECEPCIÓN FUERA DE VISUAL / CON OBSTRUCCIÓN"]},
+            {"tipo": "C", "porc": 20, "color": "#fffef0", "items": ["FISCALIZACIÓN CON USUARIO NO CORRESPONDIENTE", "ERROR DE KG EN TARA", "PRODUCTO O SKU NO PERTENECE A LA RECEPCIÓN", "NO FISCALIZÓ UNO O VARIOS PRODUCTOS"]},
+            {"tipo": "D", "porc": 25, "color": "#fff8f0", "items": ["NO SE INDICÓ DIFERENCIA AL DORSO DE LA FACTURA", "DIFERENCIA ENTRE CANTIDAD FISCALIZADA Y DOCUMENTO"]},
+            {"tipo": "E", "porc": 30, "color": "#fff0f0", "items": ["RECEPCIÓN SIN AUTORIZACIÓN DE CMF", "NO SE COMPLETA EL PROCESO DE FISCALIZACION Y SE ELIMINA"]}
+        ]
+
+        lista_items_definidos = [item.upper().replace('.', '') for g in grupos_defs for item in g["items"]]
+
+        for p_act in sorted(df_master['PERIODO'].unique()):
+            n_m_act = MESES_ES[p_act.month]
+            p_ant = p_act - 1
+            n_m_ant = MESES_ES[p_ant.month] if p_ant.month in MESES_ES else "ANT."
+            df_m_act = df_master[df_master['PERIODO'] == p_act]
+
+            for suc in sorted(df_m_act['SUCURSAL'].dropna().unique()):
+                n_s = str(suc).strip().upper()
+                df_suc_act = df_m_act[df_m_act['SUCURSAL'] == suc]
+                p_f = os.path.join(ruta_base, n_m_act, n_s); os.makedirs(p_f, exist_ok=True)
+                
+                base_ant = f"../../{n_m_ant}/{n_s}/"
+                btn_panel_principal = f"<a href='../../index.html#mes-{n_m_act}' class='btn-volver btn-panel'>PANEL PRINCIPAL</a>"
+                btn_atras_historial = "<a onclick='window.history.back()' class='btn-volver'>VOLVER AL REPORTE</a>"
+
+                def generar_cuerpo_tabla(df_local, sucursal_l, mes_l):
+                    filas = []
+                    for _, r in df_local.iterrows():
+                        links = obtener_links_fotos(sucursal_l, mes_l, r.get('FOTO_INCIDENCIAS', ''))
+                        obs_con_foto = f"{str(r.get('OBSERVACIÓN', '-'))} {links}"
+                        fila = "<tr>"
+                        for col in columnas_reporte:
+                            if col == 'OBSERVACIÓN': fila += f"<td>{obs_con_foto}</td>"
+                            elif col == 'FECHA': fila += f"<td>{pd.to_datetime(r[col]).strftime('%Y-%m-%d') if not pd.isna(r[col]) else '-'}</td>"
+                            else: fila += f"<td>{r.get(col, '-')}</td>"
+                        fila += "</tr>"
+                        filas.append(fila)
+                    return "".join(filas)
+
+                # Generar HTMLs
+                if not df_suc_act.empty:
+                    cuerpo_mes = generar_cuerpo_tabla(df_suc_act, n_s, n_m_act)
+                    html_mes_completo = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>TOTAL INCIDENCIAS {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in columnas_reporte])}</tr></thead><tbody>{cuerpo_mes}</tbody></table><br>{btn_atras_historial}{btn_panel_principal}</div></body></html>"
+                    with open(os.path.join(p_f, "todo_el_mes.html"), "w", encoding="utf-8") as f: f.write(html_mes_completo)
+
+                # Ranking
+                ranking_html = ""
+                if not df_suc_act.empty and 'RESPONSABLE' in df_suc_act.columns:
+                    top_inc = df_suc_act['RESPONSABLE'].value_counts().head(3)
+                    for nombre, total in top_inc.items():
+                        archivo_persona = f"INCIDENCIAS_{limpiar_nombre_archivo(nombre)}.html"
+                        ranking_html += f"<tr><td style='text-align:left;'>{nombre}</td><td><a href='{archivo_persona}' class='link-incidencias'>{total} INCIDENCIAS</a></td></tr>"
+                        cuerpo_p = generar_cuerpo_tabla(df_suc_act[df_suc_act['RESPONSABLE'] == nombre], n_s, n_m_act)
+                        html_pers = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>INCIDENCIAS: {nombre}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in columnas_reporte])}</tr></thead><tbody>{cuerpo_p}</tbody></table><br>{btn_atras_historial}{btn_panel_principal}</div></body></html>"
+                        with open(os.path.join(p_f, archivo_persona), "w", encoding="utf-8") as f: f.write(html_pers)
+
+                # Otros y Grupos
+                suma_impacto, t_act, t_ant = 0, 0, 0
+                df_otras_act = df_suc_act[~df_suc_act['INC_LIMPIA'].isin(lista_items_definidos)].copy()
+                df_otras_ant = df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ant) & (~df_master['INC_LIMPIA'].isin(lista_items_definidos))].copy()
+                c_otras_act, c_otras_ant = len(df_otras_act), len(df_otras_ant)
+                t_act += c_otras_act; t_ant += c_otras_ant
+                v_otras_ant = f"<a href='{base_ant}OTRAS.html' class='link-incidencias'>{c_otras_ant}</a>" if c_otras_ant > 0 else "0"
+                v_otras_act = f"<a href='OTRAS.html' class='link-incidencias'>{c_otras_act}</a>" if c_otras_act > 0 else "0"
+                filas_html_txt = f"<tr style='background:white; border-bottom:4px solid #333;'><td style='text-align:left;'>OTRAS.</td><td>-</td><td>{v_otras_ant}</td><td>{v_otras_act}</td><td>-</td></tr>"
+                
+                if c_otras_act > 0:
+                    cuerpo_otras = generar_cuerpo_tabla(df_otras_act, n_s, n_m_act)
+                    html_otras = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>OTRAS INCIDENCIAS</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in columnas_reporte])}</tr></thead><tbody>{cuerpo_otras}</tbody></table><br>{btn_atras_historial}{btn_panel_principal}</div></body></html>"
+                    with open(os.path.join(p_f, "OTRAS.html"), "w", encoding="utf-8") as f: f.write(html_otras)
+
+                for grupo in grupos_defs:
+                    g_act_grupo, g_ant_grupo = 0, 0
+                    temp_filas = []
+                    for idx_item, inc in enumerate(grupo["items"]):
+                        busq = inc.upper().replace('.', '')
+                        df_det_act = df_suc_act[df_suc_act['INC_LIMPIA'] == busq].copy()
+                        c_act = len(df_det_act)
+                        c_ant = len(df_master[(df_master['SUCURSAL']==suc) & (df_master['PERIODO']==p_ant) & (df_master['INC_LIMPIA']==busq)])
+                        g_act_grupo += c_act; g_ant_grupo += c_ant; t_act += c_act; t_ant += c_ant
+                        
+                        v_ant = f"<a href='{base_ant}{limpiar_nombre_archivo(inc)}.html' class='link-incidencias'>{c_ant}</a>" if c_ant > 0 else "0"
+                        v_act = f"<a href='{limpiar_nombre_archivo(inc)}.html' class='link-incidencias'>{c_act}</a>" if c_act > 0 else "0"
+                        
+                        estilo_sep = "border-bottom: 4px solid #333;" if idx_item == len(grupo["items"]) - 1 else ""
+                        temp_filas.append(f"<tr style='background-color:{grupo['color']}; {estilo_sep}'><td style='text-align:left;'>{inc}.</td><td>{grupo['tipo']}</td><td>{v_ant}</td><td>{v_act}</td>")
+                        if c_act > 0:
+                            cuerpo_inc = generar_cuerpo_tabla(df_det_act, n_s, n_m_act)
+                            html_inc = f"<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body><div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{inc}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div><div class='main-container'><table><thead><tr>{''.join([f'<th>{c}</th>' for c in columnas_reporte])}</tr></thead><tbody>{cuerpo_inc}</tbody></table><br>{btn_atras_historial}{btn_panel_principal}</div></body></html>"
+                            with open(os.path.join(p_f, f"{limpiar_nombre_archivo(inc)}.html"), "w", encoding="utf-8") as f: f.write(html_inc)
+
+                    if g_act_grupo > g_ant_grupo: suma_impacto += grupo["porc"]
+                    color_p = "#ffcccc" if g_act_grupo > g_ant_grupo else "#ccffcc"
+                    for idx, f_base in enumerate(temp_filas):
+                        filas_html_txt += f_base + (f"<td rowspan='{len(grupo['items'])}' style='background-color:{color_p};'>{grupo['porc']}%</td></tr>" if idx == 0 else "</tr>")
+
+                nota_f = max(0, 100 - suma_impacto)
+                color_eval = "#ed1c24" if nota_f < 75 else "#27ae60"
+
+                # Guardar Reportes Finales
+                v_total_ant = f"<a href='{base_ant}todo_el_mes.html' style='color:white;'>{t_ant}</a>" if t_ant > 0 else "0"
+                with open(os.path.join(p_f, "reporte.html"), "w", encoding="utf-8") as f: 
+                    f.write(f"""<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body>
+                        <div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>{n_s} - {n_m_act}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div>
+                        <div class='main-container'>
+                            <table>
+                                <thead><tr><th>INCIDENCIA</th><th>TIPO</th><th>{n_m_ant}</th><th>{n_m_act}</th><th>APROBATORIO 75%</th></tr></thead>
+                                <tbody>{filas_html_txt}
+                                    <tr style='background-color:#0844a4; color:white;'>
+                                        <td style='text-align:right; color:white;' colspan='2'>TOTAL / CALIFICACION</td>
+                                        <td style='color:white;'>{v_total_ant}</td>
+                                        <td style='color:white;'><a href='todo_el_mes.html' style='color:white;'>{t_act}</a></td>
+                                        <td style='background:{color_eval}; color:white;'>{nota_f}%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class='ranking-title'>PERSONAS CON MAYOR NUMERO DE INCIDENCIAS</div>
+                            <table><tbody>{ranking_html if ranking_html else "<tr><td>Sin datos</td></tr>"}</tbody></table>
+                            <br><a href='solo_mes.html' class='btn-volver'>VOLVER AL RESUMEN</a>{btn_panel_principal}
+                        </div></body></html>""")
+
+                with open(os.path.join(p_f, "solo_mes.html"), "w", encoding="utf-8") as f:
+                    f.write(f"""<html><head><meta charset='UTF-8'>{CSS_UNIFICADO}</head><body>
+                        <div class='top-bar'><img src='{RUTA_LOGO}' class='logo-ext'><h1>RESUMEN {n_s}</h1><img src='{RUTA_LOGO}' class='logo-ext'></div>
+                        <div class='main-container'>
+                            <table><thead><tr><th>MES</th><th>INCIDENCIAS</th><th>EVALUACION</th></tr></thead>
+                            <tbody><tr><td>{n_m_act}</td><td>{t_act}</td><td style='background:{color_eval}; color:white;'>{nota_f}%</td></tr></tbody></table>
+                            <br><a href='reporte.html' class='btn-volver'>VER REPORTE DETALLADO</a>{btn_panel_principal}
+                        </div></body></html>""")
+
+                print(f"Sucursal: {n_s} -> OK")
+
+        print("\nOK: GENERACION DE REPORTES FINALIZADA.")
+    except Exception as e: 
+        print(f"\nERROR CRITICO: {e}")
+
+if __name__ == "__main__":
+    ejecutar()
