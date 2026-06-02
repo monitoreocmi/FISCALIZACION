@@ -352,6 +352,14 @@
         "TOTAL_GESTIONADO": 2.45
     },
     {
+        "sucursal": "TUCACAS",
+        "mes": "JUNIO",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 161.46,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 161.46
+    },
+    {
         "sucursal": "LA MORA",
         "mes": "MARZO",
         "COBRADO": 0.0,

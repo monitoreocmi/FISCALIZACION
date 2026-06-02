@@ -88,7 +88,7 @@
     },
     "JUNIO": {
         "TOTAL_COBRADO": 1.62,
-        "TOTAL_PERDIDA_PATRIMONIO": 2.45,
+        "TOTAL_PERDIDA_PATRIMONIO": 163.91,
         "TOTAL_EXCEDENTE": 0.0,
         "DETALLE_SUCURSALES": {
             "ACACIAS": {
@@ -119,6 +119,11 @@
             "MORA": {
                 "COBRADO": 0.0,
                 "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "TUCACAS": {
+                "COBRADO": 0.0,
+                "RECUPERADO": 161.46,
                 "EXCEDENTE": 0.0
             },
             "VILLAS DE ARAGUA": {
