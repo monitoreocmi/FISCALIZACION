@@ -123,9 +123,9 @@
         "sucursal": "CASTAÑO",
         "mes": "MAYO",
         "COBRADO": 20.79,
-        "PERDIDA_PATRIMONIO": 0.0,
+        "PERDIDA_PATRIMONIO": 8.06,
         "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 20.79
+        "TOTAL_GESTIONADO": 28.85
     },
     {
         "sucursal": "SAN DIEGO",
