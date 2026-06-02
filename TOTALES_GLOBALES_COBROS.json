@@ -213,7 +213,7 @@
     "MAYO": {
         "TOTAL_COBRADO": 435.49,
         "TOTAL_PERDIDA_PATRIMONIO": 429.13999999999993,
-        "TOTAL_EXCEDENTE": 223.37000000000003,
+        "TOTAL_EXCEDENTE": 592.4,
         "DETALLE_SUCURSALES": {
             "ACACIAS": {
                 "COBRADO": 2.85,
@@ -233,7 +233,7 @@
             "CASTAÑO": {
                 "COBRADO": 20.79,
                 "RECUPERADO": 8.06,
-                "EXCEDENTE": 0.0
+                "EXCEDENTE": 369.03
             },
             "CENTRAL": {
                 "COBRADO": 97.94000000000001,
