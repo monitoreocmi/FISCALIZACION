@@ -344,6 +344,14 @@
         "TOTAL_GESTIONADO": 4.19
     },
     {
+        "sucursal": "BOSQUE",
+        "mes": "JUNIO",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 15.31,
+        "TOTAL_GESTIONADO": 15.31
+    },
+    {
         "sucursal": "CASTAÑO",
         "mes": "JUNIO",
         "COBRADO": 0.0,
