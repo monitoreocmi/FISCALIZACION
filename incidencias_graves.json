@@ -78,6 +78,11 @@
             "detalle": "D: 1 | E: 0"
         },
         {
+            "sucursal": "BOSQUE",
+            "total": 1,
+            "detalle": "D: 0 | E: 1"
+        },
+        {
             "sucursal": "CENTRAL",
             "total": 1,
             "detalle": "D: 0 | E: 1"
