@@ -241,9 +241,9 @@
         }
     },
     "MAYO": {
-        "TOTAL_COBRADO": 435.49,
-        "TOTAL_PERDIDA_PATRIMONIO": 448.94999999999993,
-        "TOTAL_EXCEDENTE": 592.4,
+        "TOTAL_COBRADO": 509.07,
+        "TOTAL_PERDIDA_PATRIMONIO": 375.36999999999995,
+        "TOTAL_EXCEDENTE": 590.81,
         "DETALLE_SUCURSALES": {
             "ACACIAS": {
                 "COBRADO": 2.85,
@@ -316,9 +316,9 @@
                 "EXCEDENTE": 0.0
             },
             "VICTORIA": {
-                "COBRADO": 24.96,
-                "RECUPERADO": 73.58000000000001,
-                "EXCEDENTE": 1.59
+                "COBRADO": 98.53999999999999,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
             },
             "VILLAS DE ARAGUA": {
                 "COBRADO": 100.93,
