@@ -39,7 +39,7 @@
                 <img src="RECURSOS/logo.png" class="logo-panel" onclick="toggleCentral()">
             </header>
             <div class="controls-bar">
-                <select id="mes-selector" onchange="cambiarMes()"><option value="mes-MARZO" >MARZO</option><option value="mes-ABRIL" >ABRIL</option><option value="mes-MAYO" >MAYO</option><option value="mes-JUNIO" >JUNIO</option><option value="mes-JULIO" selected>JULIO</option></select>
+                <select id="mes-selector" onchange="cambiarMes()"><option value="mes-MARZO" >MARZO</option><option value="mes-ABRIL" >ABRIL</option><option value="mes-MAYO" >MAYO</option><option value="mes-JUNIO" selected>JUNIO</option></select>
                 <button class="tab-btn active" id="btn-inc" onclick="showGlobalTab('incs')">INCIDENCIAS</button>
                 <button class="tab-btn" id="btn-cob" onclick="showGlobalTab('cobs')">COBROS Y PERDIDA MITIGADA</button>
                 <button class="tab-btn" id="btn-hon" onclick="showGlobalTab('honor')">MEJOR RENDIMIENTO</button>
@@ -193,10 +193,10 @@
                     <h2 class="sub-title">REPORTES DE INCIDENCIAS - JUNIO</h2>
                     <div class="blue-box"><div class="grid"><a href="JUNIO/ACACIAS/reporte.html" class="card sucursal-comun">ACACIAS</a><a href="JUNIO/BARQUISIMETO/reporte.html" class="card sucursal-comun">BARQUISIMETO</a><a href="JUNIO/BOSQUE/reporte.html" class="card sucursal-comun">BOSQUE</a><a href="JUNIO/CASTAÑO/reporte.html" class="card sucursal-comun">CASTAÑO</a><a href="JUNIO/CENTRAL/reporte.html" class="card sucursal-central">CENTRAL</a><a href="JUNIO/MORA/reporte.html" class="card sucursal-comun">MORA</a><a href="JUNIO/NAGUANAGUA/reporte.html" class="card sucursal-comun">NAGUANAGUA</a><a href="JUNIO/TUCACAS/reporte.html" class="card sucursal-comun">TUCACAS</a><a href="JUNIO/VILLAS DE ARAGUA/reporte.html" class="card sucursal-comun">VILLAS DE ARAGUA</a></div></div>
                     <div class="audit-grid-full">
-                        <div class="audit-card"><h3>INCIDENCIAS TOTALES</h3><div class="scroll-area"><div class='audit-row row-blue sucursal-comun'><span>ACACIAS</span><b>5</b></div><div class='audit-row row-blue sucursal-comun'><span>BOSQUE</span><b>4</b></div><div class='audit-row row-blue sucursal-comun'><span>CASTAÑO</span><b>4</b></div><div class='audit-row row-blue sucursal-comun'><span>BARQUISIMETO</span><b>3</b></div><div class='audit-row row-blue sucursal-central'><span>CENTRAL</span><b>2</b></div><div class='audit-row row-blue sucursal-comun'><span>MORA</span><b>2</b></div><div class='audit-row row-blue sucursal-comun'><span>NAGUANAGUA</span><b>1</b></div><div class='audit-row row-blue sucursal-comun'><span>TUCACAS</span><b>1</b></div><div class='audit-row row-blue sucursal-comun'><span>VILLAS DE ARAGUA</span><b>1</b></div></div></div>
+                        <div class="audit-card"><h3>INCIDENCIAS TOTALES</h3><div class="scroll-area"><div class='audit-row row-blue sucursal-comun'><span>ACACIAS</span><b>5</b></div><div class='audit-row row-blue sucursal-comun'><span>BOSQUE</span><b>4</b></div><div class='audit-row row-blue sucursal-comun'><span>CASTAÑO</span><b>4</b></div><div class='audit-row row-blue sucursal-comun'><span>BARQUISIMETO</span><b>3</b></div><div class='audit-row row-blue sucursal-central'><span>CENTRAL</span><b>2</b></div><div class='audit-row row-blue sucursal-comun'><span>MORA</span><b>2</b></div><div class='audit-row row-blue sucursal-comun'><span>VILLAS DE ARAGUA</span><b>2</b></div><div class='audit-row row-blue sucursal-comun'><span>NAGUANAGUA</span><b>1</b></div><div class='audit-row row-blue sucursal-comun'><span>TUCACAS</span><b>1</b></div></div></div>
                         <div class="audit-card"><h3>SUCURSALES APROBADAS</h3><div class="scroll-area"><div class='audit-row status-ok sucursal-comun'><span>ACACIAS</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>BARQUISIMETO</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>BOSQUE</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>CASTAÑO</span><b>100</b></div><div class='audit-row status-ok sucursal-central'><span>CENTRAL</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>MORA</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>NAGUANAGUA</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>TUCACAS</span><b>100</b></div><div class='audit-row status-ok sucursal-comun'><span>VILLAS DE ARAGUA</span><b>100</b></div></div></div>
                         <div class="audit-card"><h3>SUCURSALES REPROBADAS</h3><div class="scroll-area"><div class="audit-row">Sin registros</div></div></div>
-                        <div class="audit-card" style="border-top-color:var(--rojo)"><h3>INCIDENCIAS GRAVES</h3><div class="scroll-area"><div class='audit-row status-fail sucursal-comun'><span>ACACIAS</span><b>1</b></div><div class='audit-row status-fail sucursal-central'><span>CENTRAL</span><b>1</b></div><div class='audit-row status-fail sucursal-comun'><span>VILLAS DE ARAGUA</span><b>1</b></div></div></div>
+                        <div class="audit-card" style="border-top-color:var(--rojo)"><h3>INCIDENCIAS GRAVES</h3><div class="scroll-area"><div class='audit-row status-fail sucursal-comun'><span>VILLAS DE ARAGUA</span><b>2</b></div><div class='audit-row status-fail sucursal-comun'><span>ACACIAS</span><b>1</b></div><div class='audit-row status-fail sucursal-central'><span>CENTRAL</span><b>1</b></div></div></div>
                     </div>
                 </div>
                 <div id="cobs-JUNIO" class="tab-content">
@@ -204,7 +204,7 @@
                     <div class="blue-box"><div class="grid"><a href="JUNIO/ACACIAS/cobros_detalles.html" class="card sucursal-comun">ACACIAS</a><a href="JUNIO/BARQUISIMETO/cobros_detalles.html" class="card sucursal-comun">BARQUISIMETO</a><a href="JUNIO/BOSQUE/cobros_detalles.html" class="card sucursal-comun">BOSQUE</a><a href="JUNIO/CASTAÑO/cobros_detalles.html" class="card sucursal-comun">CASTAÑO</a><a href="JUNIO/CENTRAL/cobros_detalles.html" class="card sucursal-central">CENTRAL</a><a href="JUNIO/MORA/cobros_detalles.html" class="card sucursal-comun">MORA</a><a href="JUNIO/NAGUANAGUA/cobros_detalles.html" class="card sucursal-comun">NAGUANAGUA</a><a href="JUNIO/TUCACAS/cobros_detalles.html" class="card sucursal-comun">TUCACAS</a><a href="JUNIO/VILLAS DE ARAGUA/cobros_detalles.html" class="card sucursal-comun">VILLAS DE ARAGUA</a></div></div>
                     <div class="global-cobros-box">
                         <a href="JUNIO/todos_cobrados.html" class="global-item-link">
-                            <div class="global-item"><span>TOTAL COBRADO</span><br><b style="color: #333;">$9.24</b></div>
+                            <div class="global-item"><span>TOTAL COBRADO</span><br><b style="color: #333;">$10.86</b></div>
                         </a>
                         <a href="JUNIO/todos_recuperados.html" class="global-item-link">
                             <div class="global-item"><span>PÉRDIDA MITIGADA</span><br><b>$163.91</b></div>
@@ -212,70 +212,23 @@
                         <a href="JUNIO/todos_excedentes.html" class="global-item-link">
                             <div class="global-item" style="border-bottom-color: var(--amarillo)"><span>EXCEDENTES</span><br><b>$104.95</b></div>
                         </a>
-                        <div class="global-item"><span>TOTAL MENSUAL</span><br><b>$173.15</b></div>
+                        <div class="global-item"><span>TOTAL MENSUAL</span><br><b>$174.77</b></div>
                     </div>
                     <div class="audit-grid-full">
-                        <div class="audit-card"><h3>POR COBRADO</h3><div class="scroll-area"><div class='audit-row  sucursal-comun'><span>ACACIAS</span><b>$7.62</b></div><div class='audit-row  sucursal-comun'><span>VILLAS DE ARAGUA</span><b>$1.62</b></div><div class='audit-row  sucursal-comun'><span>BARQUISIMETO</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>BOSQUE</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>CASTAÑO</span><b>$0.00</b></div><div class='audit-row  sucursal-central'><span>CENTRAL</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>MORA</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>NAGUANAGUA</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>TUCACAS</span><b>$0.00</b></div></div></div>
+                        <div class="audit-card"><h3>POR COBRADO</h3><div class="scroll-area"><div class='audit-row  sucursal-comun'><span>ACACIAS</span><b>$7.62</b></div><div class='audit-row  sucursal-comun'><span>VILLAS DE ARAGUA</span><b>$3.24</b></div><div class='audit-row  sucursal-comun'><span>BARQUISIMETO</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>BOSQUE</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>CASTAÑO</span><b>$0.00</b></div><div class='audit-row  sucursal-central'><span>CENTRAL</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>MORA</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>NAGUANAGUA</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>TUCACAS</span><b>$0.00</b></div></div></div>
                         <div class="audit-card"><h3>POR MITIGACIÓN</h3><div class="scroll-area"><div class='audit-row  sucursal-comun'><span>TUCACAS</span><b>$161.46</b></div><div class='audit-row  sucursal-comun'><span>CASTAÑO</span><b>$2.45</b></div><div class='audit-row  sucursal-comun'><span>ACACIAS</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>BARQUISIMETO</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>BOSQUE</span><b>$0.00</b></div><div class='audit-row  sucursal-central'><span>CENTRAL</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>MORA</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>NAGUANAGUA</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>VILLAS DE ARAGUA</span><b>$0.00</b></div></div></div>
-                        <div class="audit-card"><h3>TOTAL GLOBAL</h3><div class="scroll-area"><div class='audit-row  sucursal-comun'><span>TUCACAS</span><b>$161.46</b></div><div class='audit-row  sucursal-comun'><span>ACACIAS</span><b>$7.62</b></div><div class='audit-row  sucursal-comun'><span>CASTAÑO</span><b>$2.45</b></div><div class='audit-row  sucursal-comun'><span>VILLAS DE ARAGUA</span><b>$1.62</b></div><div class='audit-row  sucursal-comun'><span>BARQUISIMETO</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>BOSQUE</span><b>$0.00</b></div><div class='audit-row  sucursal-central'><span>CENTRAL</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>MORA</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>NAGUANAGUA</span><b>$0.00</b></div></div></div>
+                        <div class="audit-card"><h3>TOTAL GLOBAL</h3><div class="scroll-area"><div class='audit-row  sucursal-comun'><span>TUCACAS</span><b>$161.46</b></div><div class='audit-row  sucursal-comun'><span>ACACIAS</span><b>$7.62</b></div><div class='audit-row  sucursal-comun'><span>VILLAS DE ARAGUA</span><b>$3.24</b></div><div class='audit-row  sucursal-comun'><span>CASTAÑO</span><b>$2.45</b></div><div class='audit-row  sucursal-comun'><span>BARQUISIMETO</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>BOSQUE</span><b>$0.00</b></div><div class='audit-row  sucursal-central'><span>CENTRAL</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>MORA</span><b>$0.00</b></div><div class='audit-row  sucursal-comun'><span>NAGUANAGUA</span><b>$0.00</b></div></div></div>
                     </div>
                 </div>
                 <div id="honor-JUNIO" class="tab-content">
                     <h2 class="sub-title" style="background:var(--verde); border-left-color:white;">MEJOR RENDIMIENTO - JUNIO</h2>
                     <div class="audit-grid-full" style="grid-template-columns: 1fr 1fr;">
                         <div class="audit-card" style="border-top-color:var(--verde)"><h3>TOP FISCALIZACIÓN</h3><div class='audit-row status-ok-green sucursal-comun'><span>NAGUANAGUA</span></div><div class='audit-row status-ok-green sucursal-comun'><span>TUCACAS</span></div><div class='audit-row status-ok-green sucursal-comun'><span>MORA</span></div></div>
-                        <div class="audit-card" style="border-top-color:var(--verde)"><h3>TOP COBROS</h3><div class='audit-row status-ok-green sucursal-comun'><span>TUCACAS</span></div><div class='audit-row status-ok-green sucursal-comun'><span>ACACIAS</span></div><div class='audit-row status-ok-green sucursal-comun'><span>CASTAÑO</span></div></div>
+                        <div class="audit-card" style="border-top-color:var(--verde)"><h3>TOP COBROS</h3><div class='audit-row status-ok-green sucursal-comun'><span>TUCACAS</span></div><div class='audit-row status-ok-green sucursal-comun'><span>ACACIAS</span></div><div class='audit-row status-ok-green sucursal-comun'><span>VILLAS DE ARAGUA</span></div></div>
                     </div>
                 </div>
                 <div id="peores-JUNIO" class="tab-content">
                     <h2 class="sub-title" style="background:var(--rojo); border-left-color:black;">RENDIMIENTO CRÍTICO - JUNIO</h2>
-                    <div class="audit-grid-full" style="grid-template-columns: 1fr 1fr;">
-                        <div class="audit-card" style="border-top-color:var(--rojo)"><h3>CRÍTICOS FISCALIZACIÓN</h3><div class="audit-row">Sin registros</div></div>
-                        <div class="audit-card" style="border-top-color:var(--rojo)"><h3>CRÍTICOS COBROS Y MITIGACION</h3><div class="audit-row">Sin registros</div></div>
-                    </div>
-                </div>
-            </div>
-            <div id="mes-JULIO" class="mes-container">
-                <div id="incs-JULIO" class="tab-content active">
-                    <h2 class="sub-title">REPORTES DE INCIDENCIAS - JULIO</h2>
-                    <div class="blue-box"><div class="grid"><a href="JULIO/GUACARA/reporte.html" class="card sucursal-comun">GUACARA</a></div></div>
-                    <div class="audit-grid-full">
-                        <div class="audit-card"><h3>INCIDENCIAS TOTALES</h3><div class="scroll-area"><div class='audit-row row-blue sucursal-comun'><span>GUACARA</span><b>1</b></div></div></div>
-                        <div class="audit-card"><h3>SUCURSALES APROBADAS</h3><div class="scroll-area"><div class='audit-row status-ok sucursal-comun'><span>GUACARA</span><b>90</b></div></div></div>
-                        <div class="audit-card"><h3>SUCURSALES REPROBADAS</h3><div class="scroll-area"><div class="audit-row">Sin registros</div></div></div>
-                        <div class="audit-card" style="border-top-color:var(--rojo)"><h3>INCIDENCIAS GRAVES</h3><div class="scroll-area"><div class="audit-row">Sin registros</div></div></div>
-                    </div>
-                </div>
-                <div id="cobs-JULIO" class="tab-content">
-                    <h2 class="sub-title">RECUPERACIÓN Y COBROS - JULIO</h2>
-                    <div class="blue-box"><div class="grid"><a href="JULIO/GUACARA/cobros_detalles.html" class="card sucursal-comun">GUACARA</a></div></div>
-                    <div class="global-cobros-box">
-                        <a href="JULIO/todos_cobrados.html" class="global-item-link">
-                            <div class="global-item"><span>TOTAL COBRADO</span><br><b style="color: #333;">$0.00</b></div>
-                        </a>
-                        <a href="JULIO/todos_recuperados.html" class="global-item-link">
-                            <div class="global-item"><span>PÉRDIDA MITIGADA</span><br><b>$0.00</b></div>
-                        </a>
-                        <a href="JULIO/todos_excedentes.html" class="global-item-link">
-                            <div class="global-item" style="border-bottom-color: var(--amarillo)"><span>EXCEDENTES</span><br><b>$0.00</b></div>
-                        </a>
-                        <div class="global-item"><span>TOTAL MENSUAL</span><br><b>$0.00</b></div>
-                    </div>
-                    <div class="audit-grid-full">
-                        <div class="audit-card"><h3>POR COBRADO</h3><div class="scroll-area"><div class='audit-row  sucursal-comun'><span>GUACARA</span><b>$0.00</b></div></div></div>
-                        <div class="audit-card"><h3>POR MITIGACIÓN</h3><div class="scroll-area"><div class='audit-row  sucursal-comun'><span>GUACARA</span><b>$0.00</b></div></div></div>
-                        <div class="audit-card"><h3>TOTAL GLOBAL</h3><div class="scroll-area"><div class='audit-row  sucursal-comun'><span>GUACARA</span><b>$0.00</b></div></div></div>
-                    </div>
-                </div>
-                <div id="honor-JULIO" class="tab-content">
-                    <h2 class="sub-title" style="background:var(--verde); border-left-color:white;">MEJOR RENDIMIENTO - JULIO</h2>
-                    <div class="audit-grid-full" style="grid-template-columns: 1fr 1fr;">
-                        <div class="audit-card" style="border-top-color:var(--verde)"><h3>TOP FISCALIZACIÓN</h3><div class='audit-row status-ok-green sucursal-comun'><span>GUACARA</span></div></div>
-                        <div class="audit-card" style="border-top-color:var(--verde)"><h3>TOP COBROS</h3><div class='audit-row status-ok-green sucursal-comun'><span>GUACARA</span></div></div>
-                    </div>
-                </div>
-                <div id="peores-JULIO" class="tab-content">
-                    <h2 class="sub-title" style="background:var(--rojo); border-left-color:black;">RENDIMIENTO CRÍTICO - JULIO</h2>
                     <div class="audit-grid-full" style="grid-template-columns: 1fr 1fr;">
                         <div class="audit-card" style="border-top-color:var(--rojo)"><h3>CRÍTICOS FISCALIZACIÓN</h3><div class="audit-row">Sin registros</div></div>
                         <div class="audit-card" style="border-top-color:var(--rojo)"><h3>CRÍTICOS COBROS Y MITIGACION</h3><div class="audit-row">Sin registros</div></div>

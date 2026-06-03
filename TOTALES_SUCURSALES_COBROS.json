@@ -256,6 +256,14 @@
         "TOTAL_GESTIONADO": 1341.8
     },
     {
+        "sucursal": "VILLAS DE ARAGUA",
+        "mes": "JUNIO",
+        "COBRADO": 3.24,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 3.24
+    },
+    {
         "sucursal": "ACACIAS",
         "mes": "MAYO",
         "COBRADO": 2.85,
@@ -270,14 +278,6 @@
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 2.0
-    },
-    {
-        "sucursal": "VILLAS DE ARAGUA",
-        "mes": "JUNIO",
-        "COBRADO": 1.62,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 1.62
     },
     {
         "sucursal": "NAGUANAGUA",
