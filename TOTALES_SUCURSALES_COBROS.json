@@ -208,14 +208,6 @@
         "TOTAL_GESTIONADO": 8.23
     },
     {
-        "sucursal": "MORA",
-        "mes": "MAYO",
-        "COBRADO": 4.66,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 4.66
-    },
-    {
         "sucursal": "SAN DIEGO",
         "mes": "ABRIL",
         "COBRADO": 4.59,
@@ -441,6 +433,14 @@
     },
     {
         "sucursal": "LA MORA",
+        "mes": "MAYO",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 0.0
+    },
+    {
+        "sucursal": "MORA",
         "mes": "MAYO",
         "COBRADO": 0.0,
         "PERDIDA_PATRIMONIO": 0.0,
