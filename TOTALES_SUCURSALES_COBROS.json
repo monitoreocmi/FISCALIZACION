@@ -368,6 +368,14 @@
         "TOTAL_GESTIONADO": 2.45
     },
     {
+        "sucursal": "CENTRAL",
+        "mes": "JUNIO",
+        "COBRADO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 89.64,
+        "TOTAL_GESTIONADO": 89.64
+    },
+    {
         "sucursal": "TUCACAS",
         "mes": "JUNIO",
         "COBRADO": 0.0,

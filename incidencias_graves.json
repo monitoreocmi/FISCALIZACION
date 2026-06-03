@@ -31,6 +31,16 @@
             "detalle": "D: 3 | E: 1"
         },
         {
+            "sucursal": "GUACARA",
+            "total": 3,
+            "detalle": "D: 1 | E: 2"
+        },
+        {
+            "sucursal": "IPSFA",
+            "total": 2,
+            "detalle": "D: 2 | E: 0"
+        },
+        {
             "sucursal": "MORA",
             "total": 2,
             "detalle": "D: 2 | E: 0"
