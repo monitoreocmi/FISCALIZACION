@@ -14,7 +14,7 @@
         },
         {
             "n": "IPSFA (ABRIL)",
-            "v": 85
+            "v": 100
         },
         {
             "n": "SAN DIEGO (ABRIL)",
@@ -71,10 +71,6 @@
         {
             "n": "VILLAS DE ARAGUA (JUNIO)",
             "v": 100
-        },
-        {
-            "n": "MORA (MARZO)",
-            "v": 90
         },
         {
             "n": "CIRCULO MILITAR (MAYO)",
@@ -157,6 +153,10 @@
         {
             "n": "LA MORA (MARZO)",
             "v": 70
+        },
+        {
+            "n": "MORA (MARZO)",
+            "v": 30
         },
         {
             "n": "NAGUANAGUA (MARZO)",
