@@ -86,18 +86,6 @@
             }
         }
     },
-    "JULIO": {
-        "TOTAL_COBRADO": 0.0,
-        "TOTAL_PERDIDA_PATRIMONIO": 0.0,
-        "TOTAL_EXCEDENTE": 0.0,
-        "DETALLE_SUCURSALES": {
-            "GUACARA": {
-                "COBRADO": 0.0,
-                "RECUPERADO": 0.0,
-                "EXCEDENTE": 0.0
-            }
-        }
-    },
     "JUNIO": {
         "TOTAL_COBRADO": 1.62,
         "TOTAL_PERDIDA_PATRIMONIO": 163.91,
