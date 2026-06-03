@@ -87,12 +87,12 @@
         }
     },
     "JUNIO": {
-        "TOTAL_COBRADO": 1.62,
+        "TOTAL_COBRADO": 9.24,
         "TOTAL_PERDIDA_PATRIMONIO": 163.91,
         "TOTAL_EXCEDENTE": 104.95,
         "DETALLE_SUCURSALES": {
             "ACACIAS": {
-                "COBRADO": 0.0,
+                "COBRADO": 7.62,
                 "RECUPERADO": 0.0,
                 "EXCEDENTE": 0.0
             },
