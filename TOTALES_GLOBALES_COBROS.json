@@ -87,7 +87,7 @@
         }
     },
     "JUNIO": {
-        "TOTAL_COBRADO": 23.97,
+        "TOTAL_COBRADO": 28.05,
         "TOTAL_PERDIDA_PATRIMONIO": 163.91,
         "TOTAL_EXCEDENTE": 104.95,
         "DETALLE_SUCURSALES": {
@@ -118,6 +118,11 @@
             },
             "CIRCULO MILITAR": {
                 "COBRADO": 0.0,
+                "RECUPERADO": 0.0,
+                "EXCEDENTE": 0.0
+            },
+            "GUACARA": {
+                "COBRADO": 4.08,
                 "RECUPERADO": 0.0,
                 "EXCEDENTE": 0.0
             },

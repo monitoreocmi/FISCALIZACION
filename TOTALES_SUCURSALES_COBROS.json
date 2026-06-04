@@ -248,6 +248,14 @@
         "TOTAL_GESTIONADO": 115.16
     },
     {
+        "sucursal": "GUACARA",
+        "mes": "JUNIO",
+        "COBRADO": 4.08,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 4.08
+    },
+    {
         "sucursal": "BARQUISIMETO",
         "mes": "MARZO",
         "COBRADO": 3.43,
