@@ -65,10 +65,6 @@
             "v": 100
         },
         {
-            "n": "SAN JUAN (JUNIO)",
-            "v": 85
-        },
-        {
             "n": "TUCACAS (JUNIO)",
             "v": 100
         },
@@ -125,6 +121,10 @@
         {
             "n": "VILLAS DE ARAGUA (ABRIL)",
             "v": 35
+        },
+        {
+            "n": "SAN JUAN (JUNIO)",
+            "v": 65
         },
         {
             "n": "ACACIAS (MARZO)",
