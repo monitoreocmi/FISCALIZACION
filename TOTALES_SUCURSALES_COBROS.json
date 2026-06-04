@@ -84,8 +84,8 @@
         "mes": "MAYO",
         "COBRADO": 24.96,
         "PERDIDA_PATRIMONIO": 73.58,
-        "EXCEDENTE": 1.59,
-        "TOTAL_GESTIONADO": 100.13
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 98.54
     },
     {
         "sucursal": "BOSQUE",
