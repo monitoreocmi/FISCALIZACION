@@ -144,6 +144,14 @@
         "TOTAL_GESTIONADO": 16.95
     },
     {
+        "sucursal": "SAN DIEGO",
+        "mes": "JUNIO",
+        "COBRADO": 15.8,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 15.8
+    },
+    {
         "sucursal": "CIRCULO MILITAR",
         "mes": "ABRIL",
         "COBRADO": 15.24,

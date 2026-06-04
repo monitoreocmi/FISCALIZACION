@@ -87,7 +87,7 @@
         }
     },
     "JUNIO": {
-        "TOTAL_COBRADO": 8.17,
+        "TOTAL_COBRADO": 23.97,
         "TOTAL_PERDIDA_PATRIMONIO": 163.91,
         "TOTAL_EXCEDENTE": 104.95,
         "DETALLE_SUCURSALES": {
@@ -132,7 +132,7 @@
                 "EXCEDENTE": 0.0
             },
             "SAN DIEGO": {
-                "COBRADO": 0.0,
+                "COBRADO": 15.8,
                 "RECUPERADO": 0.0,
                 "EXCEDENTE": 0.0
             },
