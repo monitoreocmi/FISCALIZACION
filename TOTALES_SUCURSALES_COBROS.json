@@ -328,6 +328,14 @@
         "TOTAL_GESTIONADO": 310.54
     },
     {
+        "sucursal": "CASTAÑO",
+        "mes": "JUNIO",
+        "COBRADO": 0.55,
+        "PERDIDA_PATRIMONIO": 2.45,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 3.0
+    },
+    {
         "sucursal": "GUACARA",
         "mes": "ABRIL",
         "COBRADO": 0.3,
@@ -358,14 +366,6 @@
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 15.31,
         "TOTAL_GESTIONADO": 15.31
-    },
-    {
-        "sucursal": "CASTAÑO",
-        "mes": "JUNIO",
-        "COBRADO": 0.0,
-        "PERDIDA_PATRIMONIO": 2.45,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 2.45
     },
     {
         "sucursal": "CENTRAL",
