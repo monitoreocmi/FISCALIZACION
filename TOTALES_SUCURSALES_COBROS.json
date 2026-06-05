@@ -256,6 +256,14 @@
         "TOTAL_GESTIONADO": 4.08
     },
     {
+        "sucursal": "SAN JUAN",
+        "mes": "JUNIO",
+        "COBRADO": 3.5,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 3.5
+    },
+    {
         "sucursal": "BARQUISIMETO",
         "mes": "MARZO",
         "COBRADO": 3.43,
@@ -286,14 +294,6 @@
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 2.0
-    },
-    {
-        "sucursal": "SAN JUAN",
-        "mes": "JUNIO",
-        "COBRADO": 1.76,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 1.76
     },
     {
         "sucursal": "VILLAS DE ARAGUA",
