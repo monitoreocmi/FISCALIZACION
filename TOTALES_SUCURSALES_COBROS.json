@@ -288,6 +288,14 @@
         "TOTAL_GESTIONADO": 2.0
     },
     {
+        "sucursal": "SAN JUAN",
+        "mes": "JUNIO",
+        "COBRADO": 1.76,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 1.76
+    },
+    {
         "sucursal": "VILLAS DE ARAGUA",
         "mes": "JUNIO",
         "COBRADO": 1.62,
