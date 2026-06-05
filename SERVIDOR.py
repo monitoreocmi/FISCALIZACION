@@ -114,7 +114,7 @@ USUARIOS = {
     "wcarmona": {"pw": "2026", "sucursales": ["CENTRAL"]},
     "kcalderon": {"pw": "2026", "sucursales": ["ACACIAS", "VILLAS DE ARAGUA"]},
     "hdelgado": {"pw": "2026", "sucursales": ["TODAS"]},
-    "cmartinez": {"pw": "2026", "sucursales": ["ACACIAS", "VILLAS DE ARAGUA"]}
+    "cmartinez": {"pw": "2026", "sucursales": ["IPSFA", "GUACARA"]}
 }
 
 SUCURSALES_FULL = ["BARQUISIMETO", "CASTAÑO", "CENTRAL", "CIRCULO MILITAR", "BOSQUE", "GUACARA", "IPSFA", "MORA", "VICTORIA", "ACACIAS", "NAGUANAGUA", "SAN DIEGO", "SAN JUAN", "SANTA RITA", "TUCACAS", "VILLAS DE ARAGUA"]
