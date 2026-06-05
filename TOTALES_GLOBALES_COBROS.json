@@ -87,9 +87,9 @@
         }
     },
     "JUNIO": {
-        "TOTAL_COBRADO": 121.19,
+        "TOTAL_COBRADO": 31.55,
         "TOTAL_PERDIDA_PATRIMONIO": 163.91,
-        "TOTAL_EXCEDENTE": 15.31,
+        "TOTAL_EXCEDENTE": 104.95,
         "DETALLE_SUCURSALES": {
             "ACACIAS": {
                 "COBRADO": 7.62,
@@ -112,9 +112,9 @@
                 "EXCEDENTE": 0.0
             },
             "CENTRAL": {
-                "COBRADO": 89.64,
+                "COBRADO": 0.0,
                 "RECUPERADO": 0.0,
-                "EXCEDENTE": 0.0
+                "EXCEDENTE": 89.64
             },
             "CIRCULO MILITAR": {
                 "COBRADO": 0.0,
