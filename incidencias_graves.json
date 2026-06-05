@@ -103,6 +103,11 @@
             "detalle": "D: 1 | E: 1"
         },
         {
+            "sucursal": "MORA",
+            "total": 1,
+            "detalle": "D: 1 | E: 0"
+        },
+        {
             "sucursal": "SAN DIEGO",
             "total": 1,
             "detalle": "D: 1 | E: 0"

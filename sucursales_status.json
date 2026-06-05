@@ -57,10 +57,6 @@
             "v": 100
         },
         {
-            "n": "MORA (JUNIO)",
-            "v": 85
-        },
-        {
             "n": "NAGUANAGUA (JUNIO)",
             "v": 100
         },
@@ -133,6 +129,10 @@
         {
             "n": "GUACARA (JUNIO)",
             "v": 70
+        },
+        {
+            "n": "MORA (JUNIO)",
+            "v": 60
         },
         {
             "n": "SAN JUAN (JUNIO)",
