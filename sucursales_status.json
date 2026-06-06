@@ -77,10 +77,6 @@
             "v": 100
         },
         {
-            "n": "VILLAS DE ARAGUA (JUNIO)",
-            "v": 100
-        },
-        {
             "n": "CIRCULO MILITAR (MAYO)",
             "v": 90
         },
@@ -137,6 +133,10 @@
         {
             "n": "SAN JUAN (JUNIO)",
             "v": 40
+        },
+        {
+            "n": "VILLAS DE ARAGUA (JUNIO)",
+            "v": 70
         },
         {
             "n": "ACACIAS (MARZO)",
