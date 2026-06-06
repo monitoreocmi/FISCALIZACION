@@ -368,6 +368,14 @@
         "TOTAL_GESTIONADO": 3.0
     },
     {
+        "sucursal": "NAGUANAGUA",
+        "mes": "JUNIO",
+        "COBRADO": 0.55,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 0.55
+    },
+    {
         "sucursal": "GUACARA",
         "mes": "ABRIL",
         "COBRADO": 0.3,
@@ -406,14 +414,6 @@
         "PERDIDA_PATRIMONIO": 0.0,
         "EXCEDENTE": 89.64,
         "TOTAL_GESTIONADO": 89.64
-    },
-    {
-        "sucursal": "NAGUANAGUA",
-        "mes": "JUNIO",
-        "COBRADO": 0.0,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 0.0
     },
     {
         "sucursal": "TUCACAS",
