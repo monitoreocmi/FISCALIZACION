@@ -368,6 +368,14 @@
         "TOTAL_GESTIONADO": 4.3
     },
     {
+        "sucursal": "MORA",
+        "mes": "JUNIO",
+        "COBRADO": 0.25,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 0.25
+    },
+    {
         "sucursal": "LA MORA",
         "mes": "ABRIL",
         "COBRADO": 0.0,
