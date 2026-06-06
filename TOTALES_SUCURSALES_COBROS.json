@@ -200,6 +200,14 @@
         "TOTAL_GESTIONADO": 7.62
     },
     {
+        "sucursal": "BOSQUE",
+        "mes": "JUNIO",
+        "COBRADO": 7.44,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 15.31,
+        "TOTAL_GESTIONADO": 22.75
+    },
+    {
         "sucursal": "ACACIAS",
         "mes": "MARZO",
         "COBRADO": 7.38,
@@ -390,14 +398,6 @@
         "PERDIDA_PATRIMONIO": 4.19,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 4.19
-    },
-    {
-        "sucursal": "BOSQUE",
-        "mes": "JUNIO",
-        "COBRADO": 0.0,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 15.31,
-        "TOTAL_GESTIONADO": 15.31
     },
     {
         "sucursal": "CENTRAL",

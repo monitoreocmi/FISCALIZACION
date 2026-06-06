@@ -87,7 +87,7 @@
         }
     },
     "JUNIO": {
-        "TOTAL_COBRADO": 33.31,
+        "TOTAL_COBRADO": 40.75,
         "TOTAL_PERDIDA_PATRIMONIO": 163.91,
         "TOTAL_EXCEDENTE": 104.95,
         "DETALLE_SUCURSALES": {
@@ -102,7 +102,7 @@
                 "EXCEDENTE": 0.0
             },
             "BOSQUE": {
-                "COBRADO": 0.0,
+                "COBRADO": 7.44,
                 "RECUPERADO": 0.0,
                 "EXCEDENTE": 15.31
             },
