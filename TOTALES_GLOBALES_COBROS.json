@@ -87,7 +87,7 @@
         }
     },
     "JUNIO": {
-        "TOTAL_COBRADO": 31.8,
+        "TOTAL_COBRADO": 33.31,
         "TOTAL_PERDIDA_PATRIMONIO": 163.91,
         "TOTAL_EXCEDENTE": 104.95,
         "DETALLE_SUCURSALES": {
@@ -167,7 +167,7 @@
                 "EXCEDENTE": 0.0
             },
             "VILLAS DE ARAGUA": {
-                "COBRADO": 0.0,
+                "COBRADO": 1.51,
                 "RECUPERADO": 0.0,
                 "EXCEDENTE": 0.0
             }

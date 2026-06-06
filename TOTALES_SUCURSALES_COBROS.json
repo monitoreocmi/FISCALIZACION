@@ -304,6 +304,14 @@
         "TOTAL_GESTIONADO": 76.36
     },
     {
+        "sucursal": "VILLAS DE ARAGUA",
+        "mes": "JUNIO",
+        "COBRADO": 1.51,
+        "PERDIDA_PATRIMONIO": 0.0,
+        "EXCEDENTE": 0.0,
+        "TOTAL_GESTIONADO": 1.51
+    },
+    {
         "sucursal": "TUCACAS",
         "mes": "MAYO",
         "COBRADO": 1.31,
@@ -406,14 +414,6 @@
         "PERDIDA_PATRIMONIO": 161.46,
         "EXCEDENTE": 0.0,
         "TOTAL_GESTIONADO": 161.46
-    },
-    {
-        "sucursal": "VILLAS DE ARAGUA",
-        "mes": "JUNIO",
-        "COBRADO": 0.0,
-        "PERDIDA_PATRIMONIO": 0.0,
-        "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 0.0
     },
     {
         "sucursal": "LA MORA",
