@@ -88,7 +88,7 @@
     },
     "JUNIO": {
         "TOTAL_COBRADO": 42.92,
-        "TOTAL_PERDIDA_PATRIMONIO": 163.91,
+        "TOTAL_PERDIDA_PATRIMONIO": 164.9,
         "TOTAL_EXCEDENTE": 104.95,
         "DETALLE_SUCURSALES": {
             "ACACIAS": {
@@ -138,7 +138,7 @@
             },
             "NAGUANAGUA": {
                 "COBRADO": 0.55,
-                "RECUPERADO": 0.0,
+                "RECUPERADO": 0.99,
                 "EXCEDENTE": 0.0
             },
             "SAN DIEGO": {

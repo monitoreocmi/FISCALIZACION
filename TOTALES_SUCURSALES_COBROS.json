@@ -371,9 +371,9 @@
         "sucursal": "NAGUANAGUA",
         "mes": "JUNIO",
         "COBRADO": 0.55,
-        "PERDIDA_PATRIMONIO": 0.0,
+        "PERDIDA_PATRIMONIO": 0.99,
         "EXCEDENTE": 0.0,
-        "TOTAL_GESTIONADO": 0.55
+        "TOTAL_GESTIONADO": 1.54
     },
     {
         "sucursal": "GUACARA",
