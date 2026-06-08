@@ -104,8 +104,8 @@
         },
         {
             "sucursal": "MORA",
-            "total": 3,
-            "detalle": "D: 2 | E: 1"
+            "total": 2,
+            "detalle": "D: 2 | E: 0"
         },
         {
             "sucursal": "NAGUANAGUA",
@@ -121,6 +121,11 @@
             "sucursal": "SAN JUAN",
             "total": 2,
             "detalle": "D: 2 | E: 0"
+        },
+        {
+            "sucursal": "SANTA RITA",
+            "total": 1,
+            "detalle": "D: 0 | E: 1"
         },
         {
             "sucursal": "TUCACAS",
