@@ -87,9 +87,9 @@
         }
     },
     "JUNIO": {
-        "TOTAL_COBRADO": 58.22999999999999,
+        "TOTAL_COBRADO": 42.92,
         "TOTAL_PERDIDA_PATRIMONIO": 164.9,
-        "TOTAL_EXCEDENTE": 89.64,
+        "TOTAL_EXCEDENTE": 104.95,
         "DETALLE_SUCURSALES": {
             "ACACIAS": {
                 "COBRADO": 7.62,
@@ -102,9 +102,9 @@
                 "EXCEDENTE": 0.0
             },
             "BOSQUE": {
-                "COBRADO": 22.75,
+                "COBRADO": 7.44,
                 "RECUPERADO": 0.0,
-                "EXCEDENTE": 0.0
+                "EXCEDENTE": 15.31
             },
             "CASTAÑO": {
                 "COBRADO": 0.55,
